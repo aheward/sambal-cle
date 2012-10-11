@@ -1,9 +1,9 @@
 require 'cgi'
 require 'watir-webdriver'
-require 'sakai-cle-test-api/page_maker.rb'
-Dir["#{File.dirname(__FILE__)}/sakai-cle-test-api/*.rb"].each {|f| require f }
-Dir["#{File.dirname(__FILE__)}/sakai-cle-test-api/page_objects/*.rb"].each {|f| require f }
-Dir["#{File.dirname(__FILE__)}/sakai-cle-test-api/data_objects/*.rb"].each {|f| require f }
+require 'sambal-cle/page_maker.rb'
+Dir["#{File.dirname(__FILE__)}/sambal-cle/*.rb"].each {|f| require f }
+Dir["#{File.dirname(__FILE__)}/sambal-cle/page_objects/*.rb"].each {|f| require f }
+Dir["#{File.dirname(__FILE__)}/sambal-cle/data_objects/*.rb"].each {|f| require f }
 
 # Initialize this class at the start of your test cases to
 # open the specified test browser at the specified Sakai welcome page URL.
