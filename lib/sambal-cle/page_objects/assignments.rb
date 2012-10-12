@@ -284,47 +284,24 @@ class AssignmentsPermissions < AssignmentsBase
   # the AssignmentsList page class.
   action(:save) {|b| b.frm.button(:value=>"Save").click }
 
-  element(:evaluators_share_drafts) { |b| b.frm.checkbox(:id=>"Evaluatorasn.share.drafts") }
-  element(:organizers_share_drafts) { |b| b.frm.checkbox(:id=>"Organizerasn.share.drafts") }
+  def self.chekbocks(method_name)
+    define_method method_name do |role|
+      self.frm.checkbox(:id=>"#{role}asn.#{method_name.to_s.gsub("_", ".")}")
+    end
+  end
 
-  element(:guests_all_groups) { |b| b.frm.checkbox(:id=>"Guestasn.all.groups") }
-  element(:guests_create_assignments) { |b| b.frm.checkbox(:id=>"Guestasn.new") }
-  element(:guests_submit_to_assigments) { |b| b.frm.checkbox(:id=>"Guestasn.submit") }
-  element(:guests_delete_assignments) { |b| b.frm.checkbox(:id=>"Guestasn.delete") }
-  element(:guests_read_assignments) { |b| b.frm.checkbox(:id=>"Guestasn.read") }
-  element(:guests_revise_assignments) { |b| b.frm.checkbox(:id=>"Guestasn.revise") }
-  element(:guests_grade_assignments) { |b| b.frm.checkbox(:id=>"Guestasn.grade") }
-  element(:guests_receive_notifications) { |b| b.frm.checkbox(:id=>"Guestasn.receive.notifications") }
-  element(:guests_share_drafts) { |b| b.frm.checkbox(:id=>"Guestasn.share.drafts") }
-  element(:instructors_all_groups) { |b| b.frm.checkbox(:id=>"Instructorasn.all.groups") }
-  element(:instructors_create_assignments) { |b| b.frm.checkbox(:id=>"Instructorasn.new") }
-  element(:instructors_submit_to_assigments) { |b| b.frm.checkbox(:id=>"Instructorasn.submit") }
-  element(:instructors_delete_assignments) { |b| b.frm.checkbox(:id=>"Instructorasn.delete") }
-  element(:instructors_read_assignments) { |b| b.frm.checkbox(:id=>"Instructorasn.read") }
-  element(:instructors_revise_assignments) { |b| b.frm.checkbox(:id=>"Instructorasn.revise") }
-  element(:instructors_grade_assignments) { |b| b.frm.checkbox(:id=>"Instructorasn.grade") }
-  element(:instructors_receive_notifications) { |b| b.frm.checkbox(:id=>"Instructorasn.receive.notifications") }
-  element(:instructors_share_drafts) { |b| b.frm.checkbox(:id=>"Instructorasn.share.drafts") }
-  element(:students_all_groups) { |b| b.frm.checkbox(:id=>"Studentasn.all.groups") }
-  element(:students_create_assignments) { |b| b.frm.checkbox(:id=>"Studentasn.new") }
-  element(:students_submit_to_assigments) { |b| b.frm.checkbox(:id=>"Studentasn.submit") }
-  element(:students_delete_assignments) { |b| b.frm.checkbox(:id=>"Studentasn.delete") }
-  element(:students_read_assignments) { |b| b.frm.checkbox(:id=>"Studentasn.read") }
-  element(:students_revise_assignments) { |b| b.frm.checkbox(:id=>"Studentasn.revise") }
-  element(:students_grade_assignments) { |b| b.frm.checkbox(:id=>"Studentasn.grade") }
-  element(:students_receive_notifications) { |b| b.frm.checkbox(:id=>"Studentasn.receive.notifications") }
-  element(:students_share_drafts) { |b| b.frm.checkbox(:id=>"Studentasn.share.drafts") }
-  element(:tas_all_groups) { |b| b.frm.checkbox(:id=>"Teaching Assistantasn.all.groups") }
-  element(:tas_create_assignments) { |b| b.frm.checkbox(:id=>"Teaching Assistantasn.new") }
-  element(:tas_submit_to_assigments) { |b| b.frm.checkbox(:id=>"Teaching Assistantasn.submit") }
-  element(:tas_delete_assignments) { |b| b.frm.checkbox(:id=>"Teaching Assistantasn.delete") }
-  element(:tas_read_assignments) { |b| b.frm.checkbox(:id=>"Teaching Assistantasn.read") }
-  element(:tas_revise_assignments) { |b| b.frm.checkbox(:id=>"Teaching Assistantasn.revise") }
-  element(:tas_grade_assignments) { |b| b.frm.checkbox(:id=>"Teaching Assistantasn.grade") }
-  element(:tas_receive_notifications) { |b| b.frm.checkbox(:id=>"Teaching Assistantasn.receive.notifications") }
-  element(:tas_share_drafts) { |b| b.frm.checkbox(:id=>"Teaching Assistantasn.share.drafts") }
+  chekbocks :all_groups
+  chekbocks :new
+  chekbocks :submit
+  chekbocks :delete
+  chekbocks :read
+  chekbocks :revise
+  chekbocks :grade
+  chekbocks :receive_notifications
+  chekbocks :share_drafts
+
   action(:undo_changes) { |b| b.frm.link(:text=>"Undo changes").click }
-  action(:cancel) { |b| b.frm.button(:id=>"eventSubmit_doCancel").click }
+  action(:cancel) { |b| b.frm.button(:name=>"eventSubmit_doCancel").click }
   action(:permission) { |b| b.frm.link(:text=>"Permission").click }
   action(:guest) { |b| b.frm.link(:text=>"Guest").click }
   action(:instructor) { |b| b.frm.link(:text=>"Instructor").click }
@@ -478,7 +455,7 @@ class AssignmentStudent < BasePage
   # in case any more files need to be added to the upload
   # list.
   def select_file(file_name, file_path="")
-    frm.file_field(:id=>"clonableUpload", :name=>"upload#{@@file_number}").set(file_path + file_name)
+    #frm.file_field(:id=>"clonableUpload", :name=>"upload#{@@file_number}").set(file_path + file_name)
     @@file_number += 1
   end
 

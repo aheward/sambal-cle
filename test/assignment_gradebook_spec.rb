@@ -95,4 +95,6 @@ describe "Assignments" do
     end
   end
 
+  # TODO: Add a GB2 test here.
+
 end
