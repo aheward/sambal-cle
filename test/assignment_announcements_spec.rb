@@ -18,6 +18,21 @@ describe "Assignments appearing in Announcements" do
     @sakai = SakaiCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
+    @student = make UserObject, :id=>@directory['person1']['id'], :password=>@directory['person1']['password'],
+                    :first_name=>@directory['person1']['firstname'], :last_name=>@directory['person1']['lastname']
+    @instructor1 = make UserObject, :id=>@directory['person3']['id'], :password=>@directory['person3']['password'],
+                        :first_name=>@directory['person3']['firstname'], :last_name=>@directory['person3']['lastname'],
+                        :type=>"Instructor"
+    @instructor2 = make UserObject, :id=>@directory['person4']['id'], :password=>@directory['person4']['password'],
+                        :first_name=>@directory['person4']['firstname'], :last_name=>@directory['person4']['lastname'],
+                        :type=>"Instructor"
+    @instructor1.log_in
+<<<<<<< HEAD
+=======
     @student = @directory['person1']['id']
     @spassword = @directory['person1']['password']
     @instructor1 = @directory['person3']['id']
@@ -26,13 +41,15 @@ describe "Assignments appearing in Announcements" do
     @instructor2 = @directory['person4']['id']
     @password1 = @directory['person4']['password']
 
-    @sakai.page.login(@instructor1, @ipassword)
+    log_in(@instructor1, @ipassword)
+>>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
+=======
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
 
     @site = make SiteObject
     @site.create
-
-    @site.add_official_participants :role=>"Student", :participants=>[@student]
-    @site.add_official_participants :role=>"Instructor", :participants=>[@instructor2]
+    @site.add_official_participants :role=>@student.type, :participants=>[@student.id]
+    @site.add_official_participants :role=>@instructor2.type, :participants=>[@instructor2.id]
 
     @assignment1 = make AssignmentObject, :status=>"Draft", :add_open_announcement=>:set, :site=>@site.name, :title=>random_xss_string(30), :open=>in_an_hour, :student_submissions=>"Attachments only", :grade_scale=>"Points", :max_points=>"100", :instructions=>random_multiline(600, 12, :string)
     @assignment2 = make AssignmentObject, :site=>@site.name, :add_open_announcement=>:set, :open=>an_hour_ago

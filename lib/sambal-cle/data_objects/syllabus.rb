@@ -14,10 +14,16 @@ class SyllabusObject
         :content=>random_multiline(50, 5, :alpha)
     }
     options = defaults.merge(opts)
-    @title=options[:title]
-    @content=options[:content]
-    @site=options[:site]
+    set_options(options)
+<<<<<<< HEAD
+<<<<<<< HEAD
+    requires @site
+=======
     raise "You must specify a Site for the announcement" if @site==nil
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
+=======
+    requires @site
+>>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   alias :name :title
@@ -50,8 +56,7 @@ class SyllabusObject
       item.title.set opts[:title] unless opts[:title]==nil
       item.enter_source_text(item.editor, opts[:content]) unless opts[:content]==nil
     end
-    @title = opts[:title] unless opts[:title]==nil
-    @content = opts[:content] unless opts[:content]==nil
+    set_options(opts)
   end
 
   def get_properties

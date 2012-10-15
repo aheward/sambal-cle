@@ -15,10 +15,16 @@ class WebContentObject
     }
     options = defaults.merge(opts)
 
-    @title=options[:title]
-    @source=options[:source]
-    @site=options[:site]
+    set_options(options)
+<<<<<<< HEAD
+<<<<<<< HEAD
+    requires @site
+=======
     raise "You need to specify a site for your web content" if @site==nil
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
+=======
+    requires @site
+>>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   def create

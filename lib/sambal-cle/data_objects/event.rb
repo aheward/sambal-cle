@@ -23,21 +23,16 @@ class EventObject
     }
     options = defaults.merge(opts)
 
-    @title=options[:title]
-    @month=options[:month]
-    @day=options[:day]
-    @year=options[:year]
-    @start_hour=options[:start_hour]
-    @start_minute=options[:start_minute]
-    @start_meridian=options[:start_meridian]
-    @duration_hours=options[:duration_hours]
-    @duration_minutes=options[:duration_minutes]
-    @end_hour=options[:end_hour]
-    @end_minute=options[:end_minute]
-    @end_meridian=options[:end_meridian]
-    @message=options[:message]
-    @site=options[:site]
+    set_options(options)
+<<<<<<< HEAD
+<<<<<<< HEAD
+    requires @site
+=======
     raise "You need to specify a site for your wiki" if @site==nil
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
+=======
+    requires @site
+>>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   def create

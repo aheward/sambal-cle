@@ -12,20 +12,20 @@ Dir["#{File.dirname(__FILE__)}/sambal-cle/data_objects/*.rb"].each {|f| require 
 # create the @browser variable used throughout the page classes
 class SakaiCLE
 
-  #include PageObject
-  #include ToolsMenu
-
   attr_reader :browser
 
   def initialize(web_browser, url)
     @browser = Watir::Browser.new web_browser
     @browser.window.resize_to(1400,900)
     @browser.goto url
-  end
-
-  # Returns the class containing the welcome page's page elements.
-  def page
-    Login.new @browser
+<<<<<<< HEAD
+<<<<<<< HEAD
+    $base_url=url
+=======
+>>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
+=======
+    $base_url=url
+>>>>>>> c3a8c8c... Created the UserObject class and methods.  Started updating the scripts to properly use them.
   end
 
 end

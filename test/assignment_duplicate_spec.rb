@@ -2,9 +2,7 @@ require 'rspec'
 require 'sambal-cle'
 require 'yaml'
 
-# TODO: Add more tests of various permissions settings.
-
-describe "Assignment Permissions" do
+describe "Duplicating an Assignment" do
 
   include Utilities
   include Workflows
@@ -20,6 +18,10 @@ describe "Assignment Permissions" do
     @sakai = SakaiCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
     @student = make UserObject, :id=>@directory['person1']['id'], :password=>@directory['person1']['password'],
                     :first_name=>@directory['person1']['firstname'], :last_name=>@directory['person1']['lastname']
     @instructor1 = make UserObject, :id=>@directory['person3']['id'], :password=>@directory['person3']['password'],
@@ -29,40 +31,41 @@ describe "Assignment Permissions" do
                         :first_name=>@directory['person4']['firstname'], :last_name=>@directory['person4']['lastname'],
                         :type=>"Instructor"
     @instructor1.log_in
+<<<<<<< HEAD
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
     @site = make SiteObject
     @site.create
     @site.add_official_participants :role=>@student.type, :participants=>[@student.id]
     @site.add_official_participants :role=>@instructor2.type, :participants=>[@instructor2.id]
-<<<<<<< HEAD
 =======
+    @student = @directory['person1']['id']
+    @spassword = @directory['person1']['password']
+    @instructor1 = @directory['person3']['id']
+    @ipassword = @directory['person3']['password']
+
     @instructor2 = @directory['person4']['id']
     @password1 = @directory['person4']['password']
 
     log_in(@instructor1, @ipassword)
->>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
-=======
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
 
     @site = make SiteObject
     @site.create
 
     @site.add_official_participants :role=>"Student", :participants=>[@student]
     @site.add_official_participants :role=>"Instructor", :participants=>[@instructor2]
+>>>>>>> d4dd786... Creation of the assignment duplication test case spec.
+=======
 
-    @assignment = make AssignmentObject, :status=>"Draft", :site=>@site.name, :title=>random_string(25), :open=>next_monday
-    @assignment2 = make AssignmentObject, :site=>@site.name
+    @site = make SiteObject
+    @site.create
+    @site.add_official_participants :role=>@student.type, :participants=>[@student.id]
+    @site.add_official_participants :role=>@instructor2.type, :participants=>[@instructor2.id]
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
+
+    @assignment = make AssignmentObject, :site=>@site.name, :title=>random_string(25), :open=>next_monday, :grade_scale=>"Pass", :instructions=>random_alphanums
+
     @assignment.create
-    @assignment2.create
 
-    @permissions = make AssignmentPermissionsObject, :site=>@site.name
-
-    @instructor1.log_out
-    @instructor2.log_in
   end
 
   after :all do
@@ -70,28 +73,13 @@ describe "Assignment Permissions" do
     @sakai.browser.close
   end
 
-  it "Default permissions allow instructors to share drafts" do
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    log_in(@instructor2, @password1)
->>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
-=======
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-    open_my_site_by_name @assignment.site
-    assignments
+  it "Duplicate command creates duplicate of the Assignment" do
+    dupe = @assignment.duplicate
     on AssignmentsList do |list|
-      list.assignments_list.should include "Draft - #{@assignment.title}"
-      list.assignments_list.should include @assignment2.title
+      list.assignments_titles.should include dupe.title
     end
-  end
 
-  it "Removing 'share draft' permissions for instructors works as expected" do
-    @permissions.set :instructor=>{:share_drafts=>:clear}
-    on AssignmentsList do |list|
-      list.assignments_list.should_not include "Draft - #{@assignment.title}"
-      list.assignments_list.should include @assignment2.title
-    end
-  end
+    # TODO: Add more verification stuff here
 
+  end
 end

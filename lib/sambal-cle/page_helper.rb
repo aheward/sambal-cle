@@ -19,4 +19,26 @@ module PageHelper
     Object::Watir::Wait.until(timeout, message, &block)
   end
 
+  def set_options(hash)
+    hash.each do |key, value|
+      instance_variable_set("@#{key}", value)
+    end
+  end
+  alias update_options set_options
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
+  def requires(*elements)
+    elements.each do |inst_var|
+      raise "You must explicitly define the #{inst_var} variable for the #{self}." if inst_var==nil
+    end
+  end
+<<<<<<< HEAD
+=======
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
+=======
+>>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
+
 end

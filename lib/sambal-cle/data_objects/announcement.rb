@@ -16,10 +16,16 @@ class AnnouncementObject
         :body=>random_multiline(500, 10, :alpha)
     }
     options = defaults.merge(opts)
-    @title=options[:title]
-    @body=options[:body]
-    @site=options[:site]
+    set_options(options)
+<<<<<<< HEAD
+<<<<<<< HEAD
+    requires @site
+=======
     raise "You must specify a Site for the announcement" if @site==nil
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
+=======
+    requires @site
+>>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   alias :name :title
@@ -57,10 +63,7 @@ class AnnouncementObject
       end
       edit.save_changes
     end
-    @title=opts[:title] unless opts[:title]==nil
-    @body=opts[:body] unless opts[:body]==nil
-    @access=opts[:access]
-    @availability=opts[:availability]
+    update_options(opts)
   end
 
   def view

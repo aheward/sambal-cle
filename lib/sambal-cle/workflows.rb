@@ -215,9 +215,21 @@ module Workflows
   # The Page Reset button, found on all Site pages
   menu_link :reset, :href=>/tool-reset/
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
   # Login class.
   menu_link :logout, :text=>"Logout"
   alias :log_out :logout
   alias :sign_out :logout
 
+  def log_in(username, password)
+    on Login do |page|
+      page.login(username, password)
+    end
+  end
+
+>>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
+=======
+>>>>>>> c3a8c8c... Created the UserObject class and methods.  Started updating the scripts to properly use them.
 end

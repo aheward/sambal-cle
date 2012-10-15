@@ -1,3 +1,5 @@
+# This data object is strictly the assignment as created by an instructor
+# for Student submissions of an assignment, use AssignmentSubmissionObject
 class AssignmentObject
 
   include PageHelper
@@ -28,23 +30,16 @@ class AssignmentObject
     }
     options = defaults.merge(opts)
 
-    @title=options[:title]
-    @instructions=options[:instructions]
-    @site=options[:site]
-    @grade_scale=options[:grade_scale]
-    @max_points=options[:max_points]
-    @allow_resubmission=options[:allow_resubmission]
-    @num_resubmissions=options[:num_resubmissions]
-    @open=options[:open]
-    @due=options[:due]
-    @accept_until=options[:accept_until]
-    @resubmission=options[:resubmission]
-    @student_submissions=options[:student_submissions]
-    @add_due_date=options[:add_due_date]
-    @add_open_announcement=options[:add_open_announcement]
-    @add_to_gradebook=options[:add_to_gradebook]
-    @status=options[:status]
+    set_options(options)
+<<<<<<< HEAD
+<<<<<<< HEAD
+    requires @site
+=======
     raise "You must specify a Site for your Assignment" if @site==nil
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
+=======
+    requires @site
+>>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
     raise "You must specify max points if your grade scale is 'points'" if @max_points==nil && @grade_scale=="Points"
   end
 
@@ -121,6 +116,7 @@ class AssignmentObject
         list.edit_assignment @title
       end
     end
+
     on AssignmentAdd do |edit|
       edit.title.set opts[:title] unless opts[:title]==nil
       unless opts[:instructions]==nil
@@ -128,10 +124,11 @@ class AssignmentObject
       end
       edit.grade_scale.select opts[:grade_scale] unless opts[:grade_scale]==nil
       edit.max_points.set opts[:max_points] unless opts[:max_points]==nil
-      # This should be one of the last items edited...
-      edit.add_to_gradebook.send(opts[:add_to_gradebook]) unless opts[:add_to_gradebook]==nil
 
       #TODO: All the rest goes here
+
+      # This should be one of the last items edited...
+      edit.add_to_gradebook.send(opts[:add_to_gradebook]) unless opts[:add_to_gradebook]==nil
 
       if (@status=="Draft" && opts[:status]==nil) || opts[:status]=="Draft"
         edit.save_draft
@@ -141,12 +138,15 @@ class AssignmentObject
         edit.post
       end
     end
-    @title=opts[:title] unless opts[:title] == nil
-    @instructions=opts[:instructions] unless opts[:instructions] == nil
-    @grade_scale=opts[:grade_scale] unless opts[:grade_scale] == nil
-    @max_points=opts[:max_points] unless opts[:title] == nil
-    @add_to_gradebook==opts[:add_to_gradebook]
-    # TODO: Add all the rest of the elements here
+<<<<<<< HEAD
+<<<<<<< HEAD
+    set_options(opts)
+=======
+    update_options(opts)
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
+=======
+    set_options(opts)
+>>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
 
     unless opts[:status]=="Editing"
       on AssignmentsList do |list|
@@ -194,12 +194,83 @@ class AssignmentObject
     end
   end
 
+  def duplicate
+    open_my_site_by_name @site unless @browser.title=~/#{@site}/
+    assignments unless @browser.title=~/Assignments$/
+    reset
+    on AssignmentsList do |list|
+      list.duplicate @title
+    end
+
+    duplicate_assignment = self
+    duplicate_assignment.title="Draft - #{self.title} - Copy"
+    duplicate_assignment.status="Draft"
+    duplicate_assignment
+<<<<<<< HEAD
+=======
+  end
+
+<<<<<<< HEAD
+<<<<<<< HEAD
   def submit
+    # TODO: Create this method
+>>>>>>> d4dd786... Creation of the assignment duplication test case spec.
+=======
+  def submit opts={}
+    open_my_site_by_name @site unless @browser.title=~/#{@site}/
+    assignments unless @browser.title=~/Assignments$/
+    reset
+    on AssignmentsList do |list|
+      list.open_assignment @title
+    end
+    on AssignmentStudent do |assignment|
+      assignment.assignment_text=opts[:text] unless opts[:text]==nil
+      # TODO: Add stuff for adding file(s) to the assignment
+      if opts[:student_status]==nil || opts[:student_status]=="Submitted"
+        assignment.submit
+        @submission_date=right_now[:sakai]
+        @student_status="Submitted"
+      else
+        assignment.save_draft
+        @student_status="Draft - In progress"
+      end
+    end
+
+    @text=opts[:text] unless opts[:text]==nil
+>>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
+  end
+
+  def view_submissions
     # TODO: Create this method
   end
 
-  def grade
+<<<<<<< HEAD
+  # Use this method to open a submitted assignment for viewing
+  # the page.
+  def view_submission
+    open_my_site_by_name @site unless @browser.title=~/#{@site}/
+    assignments unless @browser.title=~/Assignments$/
+    reset
+    on AssignmentsList do |list|
+      list.open_assignment @title
+    end
+=======
+=======
+>>>>>>> c3a8c8c... Created the UserObject class and methods.  Started updating the scripts to properly use them.
+  def view_submissions
     # TODO: Create this method
+>>>>>>> d4dd786... Creation of the assignment duplication test case spec.
+  end
+
+  # Use this method to open a submitted assignment for viewing
+  # the page.
+  def view_submission
+    open_my_site_by_name @site unless @browser.title=~/#{@site}/
+    assignments unless @browser.title=~/Assignments$/
+    reset
+    on AssignmentsList do |list|
+      list.open_assignment @title
+    end
   end
 
 end

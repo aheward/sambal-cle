@@ -16,11 +16,16 @@ class ForumObject
     }
     options = defaults.merge(opts)
     
-    @site=options[:site]
-    @title=options[:title]
-    @short_description=options[:short_description]
-    @description=options[:description]
+    set_options(options)
+<<<<<<< HEAD
+<<<<<<< HEAD
+    requires @site
+=======
     raise "You need to specify a site for your Forum" if @site==nil
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
+=======
+    requires @site
+>>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   alias :name :title
@@ -53,9 +58,7 @@ class ForumObject
       end
       edit.save
     end
-    @title=opts[:title] unless opts[:title] == nil
-    @short_description=opts[:short_description] unless opts[:short_description] == nil
-    @description=opts[:description] unless opts[:description] == nil
+    set_options(opts)
   end
     
   def view
@@ -120,11 +123,7 @@ class TopicObject
     }
     options = defaults.merge(opts)
     
-    @title=options[:title]
-    @short_description=options[:short_description]
-    @description=options[:description]
-    @site=options[:site]
-    @forum=options[:forum]
+    set_options(options)
     raise "You must define a site for your Topic" if @site==nil
     raise "You must specify an existing Forum for your Topic" if @forum==nil
   end
@@ -160,9 +159,7 @@ class TopicObject
       end
       edit.save
     end
-    @title=opts[:title] unless opts[:title] == nil
-    @short_description=opts[:short_description] unless opts[:short_description] == nil
-    @description=opts[:description] unless opts[:description] == nil
+    set_options(opts)
   end
     
   def view

@@ -15,10 +15,16 @@ class WikiObject
     }
     options = defaults.merge(opts)
 
-    @title=options[:title]
-    @content=options[:content]
-    @site=options[:site]
+    set_options(options)
+<<<<<<< HEAD
+<<<<<<< HEAD
+    requires @site
+=======
     raise "You need to specify a site for your wiki" if @site==nil
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
+=======
+    requires @site
+>>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   alias :name :title
@@ -48,6 +54,7 @@ class WikiObject
       edit.edit
       # TODO more here
     end
+    set_options(opts)
   end
 
   def get_content

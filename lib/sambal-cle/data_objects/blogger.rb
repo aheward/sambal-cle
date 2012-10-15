@@ -16,14 +16,16 @@ class BloggerPostObject
     }
     options = defaults.merge(opts)
     
-    @title=options[:title]
-    @abstract=options[:abstract]
-    @site=options[:site]
-    @text=options[:text]
-    @read_only=options[:read_only]
-    @access=options[:access]
-    @allow_comments=options[:allow_comments]
+    set(options)
+<<<<<<< HEAD
+<<<<<<< HEAD
+    requires @site
+=======
     raise "You need to specify a site for your blogger post" if @site==nil
+>>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
+=======
+    requires @site
+>>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
     
   def create
