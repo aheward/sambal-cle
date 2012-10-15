@@ -28,15 +28,15 @@ describe "Assignments" do
 
     @sakai.page.login(@instructor1, @ipassword)
 
-    #@site = make SiteObject
-    #@site.create
+    @site = make SiteObject
+    @site.create
 
-    #@site.add_official_participants :role=>"Student", :participants=>[@student]
-    #@site.add_official_participants :role=>"Instructor", :participants=>[@instructor2]
+    @site.add_official_participants :role=>"Student", :participants=>[@student]
+    @site.add_official_participants :role=>"Instructor", :participants=>[@instructor2]
 
-    #@assignment = make AssignmentObject, :site=>@site.name, :title=>random_string(25), :open=>next_monday, :grade_scale=>"Pass", :instructions=>random_multiline(300, 15, :string)
+    @assignment = make AssignmentObject, :site=>@site.name, :title=>random_string(25), :open=>next_monday, :grade_scale=>"Pass", :instructions=>random_multiline(300, 15, :string)
 
-    #@assignment.create
+    @assignment.create
 
 
   end
@@ -47,99 +47,7 @@ describe "Assignments" do
   end
 =end
   it "does a whole bunch of shtuff" do
-    @permissions = make AssignmentPermissionsObject, :site=>"2dxtwyM3 eQ4urcKw 3ppGwWEq 201120"
-    puts "Guest:"
-    p @permissions.guest
-    puts "Instructor:"
-    p @permissions.instructor
-    @permissions.set :guest=>{:submit=>:set, :delete=>:set, :revise=>:set}, :instructor=>{:new=>:clear, :revise=>:clear}
-    puts "Guest:"
-    p @permissions.guest
-    puts "Instructor:"
-    p @permissions.instructor
-    #===========
-    # Need to add tests here for adding attachments
-    # This will need to be done when we have a properly
-    # configured test site (where test scripts are not used
-    # as "setup" scripts).
-    
-    # new_assignment.attach
-    #===========
 
-=begin
-    # Preview the new assignment
-    assignment4.preview
-    preview = AssignmentsPreview.new(@browser)
-    
-    # TEST CASE: Verify the preview window contents
-    assert_equal preview.assignment_instructions, @assignments[3][:instructions]
-    assert_equal preview.item_summary["Grade Scale"], @assignments[3][:grade_scale]
-    assert_equal preview.item_summary["Add due date to Schedule"], "No"
-    
-    # Save the Assignment
-    assignments = preview.post
-    
-    # TEST CASE: Verify assignment appears in the list
-    assert assignments.assignment_list.include? @assignments[3][:title]
-  
-    # Log out and log back in as instructor2
-    assignments.logout
-    workspace = @sakai.page.login(@user_name1, @password1)
-    
-    # Go to the test site
-    home = workspace.open_my_site_by_id(@site_id)
-    
-    # Go to the Assignments page
-    assignments = home.assignments
-    
-    # TEST CASE: Verify all expected assignments appear in list
-    assert assignments.assignment_list.include? @assignments[0][:title]
-    assert assignments.assignment_list.include? @assignments[1][:title]
-    assert assignments.assignment_list.include? "Draft - #{@assignments[2][:title]}"
-    assert assignments.assignment_list.include? @assignments[3][:title]
-    
-    # Go to Assignments Permissions page
-    assignments.permissions
-    
-    permissions = AssignmentsPermissions.new(@browser)
-
-
-
-
-    # Uncheck "Instructors share drafts"
-    permissions.uncheck_instructors_share_drafts
-    
-    # An "obsolete element error" bug requires accessing the
-    # Save button element explicitly, here, instead of using the
-    # AssignmentPermissions class definition. Hopefully this will
-    # be fixed in the future.
-    @browser.frame(:index=>1).button(:name, "eventSubmit_doSave").click
-    
-    assignments = AssignmentsList.new(@browser)
-    
-    # TEST CASE: instructor2 can no longer see the Draft assignment
-    assert_equal false, assignments.assignments_list.include?("Draft - #{@assignments[2][:title]}")
-    
-    # Go to Assignments Permissions page
-    permissions = assignments.permissions
-    
-    # Re-check "Instructors share drafts"
-    permissions.check_instructors_share_drafts
-    @browser.frame(:index=>1).button(:name, "eventSubmit_doSave").click
-    
-    assignments = AssignmentsList.new(@browser)
-    
-    # Edit Assignment 3 and save it so it's no longer in Draft mode
-    assignment3 = assignments.edit_assignment "Draft - #{@assignments[2][:title]}"
-
-    assignments = assignment3.post
-    
-    # Go to Home page of Site
-    home = assignments.home
-    
-    # TEST CASE: Verify assignment 3 appears in announcements
-    assert home.announcements_list.include? "Assignment: Open Date for '#{@assignments[2][:title]}'"
-    
     # Go to the assignments page and make Assignment 5
     assignments = home.assignments
     

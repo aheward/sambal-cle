@@ -193,7 +193,6 @@ class AssignmentsList < AssignmentsBase
   # id, then instantiates the AssignmentAdd page class.
   def edit_assignment_id(id)
     frm.link(:href=>/#{Regexp.escape(id)}/).click
-    AssignmentAdd.new(@browser)
   end
 
   # Clicks the Edit link for the Assignment specified.
@@ -207,19 +206,17 @@ class AssignmentsList < AssignmentsBase
   # Then clicks the Update button and confirms the deletion request.
   # It then reinstantiates the AssignmentsList class because of the page
   # update.
-  def delete_assignment(assignment_name)
+  def delete(assignment_name)
     frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(assignment_name)}/).checkbox(:name=>"selectedAssignments").set
     frm.button(:value=>"Update").click
     frm.button(:value=>"Delete").click
-    AssignmentsList.new(@browser)
   end
 
   # Clicks on the Duplicate link for the Assignment specified.
   # Then instantiates the AssignmentsList page class.
-  def duplicate_assignment(assignment_name)
+  def duplicate(assignment_name)
     index = assignments_titles.index(assignment_name)
     frm.link(:text=>"Duplicate", :index=>index).click
-    AssignmentsList.new(@browser)
   end
 
   # Gets the assignment id from the href of the specified

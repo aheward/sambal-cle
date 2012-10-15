@@ -26,22 +26,29 @@ module DateMakers
     return MONTHS[index-1]
   end
 
-  def hours_ago(num)
-    date_factory(Time.now - num*3600)
+  def hours_ago(hours)
+    date_factory(Time.now - hours*3600)
   end
 
-  def hours_from_now(num)
-    date_factory(Time.now + num*3600)
+  def hours_from_now(hours)
+    date_factory(Time.now + hours*3600)
   end
 
-  def minutes_ago(num)
-    date_factory(Time.now - num*60)
+  # Takes an integer representing
+  # the count of minutes as the parameter, and
+  # returns the date_factory hash for the
+  # resulting Time value.
+  def minutes_ago(mins)
+    date_factory(Time.now - mins*60)
   end
 
-  def minutes_from_now(num)
-    date_factory(Time.now + num*60)
+  def minutes_from_now(mins)
+    date_factory(Time.now + mins*60)
   end
 
+  # Returns the current month as an
+  # upper-case 3-letter string.
+  # example: "JUL"
   def current_month
     Time.now.strftime("%^b")
   end

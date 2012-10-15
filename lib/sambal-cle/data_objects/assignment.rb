@@ -194,11 +194,29 @@ class AssignmentObject
     end
   end
 
+  def duplicate
+    open_my_site_by_name @site unless @browser.title=~/#{@site}/
+    assignments unless @browser.title=~/Assignments$/
+    reset
+    on AssignmentsList do |list|
+      list.duplicate @title
+    end
+
+    duplicate_assignment = self
+    duplicate_assignment.title="Draft - #{self.title} - Copy"
+    duplicate_assignment.status="Draft"
+    duplicate_assignment
+  end
+
   def submit
     # TODO: Create this method
   end
 
   def grade
+    # TODO: Create this method
+  end
+
+  def view_submissions
     # TODO: Create this method
   end
 

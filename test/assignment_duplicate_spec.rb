@@ -2,9 +2,7 @@ require 'rspec'
 require 'sambal-cle'
 require 'yaml'
 
-# TODO: Add more tests of various permissions settings.
-
-describe "Assignment Permissions" do
+describe "Duplicating an Assignment" do
 
   include Utilities
   include Workflows
@@ -36,14 +34,9 @@ describe "Assignment Permissions" do
     @site.add_official_participants :role=>"Student", :participants=>[@student]
     @site.add_official_participants :role=>"Instructor", :participants=>[@instructor2]
 
-    @assignment = make AssignmentObject, :status=>"Draft", :site=>@site.name, :title=>random_string(25), :open=>next_monday
-    @assignment2 = make AssignmentObject, :site=>@site.name
+    @assignment = make AssignmentObject, :site=>@site.name, :title=>random_string(25), :open=>next_monday, :grade_scale=>"Pass", :instructions=>random_alphanums
+
     @assignment.create
-    @assignment2.create
-
-    @permissions = make AssignmentPermissionsObject, :site=>@site.name
-
-    log_out
 
   end
 
@@ -52,22 +45,13 @@ describe "Assignment Permissions" do
     @sakai.browser.close
   end
 
-  it "Default permissions allow instructors to share drafts" do
-    @sakai.page.login(@instructor2, @password1)
-    open_my_site_by_name @assignment.site
-    assignments
+  it "Duplicate command creates duplicate of the Assignment" do
+    dupe = @assignment.duplicate
     on AssignmentsList do |list|
-      list.assignments_list.should include "Draft - #{@assignment.title}"
-      list.assignments_list.should include @assignment2.title
+      list.assignments_titles.should include dupe.title
     end
-  end
 
-  it "Removing 'share draft' permissions for instructors works as expected" do
-    @permissions.set :instructor=>{:share_drafts=>:clear}
-    on AssignmentsList do |list|
-      list.assignments_list.should_not include "Draft - #{@assignment.title}"
-      list.assignments_list.should include @assignment2.title
-    end
-  end
+    # TODO: Add more verification stuff here
 
+  end
 end

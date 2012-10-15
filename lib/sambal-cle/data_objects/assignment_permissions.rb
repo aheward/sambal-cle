@@ -60,5 +60,3 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
   end
   
 end
-    
-      
