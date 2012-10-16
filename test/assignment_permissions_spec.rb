@@ -28,7 +28,7 @@ describe "Assignment Permissions" do
     @instructor2 = @directory['person4']['id']
     @password1 = @directory['person4']['password']
 
-    @sakai.page.login(@instructor1, @ipassword)
+    log_in(@instructor1, @ipassword)
 
     @site = make SiteObject
     @site.create
@@ -53,7 +53,7 @@ describe "Assignment Permissions" do
   end
 
   it "Default permissions allow instructors to share drafts" do
-    @sakai.page.login(@instructor2, @password1)
+    log_in(@instructor2, @password1)
     open_my_site_by_name @assignment.site
     assignments
     on AssignmentsList do |list|

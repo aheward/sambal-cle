@@ -5,8 +5,6 @@
 # This is the page where users log in to the site.
 class Login < BasePage
 
-  frame_element
-
   def search_public_courses_and_projects
     @browser.frame(:index=>0).link(:text=>"Search Public Courses and Projects").click
   end
@@ -20,7 +18,5 @@ class Login < BasePage
     frame.text_field(:id, "pw").set password
     frame.form(:method, "post").submit
   end
-  alias log_in login
-  alias sign_in login
 
 end

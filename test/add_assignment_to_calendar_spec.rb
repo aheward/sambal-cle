@@ -26,7 +26,7 @@ describe "Assignment Due Date on Calendar" do
     @instructor2 = @directory['person4']['id']
     @password1 = @directory['person4']['password']
 
-    @sakai.page.login(@instructor1, @ipassword)
+    log_in(@instructor1, @ipassword)
 
     @site = make SiteObject
     @site.create

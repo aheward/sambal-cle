@@ -220,4 +220,10 @@ module Workflows
   alias :log_out :logout
   alias :sign_out :logout
 
+  def log_in(username, password)
+    on Login do |page|
+      page.login(username, password)
+    end
+  end
+
 end

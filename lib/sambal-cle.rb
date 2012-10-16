@@ -12,20 +12,12 @@ Dir["#{File.dirname(__FILE__)}/sambal-cle/data_objects/*.rb"].each {|f| require 
 # create the @browser variable used throughout the page classes
 class SakaiCLE
 
-  #include PageObject
-  #include ToolsMenu
-
   attr_reader :browser
 
   def initialize(web_browser, url)
     @browser = Watir::Browser.new web_browser
     @browser.window.resize_to(1400,900)
     @browser.goto url
-  end
-
-  # Returns the class containing the welcome page's page elements.
-  def page
-    Login.new @browser
   end
 
 end
