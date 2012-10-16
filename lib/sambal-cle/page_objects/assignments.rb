@@ -1,7 +1,12 @@
 
 # TODO: There's a lot of cleanup that can be done with the code in these
 # classes--and it's probably even possible to completely eliminate one
-# or more of them. I'm looking at YOU, AssignmentStudentPreview and AssignmentPreview
+# or more of them. I'm looking at YOU, AssignmentStudentPreview and AssignmentPreview.
+# We could probably make an AssignmentViewBase class with a set of common elements--that's
+# assuming we even need more than one generic View class, and it might turn out that
+# we don't--unless we need one for students and one for instructors. Note that the
+# elimination and/or renaming of classes and methods will break the assignments_submissions_spec
+# (among others), so refactor with care (and use RubyMine to help).
 
 #================
 # Assignments Pages
@@ -462,13 +467,17 @@ class AssignmentStudent < BasePage
     @@file_number += 1
   end
 
+  element(:submit_button) { |b| b.frm.button(:value=>"Submit") }
+
   # Clicks the Submit button, then instantiates
   # the appropriate page class, based on the
   # page that gets loaded.
   def submit
-    frm.button(:value=>"Submit").click
+    submit_button.click
     @@file_number=0
   end
+
+  element(:resubmit_button) { |b| b.frm.button(:value=>"Resubmit") }
 
   # Clicks the Resubmit button, then instantiates
   # the appropriate page class, based on the
@@ -478,7 +487,7 @@ class AssignmentStudent < BasePage
   # uploads will work if this page is visited again
   # in the same script.
   def resubmit
-    frm.button(:value=>"Resubmit").click
+    resubmit_button.click
     @@file_number=0
   end
 
@@ -534,6 +543,7 @@ class AssignmentStudentPreview < BasePage
   frame_element
 
   element(:submit_button) { |b| b.frm.button(:value=>"Submit") }
+  element(:resubmit_button) { |b| b.frm.button(:value=>"Resubmit") }
   element(:save_draft_button) { |b| b.frm.button(:value=>"Save Draft") }
 
   # Clicks the Submit button
@@ -541,6 +551,8 @@ class AssignmentStudentPreview < BasePage
 
   # Clicks the Save Draft button
   action(:save_draft) { |p| p.frm.button(:value=>"Save Draft").click }
+
+  action(:back_to_list) { |b| b.frm.button(:value=>"Back to list").click }
 
   # Returns the contents of the submission box.
   def submission_text
@@ -696,17 +708,11 @@ class AssignmentSubmission < BasePage
   end
 
   # Clicks the Add Attachments button, then instantiates the AssignmentAttachments Class.
-  def add_attachments
-    frm.button(:name=>"attach").click
-    AssignmentAttachments.new(@browser)
-  end
+  action(:add_attachments) { |b| b.frm.button(:name=>"attach").click }
 
   # Clicks the Return to List button, then instantiates the
   # AssignmentSubmissionList Class.
-  def return_to_list
-    frm.button(:value=>"Return to List").click
-    AssignmentSubmissionList.new(@browser)
-  end
+  action(:return_to_list) { |b| b.frm.button(:value=>"Return to List").click }
 
   element(:select_default_grade) { |b| b.frm.select(:name=>"grade_submission_grade") }
   element(:allow_resubmission) { |b| b.frm.checkbox(:id=>"allowResToggle") }

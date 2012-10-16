@@ -229,6 +229,7 @@ class AssignmentObject
         @student_status="Draft - In progress"
       end
     end
+
     @text=opts[:text] unless opts[:text]==nil
   end
 

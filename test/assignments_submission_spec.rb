@@ -45,13 +45,13 @@ describe "Assignments" do
     log_out
 
   end
-=begin
+
   after :all do
     # Close the browser window
     @sakai.browser.close
   end
-=end
-  xit "Student can save an assignment as 'In progress'" do
+
+  it "Student can save an assignment as 'In progress'" do
     log_in(@student, @spassword)
 
     @assignment.submit :text=>random_alphanums, :student_status=>"Draft"
@@ -65,17 +65,19 @@ describe "Assignments" do
     end
   end
 
-  xit "Blank submissions throw a warning and aren't submitted" do
-
+  it "Blank submissions throw a warning and aren't submitted" do
+    @assignment.submit :text=>"", :student_status=>"Submitted"
+    on AssignmentStudent do |assignment|
+      assignment.alert_text.should=="Alert: You must either type in your answer in the text input or attach at least one document before submission."
+    end
   end
 
-  xit "Student can submit an assignment" do
+  it "Student can submit an assignment" do
     @assignment.submit :text=>random_alphanums(100), :student_status=>"Submitted"
     on SubmissionConfirmation do |confirm|
       confirm.summary_info["Class site:"].should==@assignment.site
       #confirm.summary_info["User:"].should== TODO: Add this line when we're making UserObjects.
       confirm.summary_info["Assignment:"].should==@assignment.title
-      confirm.summary_info["Saved Assignment ID:"].should==@assignment.id
       confirm.submission_text.should==@assignment.text
       confirm.confirmation_text.should=="You have successfully submitted your work. You will receive an email confirmation containing this information."
       # TODO Need to add validation of attachments
@@ -86,68 +88,49 @@ describe "Assignments" do
     end
   end
 
-  xit "Assignments by default do not allow resubmission" do
+  it "Assignments by default do not allow resubmission" do
     @assignment.view_submission
     on AssignmentStudentPreview do |view|
-      view.submit_button.should_not be_present
-      view.save_draft_button.should_not be_present
       view.summary_info["Submitted Date"].should==@assignment.submission_date
       view.summary_info["Title"].should==@assignment.title
+      view.submit_button.should_not be_present
+      view.save_draft_button.should_not be_present
       view.back_to_list
     end
   end
 
   it "Assignments that allow resubmission can be" do
-    @assignment2.submit :text=>
-
+    @assignment2.submit :text=>random_alphanums
+    on SubmissionConfirmation do |confirm|
+      confirm.back_to_list
+    end
+    on AssignmentsList do |list|
+      list.status_of(@assignment2.title).should=="#{@assignment2.student_status} #{@assignment2.submission_date}"
+      list.open_assignment @assignment2.title
+    end
+    on AssignmentStudent do |assignment|
+      assignment.resubmit_button.should be_present
+      assignment.resubmit
+    end
+    on SubmissionConfirmation do |confirm|
+      confirm.summary_info["Class site:"].should==@assignment2.site
+      #confirm.summary_info["User:"].should== TODO: Add this line when we're making UserObjects.
+      confirm.summary_info["Assignment:"].should==@assignment2.title
+      confirm.summary_info["Submitted on:"].should==@assignment2.submission_date # TODO: "resubmission" date? This needs testing.
+      confirm.submission_text.should==@assignment2.text
+      confirm.confirmation_text.should=="You have successfully submitted your work. You will receive an email confirmation containing this information."
+      confirm.back_to_list
+    end
   end
 
-
-
-  xit "goo goo gah chew" do
-    # Open an assignment that allows 1 resubmission
-    assignment2 = assignments.open_assignment(@assignment_2_title)
-
-    # Fill it out and submit
-    assignment2.assignment_text=@assignment_2_text1
-
-    confirm = assignment2.submit
-
-    # Verify submission
-    assert_equal( "You have successfully submitted your work. You will receive an email confirmation containing this information.", confirm.confirmation_text)
-
-    assignments = confirm.back_to_list
-
-    # Edit it and resubmit
-    assignment2 = assignments.open_assignment(@assignment_2_title)
-
-    # Clear out the field
-    assignment2.remove_assignment_text
-
-    # Enter the new text
-    assignment2.assignment_text=@assignment_2_text2
-
-    confirm = assignment2.resubmit
-
-    # Verify submission
-    assert_equal( "You have successfully submitted your work. You will receive an email confirmation containing this information.", confirm.confirmation_text )
-
-    # Verify changed assignment text
-    assert_equal(@assignment_2_text2, confirm.submission_text)
-
-    # Back to list
-    assignments = confirm.back_to_list
-
-    # Edit assignment again
-    assignment2 = assignments.open_assignment(@assignment_2_title)
-
-    # Verify the user is not allowed to edit assignment
-    assert @browser.frame(:index=>1).button(:name=>"eventSubmit_doCancel_view_grade").exist?
-    assert_equal(false, @browser.frame(:index=>1).button(:name=>"post").exist?)
-    
-    #=============
-    # Add verification of sorts tests later - though this should probably get its own test case
-    #=============
+  it "Assignments only allow one resubmission by default" do
+    @assignment2.num_resubmissions.should=="1"
+    on AssignmentsList do |list|
+      list.open_assignment @assignment2.title
+    end
+    on AssignmentStudentPreview do |assignment|
+      assignment.resubmit_button.should_not be_present
+    end
 
   end
   
