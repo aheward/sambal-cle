@@ -15,9 +15,7 @@ class WebContentObject
     }
     options = defaults.merge(opts)
 
-    @title=options[:title]
-    @source=options[:source]
-    @site=options[:site]
+    set_options(options)
     raise "You need to specify a site for your web content" if @site==nil
   end
 

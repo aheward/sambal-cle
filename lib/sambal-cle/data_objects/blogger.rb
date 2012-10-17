@@ -16,13 +16,7 @@ class BloggerPostObject
     }
     options = defaults.merge(opts)
     
-    @title=options[:title]
-    @abstract=options[:abstract]
-    @site=options[:site]
-    @text=options[:text]
-    @read_only=options[:read_only]
-    @access=options[:access]
-    @allow_comments=options[:allow_comments]
+    set(options)
     raise "You need to specify a site for your blogger post" if @site==nil
   end
     

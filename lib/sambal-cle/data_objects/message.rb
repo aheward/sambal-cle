@@ -15,11 +15,7 @@ class MessageObject
     }
     options = defaults.merge(opts)
 
-    @subject=options[:subject]
-    @recipients=options[:recipients]
-    @site=options[:site]
-    @message=options[:message]
-    @label=options[:label]
+    set_options(options)
     raise "You need to specify a site for your web content" if @site==nil
   end
 

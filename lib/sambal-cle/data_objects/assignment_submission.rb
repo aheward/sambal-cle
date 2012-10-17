@@ -8,7 +8,8 @@ class AssignmentSubmissionObject
 
   attr_accessor :site, :title, :text, :status, :submission_date,
       :student, :allow_resubmissions, :resubmission, :num_resubmissions,
-      :release_to_student, :grade, :summary_comment, :inline_comment
+      :release_to_student, :grade, :summary_comment, :inline_comment,
+      :grade_status
 
   def initialize(browser, opts={})
     @browser = browser
@@ -19,11 +20,7 @@ class AssignmentSubmissionObject
     }
     options = defaults.merge(opts)
 
-    @title=options[:title]
-    @site=options[:site]
-    @text=options[:text]
-    @status=options[:status]
-    @student=options[:student]
+    set_options(options)
     raise "You must specify a Site for your Assignment" if @site==nil
     raise "You must specify an Assignment title" if @title==nil
     raise "You must specify a student for the assignment" if @student==nil
@@ -71,8 +68,17 @@ class AssignmentSubmissionObject
       list.grade @title
     end
     on AssignmentSubmissionList do |submissions|
-      submissions.grade @student
+      submissions.grade @student.ln_fn_id
     end
+    on AssignmentSubmission do |submission|
+      submission.append assignment_submission, opts[:inline_comment]
+    end
+
+    # Get the @grade_status!
+
+    set_options(opts)
+
+
   end
 
   def open
@@ -84,5 +90,6 @@ class AssignmentSubmissionObject
     end
   end
   alias view open
+
 
 end

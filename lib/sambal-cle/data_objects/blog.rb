@@ -16,10 +16,7 @@ class BlogEntryObject
     }
     options = defaults.merge(opts)
     
-    @title=options[:title]
-    @content=options[:content]
-    @site=options[:site]
-    @permissions=options[:permissions]
+    set_options(options)
     raise "You need to specify a site for your blog entry" if @site==nil
   end
     

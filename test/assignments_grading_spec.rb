@@ -18,46 +18,47 @@ describe "Assignments grading" do
     @sakai = SakaiCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
 
-    @student = @directory['person1']['id']
-    @spassword = @directory['person1']['password']
-    @instructor1 = @directory['person3']['id']
-    @ipassword = @directory['person3']['password']
-
-    @instructor2 = @directory['person4']['id']
-    @password1 = @directory['person4']['password']
-
-    log_in(@instructor1, @ipassword)
+    @student = make UserObject, :id=>@directory['person1']['id'], :password=>@directory['person1']['password'],
+                    :first_name=>@directory['person1']['firstname'], :last_name=>@directory['person1']['lastname']
+    @instructor1 = make UserObject, :id=>@directory['person3']['id'], :password=>@directory['person3']['password'],
+                        :first_name=>@directory['person3']['firstname'], :last_name=>@directory['person3']['lastname'],
+                        :type=>"Instructor"
+    @instructor2 = make UserObject, :id=>@directory['person4']['id'], :password=>@directory['person4']['password'],
+                        :first_name=>@directory['person4']['firstname'], :last_name=>@directory['person4']['lastname'],
+                        :type=>"Instructor"
+    @instructor1.log_in
 
     @site = make SiteObject
     @site.create
-
-    @site.add_official_participants :role=>"Student", :participants=>[@student]
-    @site.add_official_participants :role=>"Instructor", :participants=>[@instructor2]
+    @site.add_official_participants :role=>@student.type, :participants=>[@student.id]
+    @site.add_official_participants :role=>@instructor2.type, :participants=>[@instructor2.id]
 
     @assignment = make AssignmentObject, :site=>@site.name, :title=>random_string(25),
                        :open=>an_hour_ago, :grade_scale=>"Pass",
                        :instructions=>random_multiline(50, 15, :string)
+    @submission = make AssignmentSubmissionObject, :site=>@site.name, :title=>@assignment.title,
+                       :student=>@student
     @assignment2 = make AssignmentObject, :site=>@site.name, :title=>random_string(25),
                         :open=>an_hour_ago, :grade_scale=>"Letter"
+    @submission2 = make AssignmentSubmissionObject, :site=>@site.name, :title=>@assignment2.title,
+                        :student=>@student
     @assignment.create
     @assignment2.create
 
-    log_out
+    @instructor1.log_out
 
-    log_in(@student, @spassword)
-    @assignment.submit :text=>random_multiline(50, 5)
-    @assignment2.submit :text=>random_multiline(20, 2)
+    @student.log_in
 
-    log_out
+    @submission.submit
+    @submission2.submit
+
+    @student.log_out
 
     @instructor_comments = random_multiline(156, 9, :string)
     @comment_string = "{{Try again please.}}"
 
     @grade2 = "A-"
     @url = "www.rsmart.com"
-
-
-
 
   end
 =begin
@@ -68,8 +69,8 @@ describe "Assignments grading" do
 =end
   it "Assignment grade can be released to the student" do
     log_in(@instructor1, @ipassword)
-    @assignment.grade :grade=>"Fail", :instructor_comments=>random_alphanums, :student=>@student,
-                      :student_resubmission=>{:allow_resubmission=>:set, :num_resubmissions=>1}
+    @submission.grade :grade=>"Fail", :summary_comment=>random_alphanums,
+
   end
 
   xit "bal" do

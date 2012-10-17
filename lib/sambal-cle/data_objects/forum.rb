@@ -16,10 +16,7 @@ class ForumObject
     }
     options = defaults.merge(opts)
     
-    @site=options[:site]
-    @title=options[:title]
-    @short_description=options[:short_description]
-    @description=options[:description]
+    set_options(options)
     raise "You need to specify a site for your Forum" if @site==nil
   end
 
@@ -53,9 +50,7 @@ class ForumObject
       end
       edit.save
     end
-    @title=opts[:title] unless opts[:title] == nil
-    @short_description=opts[:short_description] unless opts[:short_description] == nil
-    @description=opts[:description] unless opts[:description] == nil
+    set_options(opts)
   end
     
   def view
@@ -120,11 +115,7 @@ class TopicObject
     }
     options = defaults.merge(opts)
     
-    @title=options[:title]
-    @short_description=options[:short_description]
-    @description=options[:description]
-    @site=options[:site]
-    @forum=options[:forum]
+    set_options(options)
     raise "You must define a site for your Topic" if @site==nil
     raise "You must specify an existing Forum for your Topic" if @forum==nil
   end
@@ -160,9 +151,7 @@ class TopicObject
       end
       edit.save
     end
-    @title=opts[:title] unless opts[:title] == nil
-    @short_description=opts[:short_description] unless opts[:short_description] == nil
-    @description=opts[:description] unless opts[:description] == nil
+    set_options(opts)
   end
     
   def view

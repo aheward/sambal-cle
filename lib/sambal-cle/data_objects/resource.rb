@@ -13,10 +13,8 @@ class FileObject
     }
     options = defaults.merge(opts)
 
-    @name = options[:name]
-    @source_path = options[:source_path]
-    @site = options[:site]
-    options[:target_folder] == nil ? @target_folder=@site : @target_folder=options[:target_folder]
+    set_options(options)
+    @target_folder=@site if options[:target_folder]==nil
     raise "You must specify a Site for your Folder" if @site==nil
   end
 
@@ -52,9 +50,7 @@ class FolderObject
     }
     options = defaults.merge(opts)
 
-    @name = options[:name]
-    @parent_folder = options[:parent_folder]
-    @site = options[:site]
+    set_options(options)
     raise "You must specify a Site for your Folder" if @site==nil
   end
 
@@ -77,14 +73,14 @@ class WebLinkObject
   include Utilities
   include Workflows
 
-  attr_accessor
+  attr_accessor :site
 
   def initialize(browser, opts={})
     @browser = browser
 
     defaults = {}
     options = defaults.merge(opts)
-    @site = options[:site]
+    set_options(options)
     raise "You must specify a Site for your Web Link" if @site==nil
   end
 
@@ -112,12 +108,7 @@ class HTMLPageObject
     }
     options = defaults.merge(opts)
 
-    @name = options[:name]
-    @description = options[:description]
-    @site = options[:site]
-    @folder = options[:folder]
-    @html = options[:html]
-    @site = options[:site]
+    set_options(options)
     raise "You must specify a Site for your HTML Page" if @site==nil
   end
 
@@ -167,14 +158,14 @@ class TextDocumentObject
   include Utilities
   include Workflows
 
-  attr_accessor
+  attr_accessor :site
 
   def initialize(browser, opts={})
     @browser = browser
 
     defaults = {}
     options = defaults.merge(opts)
-    @site = options[:site]
+    set_options(options)
     raise "You must specify a Site for your Text Document" if @site==nil
   end
 
@@ -190,14 +181,14 @@ class CitationListObject
   include Utilities
   include Workflows
 
-  attr_accessor
+  attr_accessor :site
 
   def initialize(browser, opts={})
     @browser = browser
 
     defaults = {}
     options = defaults.merge(opts)
-    @site = options[:site]
+    set_options(options)
     raise "You must specify a Site for your Citations List" if @site==nil
   end
 

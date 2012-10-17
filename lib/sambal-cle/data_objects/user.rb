@@ -7,7 +7,8 @@ class UserObject
   include Workflows
   
   attr_accessor :id, :first_name, :last_name, :password, :email, :type,
-                :created_by, :creation_date, :modified_by, :modified_date, :internal_id
+                :created_by, :creation_date, :modified_by, :modified_date, :internal_id,
+                :full_name, :long_name, :ln_fn_id
   
   def initialize(browser, opts={})
     @browser = browser
@@ -21,12 +22,10 @@ class UserObject
     }
     options = defaults.merge(opts)
 
-    @id=options[:id]
-    @first_name=options[:first_name]
-    @last_name=options[:last_name]
-    @email=options[:email]
-    @type=options[:type]
-    @password=options[:password]
+    set_options(options)
+    @full_name="#{@first_name} #{last_name}"
+    @long_name="#{@first_name} #{last_name} (#{@id})"
+    @ln_fn_id="#{@last_name}, #{@first_name} (#{@id})"
   end
     
   def create

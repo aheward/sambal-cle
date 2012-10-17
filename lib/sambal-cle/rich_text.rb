@@ -24,6 +24,13 @@ module FCKEditor
     source_field(editor).value
   end
 
+  # Adds the specified string of text to the end of the existing
+  # text in the target FCKEditor.
+  def append(editor, string)
+    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(string)
+sleep 20
+  end
+
   def entity_picker(editor)
     editor.div(:title=>"Sakai_Entity_Link").wait_until_present
     editor.div(:title=>"Sakai_Entity_Link").click

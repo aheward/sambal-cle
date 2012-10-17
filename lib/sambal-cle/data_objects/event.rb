@@ -23,20 +23,7 @@ class EventObject
     }
     options = defaults.merge(opts)
 
-    @title=options[:title]
-    @month=options[:month]
-    @day=options[:day]
-    @year=options[:year]
-    @start_hour=options[:start_hour]
-    @start_minute=options[:start_minute]
-    @start_meridian=options[:start_meridian]
-    @duration_hours=options[:duration_hours]
-    @duration_minutes=options[:duration_minutes]
-    @end_hour=options[:end_hour]
-    @end_minute=options[:end_minute]
-    @end_meridian=options[:end_meridian]
-    @message=options[:message]
-    @site=options[:site]
+    set_options(options)
     raise "You need to specify a site for your wiki" if @site==nil
   end
 

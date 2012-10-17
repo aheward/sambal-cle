@@ -81,7 +81,7 @@ describe "Assignments Submission" do
     @submission.submit
     on SubmissionConfirmation do |confirm|
       confirm.summary_info["Class site:"].should==@submission.site
-      confirm.summary_info["User:"].should=="#{@student.first_name} #{@student.last_name} (#{@student.id})"
+      confirm.summary_info["User:"].should==@student.long_name
       confirm.summary_info["Assignment:"].should==@submission.title
       confirm.submission_text.should==@submission.text
       confirm.confirmation_text.should=="You have successfully submitted your work. You will receive an email confirmation containing this information."

@@ -17,11 +17,7 @@ class ChatRoomObject
     }
     options = defaults.merge(opts)
     
-    @title=options[:title]
-    @description=options[:description]
-    @chat_display=options[:chat_display]
-    @allow_change=options[:allow_change]
-    @site=options[:site]
+    set_options(options)
     raise "You need to specify a site for your chat room" if @site==nil
   end
     

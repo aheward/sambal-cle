@@ -14,8 +14,7 @@ class AssessmentObject
       :site=>"placeholder"
     }
     options = defaults.merge(opts)
-    @title=options[:title]
-    @site=options[:site]
+    set_options(options)
     raise "You must specify a Site for your Assessment" if @site==nil
   end
 
