@@ -1,3 +1,5 @@
+# This data object is strictly the assignment as created by an instructor
+# for Student submissions of an assignment, use AssignmentSubmissionObject
 class AssignmentObject
 
   include PageHelper
@@ -13,9 +15,7 @@ class AssignmentObject
                 # Note the following variables are taken from the Entity picker's
                 # Item Info list
                 :retract_time, :time_due, :time_modified, :url, :portal_url,
-                :description, :time_created, :direct_url,
-                # Student-related attributes...
-                :text, :student_status, :submission_date
+                :description, :time_created, :direct_url
 
   def initialize(browser, opts={})
     @browser = browser
@@ -208,33 +208,6 @@ class AssignmentObject
     duplicate_assignment.title="Draft - #{self.title} - Copy"
     duplicate_assignment.status="Draft"
     duplicate_assignment
-  end
-
-  def submit opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    assignments unless @browser.title=~/Assignments$/
-    reset
-    on AssignmentsList do |list|
-      list.open_assignment @title
-    end
-    on AssignmentStudent do |assignment|
-      assignment.assignment_text=opts[:text] unless opts[:text]==nil
-      # TODO: Add stuff for adding file(s) to the assignment
-      if opts[:student_status]==nil || opts[:student_status]=="Submitted"
-        assignment.submit
-        @submission_date=right_now[:sakai]
-        @student_status="Submitted"
-      else
-        assignment.save_draft
-        @student_status="Draft - In progress"
-      end
-    end
-
-    @text=opts[:text] unless opts[:text]==nil
-  end
-
-  def grade
-    # TODO: Create this method
   end
 
   def view_submissions

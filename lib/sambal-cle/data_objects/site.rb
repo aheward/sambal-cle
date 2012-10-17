@@ -268,6 +268,7 @@ class SiteObject
 
   end
 
+  # TODO: Improve this method to better take advantage of the UserObject...
   def add_official_participants opts={}
     participants = opts[:participants].join("\n")
     open_my_site_by_name @name unless @browser.title=~/#{@name}/

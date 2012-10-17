@@ -184,6 +184,8 @@ class AssignmentsList < AssignmentsBase
   listview_elements
   alias :add :add_assignment
 
+  expected_element :page_title
+
   # Returns an array of the displayed assignment titles.
   # Use for verification of test steps.
   def assignments_titles
@@ -214,7 +216,7 @@ class AssignmentsList < AssignmentsBase
   # Checks the appropriate checkbox, based on the specified assignment_name
   # Then clicks the Update button and confirms the deletion request.
   def delete(assignment_name)
-    frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(assignment_name)}/).checkbox(:name=>"selectedAssignments").set
+    assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).checkbox(:name=>"selectedAssignments").set
     frm.button(:value=>"Update").click
     frm.button(:value=>"Delete").click
   end
@@ -251,20 +253,20 @@ class AssignmentsList < AssignmentsBase
   # Gets the contents of the status column
   # for the specified assignment
   def status_of(assignment_name)
-    frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(assignment_name)}/).td(:headers=>"status").text
+    assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).td(:headers=>"status").text
   end
 
   # Clicks the View Submissions link for the specified
   # Assignment, then instantiates the AssignmentSubmissionList
   # page class.
   def view_submissions_for(assignment_name)
-    frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(assignment_name)}/).link(:text=>"View Submissions").click
+    assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).link(:text=>"View Submissions").click
   end
 
   # Clicks the Grade link for the specified Assignment,
   # then instantiates the AssignmentSubmissionList page class.
   def grade(assignment_name)
-    frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(assignment_name)}/).link(:text=>"Grade").click
+    assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).link(:text=>"Grade").click
   end
 
   action(:sort_assignment_title) { |b| b.frm.link(:text=>"Assignment title").click }
@@ -276,6 +278,9 @@ class AssignmentsList < AssignmentsBase
   action(:sort_scale) { |b| b.frm.link(:text=>"Scale").click }
   element(:view) { |b| b.frm.select(:id=>"view") }
   action(:update) { |b| b.frm.button(:name=>"eventSubmit_doDelete_confirm_assignment").click }
+
+  element(:assignments_table) { |b| b.frm.table(:class=>"listHier lines nolines") }
+  element(:page_title) { |b| b.frm.div(:class=>"portletBody").h3(:text=>"Assignment List") }
 
 end
 
@@ -689,22 +694,23 @@ class AssignmentSubmission < BasePage
 
   expected_element :editor
 
-  element(:editor) { |b| b.frm.frame(:id, "grade_submission_feedback_text___Frame") }
+  element(:assignment_submission) { |b| b.frm.frame(:id, "grade_submission_feedback_text___Frame") }
+  element(:instructor_comments) { |b| b.frm.frame(:id, "grade_submission_feedback_comment___Frame") }
 
   # Enters the specified text string in the FCKEditor box for the assignment text.
   def assignment_text=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    assignment_submission.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
   # Removes all the contents of the FCKEditor Assignment Text box.
   def remove_assignment_text
-    editor.div(:title=>"Select All").fire_event("onclick")
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys :backspace
+    assignment_submission.div(:title=>"Select All").fire_event("onclick")
+    assignment_submission.td(:id, "xEditingArea").frame(:index=>0).send_keys :backspace
   end
 
   # Enters the specified string into the Instructor Comments FCKEditor box.
   def instructor_comments=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    instructor_comments.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
   # Clicks the Add Attachments button, then instantiates the AssignmentAttachments Class.

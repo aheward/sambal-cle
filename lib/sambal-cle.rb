@@ -18,6 +18,7 @@ class SakaiCLE
     @browser = Watir::Browser.new web_browser
     @browser.window.resize_to(1400,900)
     @browser.goto url
+    $base_url=url
   end
 
 end
