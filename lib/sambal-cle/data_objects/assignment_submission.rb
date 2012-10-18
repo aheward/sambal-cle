@@ -9,7 +9,7 @@ class AssignmentSubmissionObject
   attr_accessor :site, :title, :text, :status, :submission_date,
       :student, :allow_resubmissions, :resubmission, :num_resubmissions,
       :release_to_student, :grade, :summary_comment, :inline_comment,
-      :grade_status
+      :grade_status, :accept_until
 
   def initialize(browser, opts={})
     @browser = browser
@@ -21,9 +21,8 @@ class AssignmentSubmissionObject
     options = defaults.merge(opts)
 
     set_options(options)
-    raise "You must specify a Site for your Assignment" if @site==nil
-    raise "You must specify an Assignment title" if @title==nil
-    raise "You must specify a student for the assignment" if @student==nil
+
+    requires @site, @title, @student
   end
 
   def submit
@@ -71,13 +70,19 @@ class AssignmentSubmissionObject
       submissions.grade @student.ln_fn_id
     end
     on AssignmentSubmission do |submission|
-      submission.append assignment_submission, opts[:inline_comment]
+      submission.prepend(submission.assignment_submission, "{{#{opts[:inline_comment]}}}") unless opts[:inline_comment]==nil
+      submission.instructor_comments=opts[:summary_comment] unless opts[:summary_comment]==nil
+      submission.grade.select opts[:grade] unless opts[:grade]==nil
+      submission.accept_until @bla unless opts[:bla]==nil
     end
+
+
+
+
 
     # Get the @grade_status!
 
     set_options(opts)
-
 
   end
 

@@ -39,7 +39,7 @@ describe "Assignments grading" do
     @submission = make AssignmentSubmissionObject, :site=>@site.name, :title=>@assignment.title,
                        :student=>@student
     @assignment2 = make AssignmentObject, :site=>@site.name, :title=>random_string(25),
-                        :open=>an_hour_ago, :grade_scale=>"Letter"
+                        :open=>an_hour_ago, :grade_scale=>"Letter grade"
     @submission2 = make AssignmentSubmissionObject, :site=>@site.name, :title=>@assignment2.title,
                         :student=>@student
     @assignment.create
@@ -67,9 +67,14 @@ describe "Assignments grading" do
     @sakai.browser.close
   end
 =end
-  it "Assignment grade can be released to the student" do
-    log_in(@instructor1, @ipassword)
+  it "Assignment can be graded" do
+    @instructor1.log_in
     @submission.grade :grade=>"Fail", :summary_comment=>random_alphanums,
+                      :inline_comment=>random_alphanums, :allow_resubmission==:set
+
+  end
+
+  it "Assignment grade can be released to the student" do
 
   end
 

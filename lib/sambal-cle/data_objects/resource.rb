@@ -15,7 +15,7 @@ class FileObject
 
     set_options(options)
     @target_folder=@site if options[:target_folder]==nil
-    raise "You must specify a Site for your Folder" if @site==nil
+    requires @site
   end
 
   def create
@@ -51,7 +51,7 @@ class FolderObject
     options = defaults.merge(opts)
 
     set_options(options)
-    raise "You must specify a Site for your Folder" if @site==nil
+    requires @site
   end
 
   def create
@@ -81,7 +81,7 @@ class WebLinkObject
     defaults = {}
     options = defaults.merge(opts)
     set_options(options)
-    raise "You must specify a Site for your Web Link" if @site==nil
+    requires @site
   end
 
   def create
@@ -109,7 +109,7 @@ class HTMLPageObject
     options = defaults.merge(opts)
 
     set_options(options)
-    raise "You must specify a Site for your HTML Page" if @site==nil
+    requires @site
   end
 
   alias :title :name
@@ -166,7 +166,7 @@ class TextDocumentObject
     defaults = {}
     options = defaults.merge(opts)
     set_options(options)
-    raise "You must specify a Site for your Text Document" if @site==nil
+    requires @site
   end
 
   def create
@@ -189,7 +189,7 @@ class CitationListObject
     defaults = {}
     options = defaults.merge(opts)
     set_options(options)
-    raise "You must specify a Site for your Citations List" if @site==nil
+    requires @site
   end
 
   def create

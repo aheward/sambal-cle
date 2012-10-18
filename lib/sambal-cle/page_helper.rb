@@ -26,5 +26,10 @@ module PageHelper
   end
   alias update_options set_options
 
+  def requires(*elements)
+    elements.each do |inst_var|
+      raise "You must explicitly define the #{inst_var} variable for the #{self}." if inst_var==nil
+    end
+  end
 
 end

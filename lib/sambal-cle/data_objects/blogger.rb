@@ -17,7 +17,7 @@ class BloggerPostObject
     options = defaults.merge(opts)
     
     set(options)
-    raise "You need to specify a site for your blogger post" if @site==nil
+    requires @site
   end
     
   def create

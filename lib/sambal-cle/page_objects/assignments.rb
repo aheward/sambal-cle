@@ -232,7 +232,7 @@ class AssignmentsList < AssignmentsBase
   # Assignment link.
   def get_assignment_id(assignment_name)
     assignment_href(assignment_name) =~ /(?<=\/a\/\S{36}\/).+(?=&pan)/
-    return $~.to_s
+    $~.to_s
   end
 
   def assignment_href(name)
@@ -291,21 +291,15 @@ class AssignmentsPermissions < AssignmentsBase
   # the AssignmentsList page class.
   action(:save) {|b| b.frm.button(:value=>"Save").click }
 
-  def self.chekbocks(method_name)
-    define_method method_name do |role|
-      self.frm.checkbox(:id=>"#{role}asn.#{method_name.to_s.gsub("_", ".")}")
+  def self.chekbocks(*method_names)
+    method_names.each do |method_name|
+      define_method method_name do |role|
+        self.frm.checkbox(:id=>"#{role}asn.#{method_name.to_s.gsub("_", ".")}")
+      end
     end
   end
 
-  chekbocks :all_groups
-  chekbocks :new
-  chekbocks :submit
-  chekbocks :delete
-  chekbocks :read
-  chekbocks :revise
-  chekbocks :grade
-  chekbocks :receive_notifications
-  chekbocks :share_drafts
+  chekbocks :all_groups, :new, :submit, :delete, :read, :revise, :grade, :receive_notifications, :share_drafts
 
   action(:undo_changes) { |b| b.frm.link(:text=>"Undo changes").click }
   action(:cancel) { |b| b.frm.button(:name=>"eventSubmit_doCancel").click }
@@ -622,32 +616,21 @@ class AssignmentSubmissionList < AssignmentsBase
   menu_elements
   listview_elements
 
-  # Clicks the Assignment List link and instantiates the AssignmentsList Class.
-  def assignment_list
-    frm.link(:text=>"Assignment List").click
-    AssignmentsList.new(@browser)
-  end
   # Clicks the Show Resubmission Settings button
-  def show_resubmission_settings
-    frm.image(:src, "/library/image/sakai/expand.gif?panel=Main").click
-  end
+  action(:show_resubmission_settings) { |b| b.frm.image(:src, "/library/image/sakai/expand.gif?panel=Main").click }
 
   # Clicks the Show Assignment Details button.
-  def show_assignment_details
-    frm.image(:src, "/library/image/sakai/expand.gif").click
-  end
+  action(:show_assignment_details) { |b| b.frm.image(:src, "/library/image/sakai/expand.gif").click }
 
   # Gets the Student table text and returns it in an Array object.
   def student_table
-    table = frm.table(:class=>"listHier lines nolines").to_a
+    frm.table(:class=>"listHier lines nolines").to_a
   end
 
   # Clicks the Grade link for the specified student, then
   # instantiates the AssignmentSubmission page class.
   def grade(student_name)
     frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(student_name)}/).link(:text=>"Grade").click
-    frm.frame(:id, "grade_submission_feedback_comment___Frame").td(:id, "xEditingArea").frame(:index=>0).wait_until_present
-    AssignmentSubmission.new(@browser)
   end
 
   # Gets the value of the status field for the specified
@@ -692,7 +675,7 @@ class AssignmentSubmission < BasePage
   include FCKEditor
   frame_element
 
-  expected_element :editor
+  expected_element :assignment_submission
 
   element(:assignment_submission) { |b| b.frm.frame(:id, "grade_submission_feedback_text___Frame") }
   element(:instructor_comments) { |b| b.frm.frame(:id, "grade_submission_feedback_comment___Frame") }
@@ -720,7 +703,7 @@ class AssignmentSubmission < BasePage
   # AssignmentSubmissionList Class.
   action(:return_to_list) { |b| b.frm.button(:value=>"Return to List").click }
 
-  element(:select_default_grade) { |b| b.frm.select(:name=>"grade_submission_grade") }
+  element(:grade) { |b| b.frm.select(:name=>"grade_submission_grade") }
   element(:allow_resubmission) { |b| b.frm.checkbox(:id=>"allowResToggle") }
   element(:num_resubmissions) { |b| b.frm.select(:id=>"allowResubmitNumberSelect") }
   element(:accept_until_month) { |b| b.frm.select(:id=>"allow_resubmit_closeMonth") }

@@ -18,7 +18,7 @@ class ChatRoomObject
     options = defaults.merge(opts)
     
     set_options(options)
-    raise "You need to specify a site for your chat room" if @site==nil
+    requires @site
   end
     
   def create

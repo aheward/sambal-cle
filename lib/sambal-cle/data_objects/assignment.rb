@@ -31,7 +31,7 @@ class AssignmentObject
     options = defaults.merge(opts)
 
     set_options(options)
-    raise "You must specify a Site for your Assignment" if @site==nil
+    requires @site
     raise "You must specify max points if your grade scale is 'points'" if @max_points==nil && @grade_scale=="Points"
   end
 
@@ -129,7 +129,7 @@ class AssignmentObject
         edit.post
       end
     end
-    update_options(opts)
+    set_options(opts)
 
     unless opts[:status]=="Editing"
       on AssignmentsList do |list|

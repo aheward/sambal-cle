@@ -16,7 +16,7 @@ class MessageObject
     options = defaults.merge(opts)
 
     set_options(options)
-    raise "You need to specify a site for your web content" if @site==nil
+    requires @site
   end
 
   def create

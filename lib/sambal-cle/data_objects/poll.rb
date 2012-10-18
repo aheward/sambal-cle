@@ -17,7 +17,7 @@ class PollObject
     options = defaults.merge(opts)
     
     set_options(options)
-    raise "You need to specify a site for your blog entry" if @site==nil
+    requires @site
   end
     
   def create

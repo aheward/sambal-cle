@@ -13,9 +13,8 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
     @instructor=checkboxes
     @student=checkboxes
     @teaching_assistant=checkboxes
-    @site=opts[:site]
-    @group=opts[:group]
-    raise "You must specify a Site for your Assignment Permissions" if @site==nil
+    set_options(opts)
+    requires @site
     get
   end
     

@@ -17,7 +17,7 @@ class ForumObject
     options = defaults.merge(opts)
     
     set_options(options)
-    raise "You need to specify a site for your Forum" if @site==nil
+    requires @site
   end
 
   alias :name :title

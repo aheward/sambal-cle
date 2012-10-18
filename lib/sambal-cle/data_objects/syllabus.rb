@@ -15,7 +15,7 @@ class SyllabusObject
     }
     options = defaults.merge(opts)
     set_options(options)
-    raise "You must specify a Site for the announcement" if @site==nil
+    requires @site
   end
 
   alias :name :title
