@@ -11,12 +11,10 @@ class AssessmentObject
 
     defaults = {
       :title=>random_alphanums,
-      :site=>"placeholder"
     }
     options = defaults.merge(opts)
-    @title=options[:title]
-    @site=options[:site]
-    raise "You must specify a Site for your Assessment" if @site==nil
+    set_options(options)
+    requires @site
   end
 
   def create

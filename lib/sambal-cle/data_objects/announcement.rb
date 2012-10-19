@@ -16,10 +16,8 @@ class AnnouncementObject
         :body=>random_multiline(500, 10, :alpha)
     }
     options = defaults.merge(opts)
-    @title=options[:title]
-    @body=options[:body]
-    @site=options[:site]
-    raise "You must specify a Site for the announcement" if @site==nil
+    set_options(options)
+    requires @site
   end
 
   alias :name :title
@@ -57,10 +55,7 @@ class AnnouncementObject
       end
       edit.save_changes
     end
-    @title=opts[:title] unless opts[:title]==nil
-    @body=opts[:body] unless opts[:body]==nil
-    @access=opts[:access]
-    @availability=opts[:availability]
+    update_options(opts)
   end
 
   def view

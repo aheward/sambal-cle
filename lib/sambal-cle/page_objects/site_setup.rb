@@ -470,7 +470,8 @@ end
 class CourseSectionInfo < SiteSetupBase
 
   menu_elements
-  
+  expected_element :subject
+
   # Clicks the Continue button, then instantiates
   # the CourseSiteInfo Class.
   action(:continue) { |b| b.frm.button(:value=>"Continue").click }

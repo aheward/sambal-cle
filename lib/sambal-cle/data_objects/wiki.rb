@@ -15,10 +15,8 @@ class WikiObject
     }
     options = defaults.merge(opts)
 
-    @title=options[:title]
-    @content=options[:content]
-    @site=options[:site]
-    raise "You need to specify a site for your wiki" if @site==nil
+    set_options(options)
+    requires @site
   end
 
   alias :name :title
@@ -48,6 +46,7 @@ class WikiObject
       edit.edit
       # TODO more here
     end
+    set_options(opts)
   end
 
   def get_content

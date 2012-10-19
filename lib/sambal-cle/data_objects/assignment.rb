@@ -1,3 +1,5 @@
+# This data object is strictly the assignment as created by an instructor
+# for Student submissions of an assignment, use AssignmentSubmissionObject
 class AssignmentObject
 
   include PageHelper
@@ -28,23 +30,8 @@ class AssignmentObject
     }
     options = defaults.merge(opts)
 
-    @title=options[:title]
-    @instructions=options[:instructions]
-    @site=options[:site]
-    @grade_scale=options[:grade_scale]
-    @max_points=options[:max_points]
-    @allow_resubmission=options[:allow_resubmission]
-    @num_resubmissions=options[:num_resubmissions]
-    @open=options[:open]
-    @due=options[:due]
-    @accept_until=options[:accept_until]
-    @resubmission=options[:resubmission]
-    @student_submissions=options[:student_submissions]
-    @add_due_date=options[:add_due_date]
-    @add_open_announcement=options[:add_open_announcement]
-    @add_to_gradebook=options[:add_to_gradebook]
-    @status=options[:status]
-    raise "You must specify a Site for your Assignment" if @site==nil
+    set_options(options)
+    requires @site
     raise "You must specify max points if your grade scale is 'points'" if @max_points==nil && @grade_scale=="Points"
   end
 
@@ -121,6 +108,7 @@ class AssignmentObject
         list.edit_assignment @title
       end
     end
+
     on AssignmentAdd do |edit|
       edit.title.set opts[:title] unless opts[:title]==nil
       unless opts[:instructions]==nil
@@ -128,10 +116,11 @@ class AssignmentObject
       end
       edit.grade_scale.select opts[:grade_scale] unless opts[:grade_scale]==nil
       edit.max_points.set opts[:max_points] unless opts[:max_points]==nil
-      # This should be one of the last items edited...
-      edit.add_to_gradebook.send(opts[:add_to_gradebook]) unless opts[:add_to_gradebook]==nil
 
       #TODO: All the rest goes here
+
+      # This should be one of the last items edited...
+      edit.add_to_gradebook.send(opts[:add_to_gradebook]) unless opts[:add_to_gradebook]==nil
 
       if (@status=="Draft" && opts[:status]==nil) || opts[:status]=="Draft"
         edit.save_draft
@@ -141,12 +130,7 @@ class AssignmentObject
         edit.post
       end
     end
-    @title=opts[:title] unless opts[:title] == nil
-    @instructions=opts[:instructions] unless opts[:instructions] == nil
-    @grade_scale=opts[:grade_scale] unless opts[:grade_scale] == nil
-    @max_points=opts[:max_points] unless opts[:title] == nil
-    @add_to_gradebook==opts[:add_to_gradebook]
-    # TODO: Add all the rest of the elements here
+    set_options(opts)
 
     unless opts[:status]=="Editing"
       on AssignmentsList do |list|
@@ -194,12 +178,33 @@ class AssignmentObject
     end
   end
 
-  def submit
+  def duplicate
+    open_my_site_by_name @site unless @browser.title=~/#{@site}/
+    assignments unless @browser.title=~/Assignments$/
+    reset
+    on AssignmentsList do |list|
+      list.duplicate @title
+    end
+
+    duplicate_assignment = self
+    duplicate_assignment.title="Draft - #{self.title} - Copy"
+    duplicate_assignment.status="Draft"
+    duplicate_assignment
+  end
+
+  def view_submissions
     # TODO: Create this method
   end
 
-  def grade
-    # TODO: Create this method
+  # Use this method to open a submitted assignment for viewing
+  # the page.
+  def view_submission
+    open_my_site_by_name @site unless @browser.title=~/#{@site}/
+    assignments unless @browser.title=~/Assignments$/
+    reset
+    on AssignmentsList do |list|
+      list.open_assignment @title
+    end
   end
 
 end

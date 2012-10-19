@@ -14,10 +14,8 @@ class SyllabusObject
         :content=>random_multiline(50, 5, :alpha)
     }
     options = defaults.merge(opts)
-    @title=options[:title]
-    @content=options[:content]
-    @site=options[:site]
-    raise "You must specify a Site for the announcement" if @site==nil
+    set_options(options)
+    requires @site
   end
 
   alias :name :title
@@ -50,8 +48,7 @@ class SyllabusObject
       item.title.set opts[:title] unless opts[:title]==nil
       item.enter_source_text(item.editor, opts[:content]) unless opts[:content]==nil
     end
-    @title = opts[:title] unless opts[:title]==nil
-    @content = opts[:content] unless opts[:content]==nil
+    set_options(opts)
   end
 
   def get_properties

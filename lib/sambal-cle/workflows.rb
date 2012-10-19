@@ -215,9 +215,4 @@ module Workflows
   # The Page Reset button, found on all Site pages
   menu_link :reset, :href=>/tool-reset/
 
-  # Login class.
-  menu_link :logout, :text=>"Logout"
-  alias :log_out :logout
-  alias :sign_out :logout
-
 end

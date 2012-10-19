@@ -16,15 +16,8 @@ class PollObject
     }
     options = defaults.merge(opts)
     
-    @question=options[:question]
-    @options=options[:options]
-    @opening_date=options[:opening_date]
-    @closing_date=options[:closing_date]
-    @site=options[:site]
-    @instructions=options[:instructions]
-    @access=options[:access]
-    @visibility=options[:visibility]
-    raise "You need to specify a site for your blog entry" if @site==nil
+    set_options(options)
+    requires @site
   end
     
   def create
@@ -59,6 +52,7 @@ class PollObject
     
   def edit opts={}
     #TODO: Add stuff here
+    set_options(opts)
   end
     
   def view

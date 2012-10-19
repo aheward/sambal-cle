@@ -27,19 +27,7 @@ class SiteObject
       :site_contact_name => random_alphanums(5)+" "+random_alphanums(8)
     }
     options = defaults.merge(opts)
-
-    @subject=options[:subject]
-    @course=options[:course]
-    @section=options[:section]
-    @authorizer=options[:authorizer]
-    @web_content_source=options[:web_content_source]
-    @email=options[:email]
-    @joiner_role=options[:joiner_role]
-    @web_content_title=options[:web_content_title]
-    @description=options[:description]
-    @short_description=options[:short_description]
-    @site_contact_name=options[:site_contact_name]
-    @site_contact_email=options[:site_contact_email]
+    set_options(options)
   end
 
   def create
@@ -268,6 +256,7 @@ class SiteObject
 
   end
 
+  # TODO: Improve this method to better take advantage of the UserObject...
   def add_official_participants opts={}
     participants = opts[:participants].join("\n")
     open_my_site_by_name @name unless @browser.title=~/#{@name}/
