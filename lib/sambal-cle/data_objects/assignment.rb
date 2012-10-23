@@ -206,5 +206,6 @@ class AssignmentObject
       list.open_assignment @title
     end
   end
+  alias open view_submission
 
 end

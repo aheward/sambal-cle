@@ -107,6 +107,7 @@ module DateMakers
         :sakai=>make_date(time_object),
         :sakai_rounded=>make_date(time_object).gsub!(/:\d+/, ":#{Time.at(time_object.to_i/(5*60)*(5*60)).strftime("%M")}"),
         :short_date=>time_object.strftime("%b %-d, %Y"), # => "Oct 18, 2013"
+        :samigo=>time_object.strftime("%m/%d/%Y %I:%M:%S %p"), # => "10/30/2012 07:02:05 AM"
         :MON => time_object.strftime("%^b"), # => "DEC"
         :Mon => time_object.strftime("%b"), # => "Jan"
         :Month => time_object.strftime("%B"), # => "February"

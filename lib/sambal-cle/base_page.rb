@@ -11,6 +11,8 @@ class BasePage < PageMaker
       value(:alert_box) { |b| b.frm.div(:class=>"alertMessage").text }
       # Returns the text of the header.
       value(:header) { |b| b.frm.div(:class=>"portletBody").h3.text }
+      element(:cancel_button) { |b| b.frm.button(:value=>"Cancel") }
+      action(:cancel) { |p| p.cancel_button.click }
     end
 
     # More element group defs go here...
