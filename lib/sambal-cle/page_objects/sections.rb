@@ -202,7 +202,6 @@ class SectionsOptions < SectionsBase
   element(:students_can_switch) { |b| b.frm.checkbox(:id=>"optionsForm:selfSwitch") }
 
   action(:update) { |b| b.frm.button(:id=>"optionsForm:_idJsp50").click }
-  action(:cancel) { |b| b.frm.button(:id=>"optionsForm:_idJsp51").click }
 
 end
 
@@ -213,7 +212,7 @@ class AddSections < SectionsBase
 
   element(:num_to_add) { |b| b.frm.select_list(:id=>"addSectionsForm:numToAdd") }
   element(:category) { |b| b.frm.select_list(:id=>"addSectionsForm:category") }
-  action(:cancel) { |b| b.frm.button(:id=>"addSectionsForm:_idJsp90").click }
+  #action(:cancel) { |b| b.frm.button(:id=>"addSectionsForm:_idJsp90").click }
   # Note that the following field definitions are appropriate for
   # ONLY THE FIRST instance of each of the fields. The Add Sections page
   # allows for an arbitrary number of these fields to exist.
@@ -249,7 +248,7 @@ class EditSections < SectionsBase
 
   element(:num_to_add) { |b| b.frm.select_list(:id=>"editSectionsForm:numToAdd") }
   element(:category) { |b| b.frm.select_list(:id=>"editSectionsForm:category") }
-  action(:cancel) { |b| b.frm.button(:id=>"editSectionsForm:_idJsp90").click }
+  #action(:cancel) { |b| b.frm.button(:id=>"editSectionsForm:_idJsp90").click }
   # Note that the following field definitions are appropriate for
   # ONLY THE FIRST instance of each of the fields. The Edit Sections page
   # allows for an arbitrary number of these fields to exist.

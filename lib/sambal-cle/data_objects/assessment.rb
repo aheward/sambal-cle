@@ -11,7 +11,7 @@ class AssessmentObject
                 :release_to, :release, :release_options, :secondary_id, :secondary_password,
                 :navigation, :question_layout, :numbering, :submissions, :num_submissions,
                 :late_handling, :submission_message, :final_page_url, :student_ids,
-                :gradebook_options, :recorded_score
+                :gradebook_options, :recorded_score, :allowed_ips
 
   def initialize(browser, opts={})
     @browser = browser
@@ -20,6 +20,7 @@ class AssessmentObject
       :title=>random_alphanums,
       :authors=>random_alphanums,
       :description=>random_alphanums,
+      :parts=>[],
       :available_date=>right_now,
       :due_date=>tomorrow,
       :retract_date=>next_week,
@@ -39,6 +40,9 @@ class AssessmentObject
     options = defaults.merge(opts)
     set_options(options)
     requires @site
+
+    default_part = make PartObject, :title=>"Default", :assessment=>@title, :part_number=>1, :information=>""
+    @parts << default_part
   end
 
   def create
@@ -63,8 +67,9 @@ class AssessmentObject
       settings.due_date.set @due_date[:samigo]
       settings.retract_date.set @retract_date[:samigo]
       # Assessment Released To
-      settings.release_to.set @released_to
+      settings.send(@released_to).set
       # High Security
+      settings.allow_specified_ips.set @allowed_ips
       settings.secondary_id.set @secondary_id
       settings.secondary_pw.set @secondary_password
       # Assessment Organization
@@ -87,7 +92,7 @@ class AssessmentObject
       # Feedback
       settings.send(@feedback_authoring).set
       settings.send(@feedback_delivery).set
-      settings.send(@release_options).set
+      settings.send(@release).set
       @release_options.each do |option|
         settings.send(option).set
       end
@@ -111,8 +116,52 @@ class AssessmentObject
   end
 
   def publish
+    my_workspace.open_my_site_by_name @site unless @browser.title=~/#{@site}/
+    tests_and_quizzes unless @browser.title=~/Tests & Quizzes$/
+    reset
+    on AssessmentsList do |list|
+      list.publish @title
+    end
+    on PublishAssessment do |assessment|
+      assessment.publish
+    end
+  end
 
+  def add_part opts={}
+    position
+    defaults = {
+      :assessment=>@title,
+      :part_number=>@parts.length+1
+    }
+    options = defaults.merge(opts)
+    part = make PartObject, options
+    part.create
+    @parts << part
+  end
 
+  def add_question opts={}
+    position
+    defaults = {
+        :assessment=>@title,
+        :part=>@parts[rand(@parts.length)].title
+    }
+    options = defaults.merge(opts)
+    question = make QuestionObject, options
+    question.create
+    @questions << question
+  end
+
+  private
+
+  def position
+    my_workspace.open_my_site_by_name @site unless @browser.title=~/#{@site}/
+    tests_and_quizzes unless @browser.title=~/Tests & Quizzes$/
+    unless @browser.frame(:class=>"portletMainIframe").h3.text=="Questions: #{@title}"
+      reset
+      on AssessmentsList do |list|
+        list.edit @title
+      end
+    end
   end
 
 end
@@ -122,44 +171,102 @@ class QuestionObject
   include PageHelper
   include Utilities
   include Workflows
+  include Randomizers
 
-  attr_accessor :site, :type, :assessment, :text, :point_value, :part
+  attr_accessor :type, :assessment, :text, :point_value, :part
 
   def initialize(browser, opts={})
     @browser = browser
     defaults = {
-        :type=>"Short Answer/Essay",
+        :type=>@question_types.keys[rand(@question_types.length)],
         :text=>random_alphanums,
-        :point_value=>"10"
+        :point_value=>(rand(100)+1).to_s
 
     }
     options = defaults.merge(opts)
     set_options(options)
-    requires @site
     requires @assessment
   end
 
-  @q_types = {
-      "Multiple Choice"=>:make_multiple_choice,
-      "True False"=>:make_true_false,
-      "Fill in the Blank"=>:make_fill_blank,
-      "Survey"=>:make_survey
+  @question_types = {
+      :"Multiple Choice"=>:add_multiple_choice,
+      #:Survey=>:add_survey,
+      #:"Short Answer/Essay"=>:add_short_answer,
+      #:"Fill in the Blank"=>:add_fill_in_the_blank,
+      #:"Numeric Response"=>:add_numeric,
+      #:Matching=>:add_matching,
+      #:"True False"=>:add_true_false,
+      #:"Audio Recording"=>:add_audio,
+      #:"File Upload"=>:add_file_upload,
+      #:"Calculated Question"=>:add_calculated_question
   }
 
   def create
-    my_workspace.open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    tests_and_quizzes unless @browser.title=~/Tests & Quizzes$/
-
+    self.send(@question_types[@type.to_sym])
   end
 
   private
 
-  def make_multiple_choice
+  def add_multiple_choice
+    on EditAssessment do |edit|
 
+    end
   end
 
-  def make_true_false
-
-  end
 
 end
+
+class PartObject
+
+  include PageHelper
+  include Utilities
+  include Workflows
+  include Randomizers
+
+  attr_accessor :assessment, :title, :information, :type, :number_of_questions, :pool_name, :part_number, :question_ordering
+  
+  def initialize(browser, opts={})
+    @browser = browser
+    
+    defaults = {
+      :title=>random_alphanums,
+      :information=>random_alphanums,
+      :type=>:one_by_one,
+      :question_ordering=>:order_as_listed
+    }
+    options = defaults.merge(opts)
+    
+    set_options(options)
+    requires @assessment
+  end
+    
+  def create
+    on EditAssessment do |edit|
+      edit.add_part
+    end
+    on AddEditAssessmentPart do |part|
+      part.title.set @title
+      part.information.set @information
+      part.send(@type).set
+      part.send(@question_ordering).set
+      # TODO: more to add here
+      part.save
+    end
+  end
+    
+  def edit opts={}
+
+    set_options(opts)
+  end
+    
+  def view
+    
+  end
+    
+  def delete
+    
+  end
+  
+end
+    
+      

@@ -35,6 +35,9 @@ describe "Assessments" do
     @assessment = make AssessmentObject, :site=>@site.name
     @assessment.create
 
+    @assessment.add_part
+    @assessment.add_part
+
     @questions = [
         {:type=>"Multiple Choice", :point_value=>"5", :question_text=>"Who was the first US president?", :a=>"Jefferson", :b=>"Lincoln", :c=>"Grant", :d=>"Washington" },
         {:type=>"True False", :point_value=>"5", :question_text=>"The sky is blue."},
@@ -50,6 +53,15 @@ describe "Assessments" do
         {:type=>"True False", :point_value=>"10", :question_text=>"The United States of America is in the Northern hemisphere." },
         {:type=>"True False", :question_text=>"Birds can fly." }
     ]
+
+    @
+
+    exit
+    @questions.each do |question|
+      @assessment.add_question question
+    end
+
+    exit
 
     @part_2_title = "This is Part 2"
     @part_2_info = "This is the information for Part 2"
