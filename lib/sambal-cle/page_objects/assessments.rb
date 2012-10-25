@@ -363,6 +363,10 @@ class EditAssessment < AssessmentsBase
   action(:print) { |b| b.frm.button(:text=>"Print").click }
   action(:update_points) { |b| b.frm.button(:id=>"assesssmentForm:pointsUpdate").click }
 
+  pgmd(:add_question_to_part) { |part, p| p.assessment_form.row(:text=>/#{Regexp.escape(part)}/).select(:id=>/changeQType/) }
+
+  element(:assessment_form) { |b| b.table(:id=>"assesssmentForm:parts") }
+
 end
 
 # This is the page for adding and editing a part of an assessment

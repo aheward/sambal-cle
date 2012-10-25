@@ -8,9 +8,9 @@ describe "Assignment Permissions" do
 
   include Utilities
   include Workflows
-  include PageHelper
+  include Positioning
   include Randomizers
-  include DateMakers
+  include DateFactory
 
   before :all do
 

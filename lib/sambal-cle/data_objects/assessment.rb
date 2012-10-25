@@ -1,9 +1,9 @@
 class AssessmentObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Randomizers
-  include DateMakers
+  include DateFactory
   include Workflows
 
   attr_accessor :title, :site, :questions, :parts, :status, :type, :available_date,
@@ -21,6 +21,7 @@ class AssessmentObject
       :authors=>random_alphanums,
       :description=>random_alphanums,
       :parts=>[],
+      :questions=>[],
       :available_date=>right_now,
       :due_date=>tomorrow,
       :retract_date=>next_week,
@@ -168,17 +169,19 @@ end
 
 class QuestionObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
   include Randomizers
 
-  attr_accessor :type, :assessment, :text, :point_value, :part
+  attr_accessor :type, :assessment, :text, :point_value, :part,
+                # Multiple Choice attributes...
+                :correct_type, :answer_credit, :negative_point_value
 
   def initialize(browser, opts={})
     @browser = browser
     defaults = {
-        :type=>@question_types.keys[rand(@question_types.length)],
+        :type=>QUESTION_TYPES.keys[rand(QUESTION_TYPES.length)],
         :text=>random_alphanums,
         :point_value=>(rand(100)+1).to_s
 
@@ -188,9 +191,9 @@ class QuestionObject
     requires @assessment
   end
 
-  @question_types = {
+  QUESTION_TYPES = {
       :"Multiple Choice"=>:add_multiple_choice,
-      #:Survey=>:add_survey,
+      :Survey=>:add_survey#,
       #:"Short Answer/Essay"=>:add_short_answer,
       #:"Fill in the Blank"=>:add_fill_in_the_blank,
       #:"Numeric Response"=>:add_numeric,
@@ -202,23 +205,36 @@ class QuestionObject
   }
 
   def create
-    self.send(@question_types[@type.to_sym])
+    on EditAssessment do |edit|
+      edit.add_question_to_part(@part).select @type
+    end
+    self.send(QUESTION_TYPES[@type.to_sym])
   end
 
   private
 
   def add_multiple_choice
-    on EditAssessment do |edit|
+    on MultipleChoice do |add|
+      add.answer_point_value.set @point_value
+      add.question_text.set @text
+      add.send(@correct_type).set
+      add.send(@answer_credit).set unless @answer_credit==nil
+      add.negative_point_value.set @negative_point_value unless @negative_point_value==nil
 
     end
   end
 
+  def add_survey
+    on Survey do |add|
+
+    end
+  end
 
 end
 
 class PartObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
   include Randomizers

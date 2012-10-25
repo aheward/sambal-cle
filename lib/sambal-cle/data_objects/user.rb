@@ -1,9 +1,9 @@
 class UserObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Randomizers
-  include DateMakers
+  include DateFactory
   include Workflows
   
   attr_accessor :id, :first_name, :last_name, :password, :email, :type,

@@ -1,4 +1,4 @@
-class BasePage < PageMaker
+class BasePage < PageFactory
 
   class << self
 

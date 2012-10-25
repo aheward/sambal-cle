@@ -1,6 +1,6 @@
 class WikiObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
 

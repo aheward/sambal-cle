@@ -1,4 +1,4 @@
-class PageMaker
+class PageFactory
 
   def initialize browser, visit = false
     @browser = browser

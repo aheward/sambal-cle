@@ -498,6 +498,7 @@ end
 class SiteAccess < SiteSetupBase
 
   menu_elements
+  expected_element :allow
   
   # The page element that displays the joiner role
   # select list. Use this method to validate whether the

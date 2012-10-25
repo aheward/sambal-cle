@@ -1,6 +1,6 @@
 class BlogEntryObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
   

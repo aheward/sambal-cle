@@ -1,6 +1,6 @@
 class PollObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
   

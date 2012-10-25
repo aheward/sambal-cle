@@ -1,6 +1,6 @@
 require 'cgi'
 require 'watir-webdriver'
-require 'sambal-cle/page_maker.rb'
+require 'sambal-cle/page_factory.rb'
 Dir["#{File.dirname(__FILE__)}/sambal-cle/*.rb"].each {|f| require f }
 Dir["#{File.dirname(__FILE__)}/sambal-cle/page_objects/*.rb"].each {|f| require f }
 Dir["#{File.dirname(__FILE__)}/sambal-cle/data_objects/*.rb"].each {|f| require f }

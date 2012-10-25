@@ -6,9 +6,9 @@ describe "Assessments" do
 
   include Utilities
   include Workflows
-  include PageHelper
+  include Positioning
   include Randomizers
-  include DateMakers
+  include DateFactory
 
   before :all do
     # Get the test configuration data
@@ -37,6 +37,8 @@ describe "Assessments" do
 
     @assessment.add_part
     @assessment.add_part
+    @assessment.add_question
+    exit
 
     @questions = [
         {:type=>"Multiple Choice", :point_value=>"5", :question_text=>"Who was the first US president?", :a=>"Jefferson", :b=>"Lincoln", :c=>"Grant", :d=>"Washington" },
@@ -54,14 +56,12 @@ describe "Assessments" do
         {:type=>"True False", :question_text=>"Birds can fly." }
     ]
 
-    @
 
-    exit
+
+
     @questions.each do |question|
       @assessment.add_question question
     end
-
-    exit
 
     @part_2_title = "This is Part 2"
     @part_2_info = "This is the information for Part 2"

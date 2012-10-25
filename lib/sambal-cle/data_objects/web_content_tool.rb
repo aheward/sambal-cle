@@ -1,6 +1,6 @@
 class WebContentObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
 

@@ -1,6 +1,6 @@
 class ModuleObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
 
@@ -47,7 +47,7 @@ end
 
 class ContentSectionObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
 

@@ -1,7 +1,7 @@
 # Note that this class is for icon-sakai-forums. NOT jforums.
 class ForumObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
   
@@ -96,7 +96,7 @@ end
 
 class TopicObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
   

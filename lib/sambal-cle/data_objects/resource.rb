@@ -1,6 +1,6 @@
 class FileObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
 
@@ -36,7 +36,7 @@ class FileObject
 end
 
 class FolderObject
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
 
@@ -69,7 +69,7 @@ class FolderObject
 end
 
 class WebLinkObject
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
 
@@ -92,7 +92,7 @@ end
 
 class HTMLPageObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
 
@@ -154,7 +154,7 @@ class HTMLPageObject
 end
 
 class TextDocumentObject
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
 
@@ -177,7 +177,7 @@ class TextDocumentObject
 end
 
 class CitationListObject
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
 

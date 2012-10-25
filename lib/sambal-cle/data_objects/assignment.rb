@@ -2,10 +2,10 @@
 # for Student submissions of an assignment, use AssignmentSubmissionObject
 class AssignmentObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Randomizers
-  include DateMakers
+  include DateFactory
   include Workflows
 
   attr_accessor :title, :site, :instructions, :id, :link, :status, :grade_scale,

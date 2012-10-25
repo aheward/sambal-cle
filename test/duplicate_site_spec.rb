@@ -6,7 +6,7 @@ describe "Duplicate Site" do
 
   include Utilities
   include Workflows
-  include PageHelper
+  include Positioning
 
   before :all do
 

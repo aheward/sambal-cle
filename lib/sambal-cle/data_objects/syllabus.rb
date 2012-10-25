@@ -1,6 +1,6 @@
 class SyllabusObject
 
-  include PageHelper
+  include Positioning
   include Utilities
   include Workflows
 

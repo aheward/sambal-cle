@@ -1,7 +1,7 @@
 class AnnouncementObject
 
   include Utilities
-  include PageHelper
+  include Positioning
   include Workflows
 
   attr_accessor :title, :body, :site, :link, :access, :availability,

@@ -1,5 +1,5 @@
 # Some date and time helper functions....
-module DateMakers
+module DateFactory
 
   MONTHS = %w{JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC}
   def an_hour_ago
@@ -20,6 +20,10 @@ module DateMakers
     date_factory(Time.now - (3600*24*365))
   end
   alias a_year_ago last_year
+
+  def in_the_last_year
+    date_factory(Time.random(:year_range=>1))
+  end
 
   def last_month
     index = MONTHS.index(current_month)
