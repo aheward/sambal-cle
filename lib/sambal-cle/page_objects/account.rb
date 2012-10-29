@@ -53,7 +53,6 @@ class UserAccount < BasePage
   # Clicks the Modify Details button. Instantiates the EditAccount class.
   def modify_details
     @browser.frame(:index=>0).button(:name=>"eventSubmit_doModify").click
-    EditAccount.new(@browser)
   end
 
   # Gets the text of the User ID field.
@@ -105,7 +104,6 @@ class UserAccount < BasePage
   # instantiates the Home Class.
   def home
     @browser.link(:text, "Home").click
-    Home.new(@browser)
   end
 
 end

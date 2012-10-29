@@ -2,10 +2,10 @@
 # for Student submissions of an assignment, use AssignmentSubmissionObject
 class AssignmentObject
 
-  include PageHelper
-  include Utilities
-  include Randomizers
-  include DateMakers
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include DateFactory
   include Workflows
 
   attr_accessor :title, :site, :instructions, :id, :link, :status, :grade_scale,
@@ -31,15 +31,7 @@ class AssignmentObject
     options = defaults.merge(opts)
 
     set_options(options)
-<<<<<<< HEAD
-<<<<<<< HEAD
     requires @site
-=======
-    raise "You must specify a Site for your Assignment" if @site==nil
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
-    requires @site
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
     raise "You must specify max points if your grade scale is 'points'" if @max_points==nil && @grade_scale=="Points"
   end
 
@@ -138,15 +130,7 @@ class AssignmentObject
         edit.post
       end
     end
-<<<<<<< HEAD
-<<<<<<< HEAD
     set_options(opts)
-=======
-    update_options(opts)
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
-    set_options(opts)
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
 
     unless opts[:status]=="Editing"
       on AssignmentsList do |list|
@@ -206,60 +190,10 @@ class AssignmentObject
     duplicate_assignment.title="Draft - #{self.title} - Copy"
     duplicate_assignment.status="Draft"
     duplicate_assignment
-<<<<<<< HEAD
-=======
-  end
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-  def submit
-    # TODO: Create this method
->>>>>>> d4dd786... Creation of the assignment duplication test case spec.
-=======
-  def submit opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    assignments unless @browser.title=~/Assignments$/
-    reset
-    on AssignmentsList do |list|
-      list.open_assignment @title
-    end
-    on AssignmentStudent do |assignment|
-      assignment.assignment_text=opts[:text] unless opts[:text]==nil
-      # TODO: Add stuff for adding file(s) to the assignment
-      if opts[:student_status]==nil || opts[:student_status]=="Submitted"
-        assignment.submit
-        @submission_date=right_now[:sakai]
-        @student_status="Submitted"
-      else
-        assignment.save_draft
-        @student_status="Draft - In progress"
-      end
-    end
-
-    @text=opts[:text] unless opts[:text]==nil
->>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
   end
 
   def view_submissions
     # TODO: Create this method
-  end
-
-<<<<<<< HEAD
-  # Use this method to open a submitted assignment for viewing
-  # the page.
-  def view_submission
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    assignments unless @browser.title=~/Assignments$/
-    reset
-    on AssignmentsList do |list|
-      list.open_assignment @title
-    end
-=======
-=======
->>>>>>> c3a8c8c... Created the UserObject class and methods.  Started updating the scripts to properly use them.
-  def view_submissions
-    # TODO: Create this method
->>>>>>> d4dd786... Creation of the assignment duplication test case spec.
   end
 
   # Use this method to open a submitted assignment for viewing
@@ -272,5 +206,6 @@ class AssignmentObject
       list.open_assignment @title
     end
   end
+  alias open view_submission
 
 end

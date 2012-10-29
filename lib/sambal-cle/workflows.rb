@@ -199,6 +199,7 @@ module Workflows
 
   # AssessmentsList class OR the TakeAssessmentList for students
   menu_link :assessments, :class=>"icon-sakai-samigo"
+  alias :tests_and_quizzes :assessments
 
   # UserMembership
   menu_link :user_membership, :class=>"icon-sakai-usermembership"
@@ -215,21 +216,4 @@ module Workflows
   # The Page Reset button, found on all Site pages
   menu_link :reset, :href=>/tool-reset/
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  # Login class.
-  menu_link :logout, :text=>"Logout"
-  alias :log_out :logout
-  alias :sign_out :logout
-
-  def log_in(username, password)
-    on Login do |page|
-      page.login(username, password)
-    end
-  end
-
->>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
-=======
->>>>>>> c3a8c8c... Created the UserObject class and methods.  Started updating the scripts to properly use them.
 end

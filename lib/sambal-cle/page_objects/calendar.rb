@@ -228,8 +228,6 @@ class EventFrequency < CalendarBase
 
   action(:save_frequency) { |b| b.frm.button(:value=>"Save Frequency").click }
 
-  action(:cancel) { |b| b.frm.button(:value=>"Cancel").click }
-
   element(:event_frequency) { |b| b.frm.select(:id=>"frequencySelect") }
   element(:interval) { |b| b.frm.select(:id=>"interval") }
   element(:ends_after) { |b| b.frm.select(:name=>"count") }

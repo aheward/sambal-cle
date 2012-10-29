@@ -1,7 +1,7 @@
 class FileObject
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :name, :site, :source_path, :target_folder, :href
@@ -15,15 +15,7 @@ class FileObject
 
     set_options(options)
     @target_folder=@site if options[:target_folder]==nil
-<<<<<<< HEAD
-<<<<<<< HEAD
     requires @site
-=======
-    raise "You must specify a Site for your Folder" if @site==nil
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
-    requires @site
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   def create
@@ -44,8 +36,8 @@ class FileObject
 end
 
 class FolderObject
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :name, :parent_folder, :site
@@ -59,15 +51,7 @@ class FolderObject
     options = defaults.merge(opts)
 
     set_options(options)
-<<<<<<< HEAD
-<<<<<<< HEAD
     requires @site
-=======
-    raise "You must specify a Site for your Folder" if @site==nil
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
-    requires @site
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   def create
@@ -85,8 +69,8 @@ class FolderObject
 end
 
 class WebLinkObject
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :site
@@ -97,15 +81,7 @@ class WebLinkObject
     defaults = {}
     options = defaults.merge(opts)
     set_options(options)
-<<<<<<< HEAD
-<<<<<<< HEAD
     requires @site
-=======
-    raise "You must specify a Site for your Web Link" if @site==nil
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
-    requires @site
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   def create
@@ -116,8 +92,8 @@ end
 
 class HTMLPageObject
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :name, :description, :site, :folder, :html, :url
@@ -133,15 +109,7 @@ class HTMLPageObject
     options = defaults.merge(opts)
 
     set_options(options)
-<<<<<<< HEAD
-<<<<<<< HEAD
     requires @site
-=======
-    raise "You must specify a Site for your HTML Page" if @site==nil
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
-    requires @site
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   alias :title :name
@@ -186,8 +154,8 @@ class HTMLPageObject
 end
 
 class TextDocumentObject
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :site
@@ -198,15 +166,7 @@ class TextDocumentObject
     defaults = {}
     options = defaults.merge(opts)
     set_options(options)
-<<<<<<< HEAD
-<<<<<<< HEAD
     requires @site
-=======
-    raise "You must specify a Site for your Text Document" if @site==nil
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
-    requires @site
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   def create
@@ -217,8 +177,8 @@ class TextDocumentObject
 end
 
 class CitationListObject
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :site
@@ -229,15 +189,7 @@ class CitationListObject
     defaults = {}
     options = defaults.merge(opts)
     set_options(options)
-<<<<<<< HEAD
-<<<<<<< HEAD
     requires @site
-=======
-    raise "You must specify a Site for your Citations List" if @site==nil
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
-    requires @site
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   def create

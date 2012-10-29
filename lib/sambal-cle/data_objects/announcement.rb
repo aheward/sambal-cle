@@ -1,7 +1,9 @@
 class AnnouncementObject
 
-  include Utilities
-  include PageHelper
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include DateFactory
   include Workflows
 
   attr_accessor :title, :body, :site, :link, :access, :availability,
@@ -17,15 +19,7 @@ class AnnouncementObject
     }
     options = defaults.merge(opts)
     set_options(options)
-<<<<<<< HEAD
-<<<<<<< HEAD
     requires @site
-=======
-    raise "You must specify a Site for the announcement" if @site==nil
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
-    requires @site
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   alias :name :title

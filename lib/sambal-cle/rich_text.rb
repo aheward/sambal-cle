@@ -24,25 +24,10 @@ module FCKEditor
     source_field(editor).value
   end
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   # Adds the specified string of text to the beginning of the existing
   # text in the target FCKEditor.
   def prepend(editor, string)
     editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(string)
-=======
-  # Adds the specified string of text to the end of the existing
-=======
-  # Adds the specified string of text to the beginning of the existing
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
-  # text in the target FCKEditor.
-  def prepend(editor, string)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(string)
-<<<<<<< HEAD
-sleep 20
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   def entity_picker(editor)

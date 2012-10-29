@@ -1,6 +1,5 @@
 require 'cgi'
-require 'watir-webdriver'
-require 'sambal-cle/page_maker.rb'
+require 'test-factory'
 Dir["#{File.dirname(__FILE__)}/sambal-cle/*.rb"].each {|f| require f }
 Dir["#{File.dirname(__FILE__)}/sambal-cle/page_objects/*.rb"].each {|f| require f }
 Dir["#{File.dirname(__FILE__)}/sambal-cle/data_objects/*.rb"].each {|f| require f }
@@ -18,14 +17,7 @@ class SakaiCLE
     @browser = Watir::Browser.new web_browser
     @browser.window.resize_to(1400,900)
     @browser.goto url
-<<<<<<< HEAD
-<<<<<<< HEAD
     $base_url=url
-=======
->>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
-=======
-    $base_url=url
->>>>>>> c3a8c8c... Created the UserObject class and methods.  Started updating the scripts to properly use them.
   end
 
 end

@@ -6,9 +6,9 @@ describe "Assignment Due Date on Calendar" do
 
   include Utilities
   include Workflows
-  include PageHelper
-  include Randomizers
-  include DateMakers
+  include Foundry
+  include StringFactory
+  include DateFactory
 
   before :all do
 
@@ -18,10 +18,6 @@ describe "Assignment Due Date on Calendar" do
     @sakai = SakaiCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c3a8c8c... Created the UserObject class and methods.  Started updating the scripts to properly use them.
     @student = make UserObject, :id=>@directory['person1']['id'], :password=>@directory['person1']['password'],
                     :first_name=>@directory['person1']['firstname'], :last_name=>@directory['person1']['lastname']
     @instructor1 = make UserObject, :id=>@directory['person3']['id'], :password=>@directory['person3']['password'],
@@ -31,20 +27,6 @@ describe "Assignment Due Date on Calendar" do
                         :first_name=>@directory['person4']['firstname'], :last_name=>@directory['person4']['lastname'],
                         :type=>"Instructor"
     @instructor1.log_in
-<<<<<<< HEAD
-=======
-    @student = @directory['person1']['id']
-    @spassword = @directory['person1']['password']
-    @instructor1 = @directory['person3']['id']
-    @ipassword = @directory['person3']['password']
-
-    @instructor2 = @directory['person4']['id']
-    @password1 = @directory['person4']['password']
-
-    log_in(@instructor1, @ipassword)
->>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
-=======
->>>>>>> c3a8c8c... Created the UserObject class and methods.  Started updating the scripts to properly use them.
 
     @site = make SiteObject
     @site.create

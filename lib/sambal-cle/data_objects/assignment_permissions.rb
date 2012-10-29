@@ -1,7 +1,7 @@
 class AssignmentPermissionsObject # TODO: Need to add support for Group-specific permissions
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
   
   attr_accessor :site, :group, :guest, :instructor, :student, :teaching_assistant

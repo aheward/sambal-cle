@@ -1,8 +1,9 @@
 # Note that this class is for icon-sakai-forums. NOT jforums.
 class ForumObject
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
+  include StringFactory
   include Workflows
   
   attr_accessor :site, :title, :short_description, :description, :direct_link,
@@ -17,15 +18,7 @@ class ForumObject
     options = defaults.merge(opts)
     
     set_options(options)
-<<<<<<< HEAD
-<<<<<<< HEAD
     requires @site
-=======
-    raise "You need to specify a site for your Forum" if @site==nil
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
-    requires @site
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   alias :name :title
@@ -104,7 +97,7 @@ end
 
 class TopicObject
 
-  include PageHelper
+  include Foundry
   include Utilities
   include Workflows
   

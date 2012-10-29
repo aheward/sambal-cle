@@ -1,7 +1,7 @@
 class BlogEntryObject
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include StringFactory
   include Workflows
   
   attr_accessor :title, :content, :site, :permissions
@@ -17,15 +17,7 @@ class BlogEntryObject
     options = defaults.merge(opts)
     
     set_options(options)
-<<<<<<< HEAD
-<<<<<<< HEAD
     requirements @site
-=======
-    raise "You need to specify a site for your blog entry" if @site==nil
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
-    requirements @site
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
     
   def create

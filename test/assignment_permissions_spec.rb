@@ -8,9 +8,9 @@ describe "Assignment Permissions" do
 
   include Utilities
   include Workflows
-  include PageHelper
-  include Randomizers
-  include DateMakers
+  include Foundry
+  include StringFactory
+  include DateFactory
 
   before :all do
 
@@ -30,23 +30,10 @@ describe "Assignment Permissions" do
                         :type=>"Instructor"
     @instructor1.log_in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
     @site = make SiteObject
     @site.create
     @site.add_official_participants :role=>@student.type, :participants=>[@student.id]
     @site.add_official_participants :role=>@instructor2.type, :participants=>[@instructor2.id]
-<<<<<<< HEAD
-=======
-    @instructor2 = @directory['person4']['id']
-    @password1 = @directory['person4']['password']
-
-    log_in(@instructor1, @ipassword)
->>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
-=======
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
 
     @site = make SiteObject
     @site.create
@@ -71,13 +58,6 @@ describe "Assignment Permissions" do
   end
 
   it "Default permissions allow instructors to share drafts" do
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    log_in(@instructor2, @password1)
->>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
-=======
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
     open_my_site_by_name @assignment.site
     assignments
     on AssignmentsList do |list|

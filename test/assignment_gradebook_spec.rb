@@ -6,9 +6,9 @@ describe "Assignments" do
 
   include Utilities
   include Workflows
-  include PageHelper
-  include Randomizers
-  include DateMakers
+  include Foundry
+  include StringFactory
+  include DateFactory
 
   before :all do
 
@@ -18,10 +18,6 @@ describe "Assignments" do
     @sakai = SakaiCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
     @student = make UserObject, :id=>@directory['person1']['id'], :password=>@directory['person1']['password'],
                     :first_name=>@directory['person1']['firstname'], :last_name=>@directory['person1']['lastname']
     @instructor1 = make UserObject, :id=>@directory['person3']['id'], :password=>@directory['person3']['password'],
@@ -31,20 +27,6 @@ describe "Assignments" do
                         :first_name=>@directory['person4']['firstname'], :last_name=>@directory['person4']['lastname'],
                         :type=>"Instructor"
     @instructor1.log_in
-<<<<<<< HEAD
-=======
-    @student = @directory['person1']['id']
-    @spassword = @directory['person1']['password']
-    @instructor1 = @directory['person3']['id']
-    @ipassword = @directory['person3']['password']
-
-    @instructor2 = @directory['person4']['id']
-    @password1 = @directory['person4']['password']
-
-    log_in(@instructor1, @ipassword)
->>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
-=======
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
 
     @site = make SiteObject
     @site.create

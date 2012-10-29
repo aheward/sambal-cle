@@ -1,7 +1,8 @@
 class WebContentObject
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
+  include StringFactory
   include Workflows
 
   attr_accessor :title, :source, :site
@@ -16,15 +17,7 @@ class WebContentObject
     options = defaults.merge(opts)
 
     set_options(options)
-<<<<<<< HEAD
-<<<<<<< HEAD
     requires @site
-=======
-    raise "You need to specify a site for your web content" if @site==nil
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
-    requires @site
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   def create

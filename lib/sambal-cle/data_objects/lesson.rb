@@ -1,7 +1,7 @@
 class ModuleObject
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :title, :description, :keywords, :start_date, :end_date, :site, :href
@@ -15,15 +15,7 @@ class ModuleObject
     options = defaults.merge(opts)
 
     set_options(options)
-<<<<<<< HEAD
-<<<<<<< HEAD
     requires @site
-=======
-    raise "You must specify a Site name for your lesson" if @site==nil
->>>>>>> 8c662f2... Added the set_options method to the PageHelper module. Updated the data object classes to use this method.
-=======
-    requires @site
->>>>>>> 38e0fb3... Added requires method to pagehelper, updated data object classes to use this method.
   end
 
   alias :name :title
@@ -55,8 +47,8 @@ end
 
 class ContentSectionObject
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :site, :module, :title, :instructions, :modality, :content_type,

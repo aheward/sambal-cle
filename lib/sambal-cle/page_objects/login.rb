@@ -5,21 +5,9 @@
 # This is the page where users log in to the site.
 class Login < BasePage
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   page_url $base_url
 
   action(:search_public_courses_and_projects) { |b| b.frame(:index=>0).link(:text=>"Search Public Courses and Projects").click }
-=======
-  def search_public_courses_and_projects
-    @browser.frame(:index=>0).link(:text=>"Search Public Courses and Projects").click
-  end
->>>>>>> 20d9a61... Now working on the Assignments Submissions Spec.  Small tweaks to other scripts because of a change to the basic log_in method.
-=======
-  page_url $base_url
-
-  action(:search_public_courses_and_projects) { |b| b.frame(:index=>0).link(:text=>"Search Public Courses and Projects").click }
->>>>>>> c3a8c8c... Created the UserObject class and methods.  Started updating the scripts to properly use them.
 
   # Logs in to Sakai using the
   # specified credentials. Then it
