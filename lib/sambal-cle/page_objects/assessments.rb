@@ -35,7 +35,6 @@ class AssessmentsBase <BasePage
       element(:keywords) { |b| b.frm.text_field(:id=>/:keyfield/) }
       # QuestionPoolsList
       action(:save) { |b| b.frm.button(:id=>"questionpool:submit").click }
-      action(:cancel) { |b| b.frm.button(:value=>"Cancel").click }
     end
   end
 end
@@ -56,7 +55,6 @@ class AssessmentsList < AssessmentsBase
   # then returns them as an Array.
   def pending_assessment_titles
     titles =[]
-    pending_table = frm.table(:id=>"authorIndexForm:coreAssessments")
     1.upto(pending_table.rows.size-1) do |x|
       titles << pending_table[x][1].span(:id=>/assessmentTitle/).text
     end
@@ -67,7 +65,6 @@ class AssessmentsList < AssessmentsBase
   # then returns them as an Array.
   def published_assessment_titles
     titles =[]
-    published_table = frm.div(:class=>"tier2", :index=>2).table(:class=>"listHier", :index=>0)
     1.upto(published_table.rows.size-1) do |x|
       titles << published_table[x][1].span(:id=>/publishedAssessmentTitle/).text
     end
@@ -78,7 +75,6 @@ class AssessmentsList < AssessmentsBase
   # in the list.
   def inactive_assessment_titles
     titles =[]
-    inactive_table = frm.div(:class=>"tier2", :index=>2).table(:id=>"authorIndexForm:inactivePublishedAssessments")
     1.upto(inactive_table.rows.size-1) do |x|
       titles << inactive_table[x][1].span(:id=>/inactivePublishedAssessmentTitle/).text
     end
@@ -88,12 +84,16 @@ class AssessmentsList < AssessmentsBase
   # Opens the selected test for scoring
   # then instantiates the AssessmentTotalScores class.
   # @param test_title [String] the title of the test to be clicked.
-  def score_test(test_title)
-    frm.tbody(:id=>"authorIndexForm:_id88:tbody_element").row(:text=>/#{Regexp.escape(test_title)}/).link(:id=>/authorIndexToScore/).click
-    AssessmentTotalScores.new(@browser)
-  end
+  pgmd(:score_test) { |test_title, b| b.frm.tbody(:id=>"authorIndexForm:_id88:tbody_element").row(:text=>/#{Regexp.escape(test_title)}/).link(:id=>/authorIndexToScore/).click }
+
+  pgmd(:publish) { |test_title, b| b.pending_table.tr(:text=>/#{Regexp.escape(test_title)}/).select(:name=>/Select/).select "Publish" }
+
+  pgmd(:edit) { |test_title, b| b.form(:id=>"authorIndexForm").tr(:text=>/#{Regexp.escape(test_title)}/).select(:name=>/Select/).select "Edit" }
 
   element(:title) { |b| b.frm.text_field(:id=>"authorIndexForm:title") }
+  element(:pending_table) { |b| b.frm.table(:id=>"authorIndexForm:coreAssessments") }
+  element(:published_table) { |b| b.frm.div(:class=>"tier2", :index=>2).table(:class=>"listHier", :index=>0) }
+  element(:inactive_table) { |b| b.frm.div(:class=>"tier2", :index=>2).table(:id=>"authorIndexForm:inactivePublishedAssessments") }
   element(:create_using_builder) { |b| b.frm.radio(:name=>"authorIndexForm:_id29", :index=>0) }
   element(:create_using_text) { |b| b.frm.radio(:name=>"authorIndexForm:_id29") }
   element(:select_assessment_type) { |b| b.frm.select(:id=>"authorIndexForm:assessmentTemplate") }
@@ -108,31 +108,20 @@ class PreviewOverview < BasePage
   frame_element
 
   # Scrapes the value of the due date from the page. Returns it as a string.
-  def due_date
-    frm.div(:class=>"tier2").table(:index=>0)[0][0].text
-  end
+  value(:due_date) { |b| b.frm.frm.div(:class=>"tier2").table(:index=>0)[0][0].text }
 
   # Scrapes the value of the time limit from the page. Returns it as a string.
-  def time_limit
-    frm.div(:class=>"tier2").table(:index=>0)[3][0].text
-  end
+  value(:time_limit) { |b| b.frm.frm.div(:class=>"tier2").table(:index=>0)[3][0].text }
 
   # Scrapes the submission limit from the page. Returns it as a string.
-  def submission_limit
-    frm.div(:class=>"tier2").table(:index=>0)[6][0].text
-  end
+  value(:submission_limit) { |b| b.frm.frm.div(:class=>"tier2").table(:index=>0)[6][0].text }
 
   # Scrapes the Feedback policy from the page. Returns it as a string.
-  def feedback
-    frm.div(:class=>"tier2").table(:index=>0)[9][0].text
-  end
+  value(:feedback) { |b| b.frm.div(:class=>"tier2").table(:index=>0)[9][0].text }
 
   # Clicks the Done button, then instantiates
   # the EditAssessment class.
-  def done
-    frm.button(:name=>"takeAssessmentForm:_id5").click
-    EditAssessment.new(@browser)
-  end
+  action(:done) { |b| b.frm.button(:name=>"takeAssessmentForm:_id5").click }
 
   action(:begin_assessment) { |b| b.frm.button(:id=>"takeAssessmentForm:beginAssessment3").click }
 
@@ -143,45 +132,44 @@ class AssessmentSettings < AssessmentsBase
 
   menu_bar_elements
 
+  expected_element :cancel_button
+
   # Scrapes the Assessment Type from the page and returns it as a string.
-  def assessment_type_title
-    frm.div(:class=>"tier2").table(:index=>0)[0][1].text
-  end
+  value(:assessment_type_title) { |b| b.frm.div(:class=>"tier2").table(:index=>0)[0][1].text }
 
   # Scrapes the Assessment Author information from the page and returns it as a string.
-  def assessment_type_author
-    frm.div(:class=>"tier2").table(:index=>0)[1][1].text
-  end
+  value(:assessment_type_author) { |b| b.frm.div(:class=>"tier2").table(:index=>0)[1][1].text }
 
   # Scrapes the Assessment Type Description from the page and returns it as a string.
-  def assessment_type_description
-    frm.div(:class=>"tier2").table(:index=>0)[2][1].text
-  end
+  value(:assessment_type_description) { |b| b.frm.div(:class=>"tier2").table(:index=>0)[2][1].text }
 
   # Clicks the Save Settings and Publish button
   # then instantiates the PublishAssessment class.
-  def save_and_publish
-    frm.button(:value=>"Save Settings and Publish").click
-    PublishAssessment.new(@browser)
-  end
+  action(:save_and_publish) { |b| b.frm.button(:value=>"Save Settings and Publish").click }
   
-  action(:open) { |b| b.frm.link(:text=>"Open") }
-  action(:close) { |b| b.frm.link(:text=>"Close") }
+  action(:open) { |b| b.frm.link(:text=>"Open").click }
+  action(:close) { |b| b.frm.link(:text=>"Close").click }
+  # Introduction
   element(:title) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:intro:assessment_title") }
   element(:authors) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:intro:assessment_author") }
   element(:description) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:intro:_id44_textinput") }
   action(:add_attachments_to_intro) { |b| b.frm.button(:name=>"assessmentSettingsAction:intro:_id90").click }
+  # Delivery Dates
   element(:available_date) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:startDate") }
   element(:due_date) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:endDate") }
   element(:retract_date) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:retractDate") }
+  # Assessment Released To
   element(:released_to_anonymous) { |b| b.frm.radio(:name=>"assessmentSettingsAction:_id117") }
   element(:released_to_site) { |b| b.frm.radio(:name=>"assessmentSettingsAction:_id117") }
   element(:specified_ips) { |b| b.frm.text_field(:name=>"assessmentSettingsAction:_id132") }
+  # High Security
   element(:secondary_id) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:username") }
   element(:secondary_pw) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:password") }
+  element(:allow_specified_ips) { |b| b.frm.text_field(:name=>"assessmentSettingsAction:_id132") }
   element(:timed_assessment) { |b| b.frm.checkbox(:id=>"assessmentSettingsAction:selTimeAssess") }
   element(:limit_hour) { |b| b.frm.select(:id=>"assessmentSettingsAction:timedHours") }
   element(:limit_mins) { |b| b.frm.select(:id=>"assessmentSettingsAction:timedMinutes") }
+  # Assessment Organization
   element(:linear_access) { |b| b.frm.radio(:name=>"assessmentSettingsAction:itemNavigation") }
   element(:random_access) { |b| b.frm.radio(:name=>"assessmentSettingsAction:itemNavigation") }
   element(:question_per_page) { |b| b.frm.radio(:name=>"assessmentSettingsAction:assessmentFormat") }
@@ -189,14 +177,17 @@ class AssessmentSettings < AssessmentsBase
   element(:assessment_per_page) { |b| b.frm.radio(:name=>"assessmentSettingsAction:assessmentFormat") }
   element(:continuous_numbering) { |b| b.frm.radio(:name=>"assessmentSettingsAction:itemNumbering") }
   element(:restart_per_part) { |b| b.frm.radio(:name=>"assessmentSettingsAction:itemNumbering") }
+  # Mark for review
   element(:add_mark_for_review) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:markForReview1") }
   element(:unlimited_submissions) { |b| b.frm.radio(:name=>"assessmentSettingsAction:unlimitedSubmissions") }
   element(:only_x_submissions) { |b| b.frm.radio(:name=>"assessmentSettingsAction:unlimitedSubmissions") }
   element(:allowed_submissions) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:submissions_Allowed") }
   element(:late_submissions_not_accepted) { |b| b.frm.radio(:name=>"assessmentSettingsAction:lateHandling") }
   element(:late_submissions_accepted) { |b| b.frm.radio(:name=>"assessmentSettingsAction:lateHandling") }
-  element(:submission_message) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:_id245_textinput") }
+  # Submission Message
+  element(:submission_message) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:_id250_textinput") }
   element(:final_page_url) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:finalPageUrl") }
+  # Feedback
   element(:question_level_feedback) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackAuthoring") }
   element(:selection_level_feedback) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackAuthoring") }
   element(:both_feedback_levels) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackAuthoring") }
@@ -229,8 +220,9 @@ class AssessmentSettings < AssessmentsBase
     #text_field(:objectives, :=>"") }
     #text_field(:rubrics, :=>"") }
     #checkbox(:record_metadata_for_questions, :=>"") }
-  action(:save) { |b| b.frm.button(:name=>"assessmentSettingsAction:_id383").click }
-  action(:cancel) { |b| b.frm.button(:name=>"assessmentSettingsAction:_id385").click }
+  action(:save) { |b| b.frm.button(:value=>"Save Settings").click }
+  element(:cancel_button) { |b| b.frm.button(:value=>"Cancel") }
+  action(:cancel) { |p| p.cancel_button.click }
 
 end
 
@@ -252,7 +244,7 @@ class AssessmentTotalScores < BasePage
     scores_table = frm.table(:id=>"editTotalResults:totalScoreTable").to_a
     scores_table.delete_at(0)
     scores_table.each { |row| ids << row[1] }
-    return ids
+    ids
   end
 
   # Adds a comment to the specified student's comment box.
@@ -262,10 +254,10 @@ class AssessmentTotalScores < BasePage
   # selecting the appropriate comment box.
   # @param student_id [String] the target student id
   # @param comment [String] the text of the comment being made to the student
-  def comment_for_student(student_id, comment)
-    index_val = student_ids.index(student_id)
-    frm.text_field(:name=>"editTotalResults:totalScoreTable:#{index_val}:_id345").value=comment
-  end
+  pgmd(:comment_for_student) { |student_id, comment, b|
+    index_val = b.student_ids.index(student_id)
+    b.frm.text_field(:name=>"editTotalResults:totalScoreTable:#{index_val}:_id345").value=comment
+  }
 
   # Clicks the Submit Date link in the table header to sort/reverse sort the list.
   def sort_by_submit_date
@@ -340,59 +332,40 @@ class EditAssessment < AssessmentsBase
   # Allows removing a specified
   # Assessment part number.
   # @param part_num [String] the part number of the assessment you want
-  def remove_part(part_num)
-    frm.link(:xpath, "//a[contains(@onclick, 'assesssmentForm:parts:#{part_num.to_i-1}:copyToPool')]").click
-  end
+  pgmd(:remove_part) { |part_num, b| b.frm.link(:xpath, "//a[contains(@onclick, 'assesssmentForm:parts:#{part_num.to_i-1}:copyToPool')]").click }
 
   # Clicks the Add Part button, then
   # instantiates the AddEditAssessmentPart page class.
-  def add_part
-    frm.link(:text=>"Add Part").click
-    AddEditAssessmentPart.new(@browser)
-  end
+  action(:add_part) { |b| b.frm.link(:text=>"Add Part").click }
 
   # Selects the desired question type from the
-  # drop down list.
-  element(:question_type) { |b| b.frm.select(:id=>"assesssmentForm:changeQType").select(qtype) }
+  # drop down list at the top of the page.
+  pgmd(:question_type) { |qtype, b| b.frm.select(:id=>"assesssmentForm:changeQType").select(qtype) }
 
   # Clicks the Preview button,
   # then instantiates the PreviewOverview page class.
-  def preview
-    frm.link(:text=>"Preview").click
-    PreviewOverview.new(@browser)
-  end
+  action(:preview) { |b| b.frm.link(:text=>"Preview").click }
 
   # Clicks the Settings link, then
   # instantiates the AssessmentSettings page class.
-  def settings
-    frm.link(:text=>"Settings").click
-    AssessmentSettings.new(@browser)
-  end
+  action(:settings) { |b| b.frm.link(:text=>"Settings").click }
 
   # Clicks the Publish button, then
   # instantiates the PublishAssessment page class.
-  def publish
-    frm.link(:text=>"Publish").click
-    PublishAssessment.new(@browser)
-  end
-
-  # Clicks the Question Pools button, then
-  # instantiates the QuestionPoolsList page class.
-  def question_pools
-    frm.link(:text=>"Question Pools").click
-    QuestionPoolsList.new(@browser)
-  end
+  action(:publish) { |b| b.frm.link(:text=>"Publish").click }
 
   # Allows retrieval of a specified question's
   # text, by part and question number.
   # @param part_num [String] the Part number containing the question you want
   # @param question_num [String] the number of the question you want
-  def get_question_text(part_number, question_number)
-    frm.table(:id=>"assesssmentForm:parts:#{part_number.to_i-1}:parts").div(:class=>"tier3", :index=>question_number.to_i-1).text
-  end
+  pgmd(:get_question_text) { |part_number, question_number, b|  b.frm.table(:id=>"assesssmentForm:parts:#{part_number.to_i-1}:parts").div(:class=>"tier3", :index=>question_number.to_i-1).text }
 
   action(:print) { |b| b.frm.button(:text=>"Print").click }
   action(:update_points) { |b| b.frm.button(:id=>"assesssmentForm:pointsUpdate").click }
+
+  pgmd(:add_question_to_part) { |part, p| p.assessment_form.row(:text=>/#{Regexp.escape(part)}/).select(:id=>/changeQType/) }
+
+  element(:assessment_form) { |b| b.table(:id=>"assesssmentForm:parts") }
 
 end
 
@@ -401,17 +374,16 @@ class AddEditAssessmentPart < BasePage
 
   frame_element
 
-  # Clicks the Save button, then instantiates
-  # the EditAssessment page class.
+  # Clicks the Save button
   def save
     frm.button(:name=>"modifyPartForm:_id89").click
-    EditAssessment.new(@browser)
+
   end
 
   element(:title) { |b| b.frm.text_field(:id=>"modifyPartForm:title") }
   element(:information) { |b| b.frm.text_field(:id=>"modifyPartForm:_id10_textinput") }
   action(:add_attachments) { |b| b.frm.button(:name=>"modifyPartForm:_id54").click }
-  element(:questions_one_by_one) { |b| b.frm.radio(:index=>0, :name=>"modifyPartForm:_id60") }
+  element(:one_by_one) { |b| b.frm.radio(:index=>0, :name=>"modifyPartForm:_id60") }
   element(:random_draw) { |b| b.frm.radio(:index=>1, :name=>"modifyPartForm:_id60") }
   element(:pool_name) { |b| b.frm.select(:id=>"modifyPartForm:assignToPool") }
   element(:number_of_questions) { |b| b.frm.text_field(:id=>"modifyPartForm:numSelected") }
@@ -433,14 +405,12 @@ end
 class PublishAssessment < BasePage
 
   frame_element
+  basic_page_elements
+
   # Clicks the Publish button, then
   # instantiates the AssessmentsList page class.
-  def publish
-    frm.button(:value=>"Publish").click
-    AssessmentsList.new(@browser)
-  end
+  action(:publish) { |b| b.frm.button(:value=>"Publish").click }
 
-  action(:cancel) { |b| b.frm.button(:value=>"Cancel").click }
   action(:edit) { |b| b.frm.button(:name=>"publishAssessmentForm:_id23").click }
   element(:notification) { |b| b.frm.select(:id=>"publishAssessmentForm:number") }
 

@@ -1,9 +1,9 @@
 class SiteObject
 
-  include PageHelper
-  include Utilities
-  include Randomizers
-  include DateMakers
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include DateFactory
   include Workflows
 
   attr_accessor :name, :id, :subject, :course, :section, :term, :authorizer,

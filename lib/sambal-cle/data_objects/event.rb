@@ -1,7 +1,9 @@
 class EventObject
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
+  include DateFactory
+  include StringFactory
   include Workflows
 
   attr_accessor :title, :month, :day, :year, :start_hour, :start_minute,

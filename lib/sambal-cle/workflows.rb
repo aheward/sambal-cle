@@ -199,6 +199,7 @@ module Workflows
 
   # AssessmentsList class OR the TakeAssessmentList for students
   menu_link :assessments, :class=>"icon-sakai-samigo"
+  alias :tests_and_quizzes :assessments
 
   # UserMembership
   menu_link :user_membership, :class=>"icon-sakai-usermembership"

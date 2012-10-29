@@ -136,7 +136,6 @@ class Groups < SiteSetupBase
   action(:create_new_group) { |p| p.create_new_group_link.click }
   action(:auto_groups) { |b| b.frm.link(:text=>"Auto Groups").click }
   action(:remove_checked) { |b| b.frm.button(:id=>"delete-groups").click }
-  action(:cancel) { |b| b.frm.button(:id=>"cancel").click }
 
   end
 
@@ -156,7 +155,6 @@ class CreateNewGroup < SiteSetupBase
   action(:left) { |b| b.frm.button(:name=>"left", :index=>0).click }
   action(:all_right) { |b| b.frm.button(:name=>"right", :index=>1).click }
   action(:all_left) { |b| b.frm.button(:name=>"left",:index=>1).click }
-  action(:cancel) { |b| b.frm.button(:id=>"cancel").click }
 
   end
 
@@ -192,7 +190,7 @@ class SiteSetupAddParticipants < SiteSetupBase
   element(:assign_each_individually) { |b| b.frm.radio(:id=>"content::role-row:1:role-select") }
   element(:active_status) { |b| b.frm.radio(:id=>"content::status-row:0:status-select") }
   element(:inactive_status) { |b| b.frm.radio(:id=>"content::status-row:1:status-select") }
-  action(:cancel) { |b| b.frm.button(:id=>"content::cancel").click }
+  #action(:cancel) { |b| b.frm.button(:id=>"content::cancel").click }
     
 end
 
@@ -205,7 +203,7 @@ class SiteSetupChooseRolesIndiv < SiteSetupBase
   action(:continue) { |b| b.frm.button(:value=>"Continue").click }
   
   action(:back) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Aback&Fast%20track%20action=siteAddParticipantHandler.processDifferentRoleBack").click }
-  action(:cancel) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Acancel&Fast%20track%20action=siteAddParticipantHandler.processCancel").click }
+  #action(:cancel) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Acancel&Fast%20track%20action=siteAddParticipantHandler.processCancel").click }
   element(:user_role) { |b| b.frm.select(:id=>"content::user-row:0:role-select-selection") }
 
 end
@@ -248,7 +246,7 @@ class SiteSetupParticipantEmail < SiteSetupBase
   
   action(:continue) { |b| b.frm.button(:value=>"Continue").click }
   action(:back) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Acontinue&Fast%20track%20action=siteAddParticipantHandler.processEmailNotiBack").click }
-  action(:cancel) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Acontinue&Fast%20track%20action=siteAddParticipantHandler.processEmailNotiCancel").click }
+  #action(:cancel) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Acontinue&Fast%20track%20action=siteAddParticipantHandler.processEmailNotiCancel").click }
   element(:send_now) { |b| b.frm.radio(:id=>"content::noti-row:0:noti-select") }
   element(:dont_send) { |b| b.frm.radio(:id=>"content::noti-row:1:noti-select") }
     
@@ -273,7 +271,7 @@ class SiteSetupParticipantConfirm < SiteSetupBase
   end
   
   action(:back) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Aback&Fast%20track%20action=siteAddParticipantHandler.processConfirmBack").click }
-  action(:cancel) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Aback&Fast%20track%20action=siteAddParticipantHandler.processConfirmCancel").click }
+  #action(:cancel) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Aback&Fast%20track%20action=siteAddParticipantHandler.processConfirmCancel").click }
 
 end
 
@@ -344,7 +342,6 @@ class EditSiteTools < SiteSetupBase
   element(:yes) { |b| b.frm.radio(:id=>"import_yes") }
   element(:import_sites) { |b| b.frm.select(:id=>"importSites") }
   action(:back) { |b| b.frm.button(:name=>"Back").click }
-  action(:cancel) { |b| b.frm.button(:name=>"Cancel").click }
 
 end
 
@@ -394,13 +391,8 @@ class DeleteSite < SiteSetupBase
 
   menu_elements
   
-  # Clicks the Remove button, then instantiates
-  # the SiteSetup class.
+  # Clicks the Remove button
   action(:remove) { |b| b.frm.button(:value=>"Remove").click }
-  
-  # Clicks the Cancel button, then instantiates
-  # the SiteSetup class.
-  action(:cancel) { |b| b.frm.button(:value=>"Cancel").click }
 
 end
 
@@ -427,7 +419,7 @@ class SiteType < SiteSetupBase
   element(:academic_term) { |b| b.frm.select(:id=>"selectTerm") }
   element(:select_template) { |b| b.frm.select(:id=>"templateSiteId") }
   element(:select_term) { |b| b.frm.select(:id=>"selectTermTemplate") }
-  action(:cancel) { |b| b.frm.button(:id=>"cancelCreate").click }
+  #action(:cancel) { |b| b.frm.button(:id=>"cancelCreate").click }
   element(:copy_users) { |b| b.frm.checkbox(:id=>"copyUsers") }
   element(:copy_content) { |b| b.frm.checkbox(:id=>"copyContent") }
 end
@@ -461,7 +453,6 @@ class AddMultipleTools < SiteSetupBase
   element(:web_content_source) { |b| b.frm.text_field(:id=>"source_sakai.iframe") }
   element(:more_web_content_tools) { |b| b.frm.select(:id=>"num_sakai.iframe")  }
   action(:back) { |b| b.frm.button(:name=>"Back").click }
-  action(:cancel) { |b| b.frm.button(:name=>"Cancel").click }
     
 end
   
@@ -498,7 +489,6 @@ class CourseSectionInfo < SiteSetupBase
   element(:special_instructions) { |b| b.frm.text_field(:id=>"additional") }
   element(:add_more_rosters) { |b| b.frm.select(:id=>"number")  }
   action(:back) { |b| b.frm.button(:name=>"Back").click }
-  action(:cancel) { |b| b.frm.button(:name=>"Cancel").click }
 
 end
   
@@ -508,6 +498,7 @@ end
 class SiteAccess < SiteSetupBase
 
   menu_elements
+  expected_element :allow
   
   # The page element that displays the joiner role
   # select list. Use this method to validate whether the
@@ -525,7 +516,6 @@ class SiteAccess < SiteSetupBase
   element(:limited) { |b| b.frm.radio(:id=>"unjoinable") }
   element(:allow) { |b| b.frm.radio(:id=>"joinable") }
   action(:back) { |b| b.frm.button(:name=>"eventSubmit_doBack").click }
-  action(:cancel) { |b| b.frm.button(:name=>"eventSubmit_doCancel_create").click }
   element(:joiner_role) { |b| b.frm.select(:id=>"joinerRole") }
 
 end
@@ -572,7 +562,6 @@ class CourseSiteInfo < BasePage
   element(:site_contact_name) { |b| b.frm.text_field(:id=>"siteContactName") }
   element(:site_contact_email) { |b| b.frm.text_field(:id=>"siteContactEmail") }
   action(:back) { |b| b.frm.button(:name=>"Back").click }
-  action(:cancel) { |b| b.frm.button(:name=>"Cancel").click }
 
 end
   

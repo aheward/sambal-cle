@@ -1,7 +1,9 @@
 class AnnouncementObject
 
-  include Utilities
-  include PageHelper
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include DateFactory
   include Workflows
 
   attr_accessor :title, :body, :site, :link, :access, :availability,

@@ -1,7 +1,8 @@
 class ChatRoomObject
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
+  include StringFactory
   include Workflows
   
   attr_accessor :title, :description, :chat_display, :allow_change, :site

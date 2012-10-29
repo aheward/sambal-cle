@@ -2,10 +2,10 @@
 # for Student submissions of an assignment, use AssignmentSubmissionObject
 class AssignmentObject
 
-  include PageHelper
-  include Utilities
-  include Randomizers
-  include DateMakers
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include DateFactory
   include Workflows
 
   attr_accessor :title, :site, :instructions, :id, :link, :status, :grade_scale,
@@ -206,5 +206,6 @@ class AssignmentObject
       list.open_assignment @title
     end
   end
+  alias open view_submission
 
 end

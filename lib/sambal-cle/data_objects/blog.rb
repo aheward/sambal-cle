@@ -1,7 +1,7 @@
 class BlogEntryObject
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include StringFactory
   include Workflows
   
   attr_accessor :title, :content, :site, :permissions

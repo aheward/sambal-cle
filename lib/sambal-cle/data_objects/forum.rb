@@ -1,8 +1,9 @@
 # Note that this class is for icon-sakai-forums. NOT jforums.
 class ForumObject
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
+  include StringFactory
   include Workflows
   
   attr_accessor :site, :title, :short_description, :description, :direct_link,
@@ -96,7 +97,7 @@ end
 
 class TopicObject
 
-  include PageHelper
+  include Foundry
   include Utilities
   include Workflows
   

@@ -6,9 +6,9 @@ describe "Assignment Due Date on Calendar" do
 
   include Utilities
   include Workflows
-  include PageHelper
-  include Randomizers
-  include DateMakers
+  include Foundry
+  include StringFactory
+  include DateFactory
 
   before :all do
 

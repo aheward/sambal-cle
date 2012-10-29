@@ -1,8 +1,3 @@
-
-# TODO: There's a lot of cleanup that can be done with the code in these
-# classes--and it's probably even possible to completely eliminate one
-# or more of them.
-
 #================
 # Assignments Pages
 #================
@@ -189,7 +184,7 @@ class AssignmentsList < AssignmentsBase
     1.upto(a_table.rows.size-1) do |x|
       titles << a_table[x][1].h4(:index=>0).text
     end
-    return titles
+    titles
   end
   alias assignment_titles assignments_titles
   alias assignment_list assignments_titles
@@ -197,72 +192,52 @@ class AssignmentsList < AssignmentsBase
 
   # Clicks the Edit link for the assignment with the specified
   # id, then instantiates the AssignmentAdd page class.
-  def edit_assignment_id(id)
-    frm.link(:href=>/#{Regexp.escape(id)}/).click
-  end
+  page_method(:edit_assignment_id) { |id, b| b.frm.link(:href=>/#{Regexp.escape(id)}/).click }
 
   # Clicks the Edit link for the Assignment specified.
   # next is the AssignmentAdd page class.
-  def edit_assignment(assignment_name)
-    index = assignments_titles.index(assignment_name)
-    frm.link(:text=>"Edit", :index=>index).click
-  end
+  page_method(:edit_assignment) { |assignment_name, b|
+    index = b.assignments_titles.index(assignment_name)
+    b.frm.link(:text=>"Edit", :index=>index).click
+  }
 
   # Checks the appropriate checkbox, based on the specified assignment_name
   # Then clicks the Update button and confirms the deletion request.
-  def delete(assignment_name)
-    assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).checkbox(:name=>"selectedAssignments").set
-    frm.button(:value=>"Update").click
-    frm.button(:value=>"Delete").click
-  end
+  page_method(:delete) { |assignment_name, b|
+    b.assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).checkbox(:name=>"selectedAssignments").set
+    b.frm.button(:value=>"Update").click
+    b.frm.button(:value=>"Delete").click
+  }
 
   # Clicks on the Duplicate link for the Assignment specified.
   # Then instantiates the AssignmentsList page class.
-  def duplicate(assignment_name)
-    index = assignments_titles.index(assignment_name)
-    frm.link(:text=>"Duplicate", :index=>index).click
-  end
+  page_method(:duplicate) { |assignment_name, b|
+    index = b.assignments_titles.index(assignment_name)
+    b.frm.link(:text=>"Duplicate", :index=>index).click
+  }
 
   # Gets the assignment id from the href of the specified
   # Assignment link.
-  def get_assignment_id(assignment_name)
-    assignment_href(assignment_name) =~ /(?<=\/a\/\S{36}\/).+(?=&pan)/
-    $~.to_s
-  end
-
-  def assignment_href(name)
-    frm.link(:text=>/#{Regexp.escape(name)}/).href
-  end
+  page_method(:get_assignment_id) { |assignment_name, b| b.assignment_href(assignment_name) =~ /(?<=\/a\/\S{36}\/).+(?=&pan)/; $~.to_s }
+  page_method(:assignment_href) { |name, b| b.frm.link(:text=>/#{Regexp.escape(name)}/).href }
 
   # Checks the checkbox for the specified Assignment,
   # using the assignment id as the identifier.
-  def check_assignment(id) #FIXME to use name instead of id.
-    frm.checkbox(:value, /#{id}/).set
-  end
-
-  # Opens the specified assignment for viewing
-  def open_assignment(assignment_name)
-    frm.link(:text=>assignment_name).click
-  end
+  page_method(:check_assignment) { |id,b| b.frm.checkbox(:value, /#{id}/).set } #FIXME to use name instead of id.
+  page_method(:open_assignment) { |assignment_name, b| b.frm.link(:text=>assignment_name).click }
 
   # Gets the contents of the status column
   # for the specified assignment
-  def status_of(assignment_name)
-    assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).td(:headers=>"status").text
-  end
+  page_method(:status_of) { |assignment_name, b| b.assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).td(:headers=>"status").text }
 
   # Clicks the View Submissions link for the specified
   # Assignment, then instantiates the AssignmentSubmissionList
   # page class.
-  def view_submissions_for(assignment_name)
-    assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).link(:text=>"View Submissions").click
-  end
+  page_method(:view_submissions_for) { |assignment_name, b| b.assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).link(:text=>"View Submissions").click }
 
   # Clicks the Grade link for the specified Assignment,
   # then instantiates the AssignmentSubmissionList page class.
-  def grade(assignment_name)
-    assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).link(:text=>"Grade").click
-  end
+  page_method(:grade) { |assignment_name, b| b.assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).link(:text=>"Grade").click }
 
   action(:sort_assignment_title) { |b| b.frm.link(:text=>"Assignment title").click }
   action(:sort_status) { |b| b.frm.link(:text=>"Status").click }
@@ -323,11 +298,7 @@ end
 class AssignmentsPreview < AssignmentsBase
 
   menu_elements
-
-  # Returns the text content of the page header
-  def header
-    frm.div(:class=>"portletBody").h3.text
-  end
+  basic_page_elements # Needed for the header method
 
   # returns a hash containing the info in the Summary table.
   # Header fields are the keys and their associated tds are the values.
@@ -341,31 +312,15 @@ class AssignmentsPreview < AssignmentsBase
   end
 
   # Grabs the Assignment Instructions text.
-  def instructions
-    frm.div(:class=>"textPanel").text
-  end
+  value(:instructions) { |b| b.frm.div(:class=>"textPanel").text }
 
   # Grabs the instructor comments text.
-  def instructor_comments
-    frm.div(:class=>"portletBody").div(:class=>"textPanel", :index=>2).text
-  end
+  value(:instructor_comments) { |b| b.frm.div(:class=>"portletBody").div(:class=>"textPanel", :index=>2).text }
 
-  #
-  def back_to_list
-    frm.button(:value=>"Back to list").click
-  end
+  action(:back_to_list) { |b| b.frm.button(:value=>"Back to list").click }
 
-  # Clicks the Post button, then instantiates
-  # the AssignmentsList page class.
-  def post
-    frm.button(:name=>"post").click
-  end
-
-  # Clicks the Cancel button and instantiates the
-  # AssignmentsList Class.
-  def cancel
-    frm.button(:value=>"Cancel").click
-  end
+  # Clicks the Post button.
+  action(:post) { |b| b.frm.button(:name=>"post").click }
 
   element(:assignment_id) { |b| b.frm.hidden(:name=>"assignmentId") }
   action(:hide_assignment) { |b| b.frm.link(:href=>/doHide_preview_assignment_assignment/).click }
@@ -382,19 +337,9 @@ end
 class AssignmentsReorder < AssignmentsBase
 
   menu_elements
+  basic_page_elements
 
-  # Clicks the Save button, then instantiates
-  # the AssignmentsList page class.
-  def save
-    frm.button(:value=>"Save").click
-  end
-
-  # Clicks the Cancel button, then instantiates
-  # the AssignmentsList Class.
-  def cancel
-    frm.button(:value=>"Cancel").click
-  end
-
+  action(:save) { |b| b.frm.button(:value=>"Save").click }
   action(:sort_by_title) { |b| b.frm.link(:text=>"Sort by title").click }
   action(:sort_by_open_date) { |b| b.frm.link(:text=>"Sort by open date").click }
   action(:sort_by_due_date) { |b| b.frm.link(:text=>"Sort by due date").click }
@@ -444,14 +389,12 @@ class AssignmentStudentView < BasePage
   element(:resubmit_button) { |b| b.frm.button(:value=>"Resubmit") }
   element(:save_draft_button) { |b| b.frm.button(:value=>"Save Draft") }
   element(:preview_button) { |b| b.frm.button(:value=>"Preview") }
-  element(:cancel_button) { |b| b.frm.button(:value=>"Cancel") }
 
   action(:submit) { |p| p.submit_button.click }
   action(:resubmit) { |p| p.resubmit_button.click }
   action(:save_draft) { |p| p.save_draft_button.click }
   action(:back_to_list) { |b| b.frm.button(:value=>"Back to list").click }
   action(:preview) { |p| p.preview_button.click }
-  action(:cancel) { |p| p.cancel_button.click }
 
   element(:instructor_comment_field) { |b| b.frm.form(:name=>"addSubmissionForm").div(:class=>"textPanel", :index=>1) }
 
@@ -464,7 +407,7 @@ class AssignmentStudentView < BasePage
   def attachments
     names = []
     frm.ul(:class=>"attachList indnt1").links.each { |link| names << link.text }
-    return names
+    names
   end
 
 end
@@ -511,15 +454,11 @@ class AssignmentSubmissionList < AssignmentsBase
   action(:show_assignment_details) { |b| b.frm.image(:src, "/library/image/sakai/expand.gif").click }
 
   # Gets the Student table text and returns it in an Array object.
-  def student_table
-    frm.table(:class=>"listHier lines nolines").to_a
-  end
+  value(:student_table) { |b| b.frm.table(:class=>"listHier lines nolines").to_a }
 
   # Clicks the Grade link for the specified student, then
   # instantiates the AssignmentSubmission page class.
-  def grade(student_name)
-    frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(student_name)}/).link(:text=>"Grade").click
-  end
+  pgmd(:grade) { |student_name, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(student_name)}/).link(:text=>"Grade").click }
 
   # Gets the value of the status field for the specified
   # Student. Note that the student's name needs to be entered
@@ -528,9 +467,7 @@ class AssignmentSubmissionList < AssignmentsBase
   # students with the same name.
   #
   # Useful for verification purposes.
-  def submission_status_of(student_name)
-    frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(student_name)}/)[4].text
-  end
+  pgmd(:submission_status_of) { |student_name, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(student_name)}/)[4].text }
 
   element(:search_input) { |b| b.frm.text_field(:id=>"search") }
   action(:find) { |b| b.frm.button(:value=>"Find").click }

@@ -1,9 +1,9 @@
 class AssignmentSubmissionObject
 
-  include PageHelper
-  include Utilities
-  include Randomizers
-  include DateMakers
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include DateFactory
   include Workflows
 
   attr_accessor :site, :title, :text, :status, :submission_date,

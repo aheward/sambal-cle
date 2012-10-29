@@ -1,7 +1,7 @@
 class ModuleObject
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :title, :description, :keywords, :start_date, :end_date, :site, :href
@@ -47,8 +47,8 @@ end
 
 class ContentSectionObject
 
-  include PageHelper
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :site, :module, :title, :instructions, :modality, :content_type,

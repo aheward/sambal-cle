@@ -16,16 +16,10 @@ module Utilities
     return $~.to_s
   end
 
+  # TODO: Pull this out because it's a dupe. Fix anything that's broken because this is commented out...
   # Shorthand method for making a data object for testing.
-  def make data_object_class, opts={}
-    data_object_class.new @browser, opts
-  end
-
-  # Transform for use with data object instance variables
-  # that refer to checkboxes or radio buttons.
-  def checkbox_setting(checkbox)
-    checkbox.set? ? :set : :clear
-  end
-  alias radio_setting checkbox_setting
+  #def make data_object_class, opts={}
+  #  data_object_class.new @browser, opts
+  #end
 
 end
