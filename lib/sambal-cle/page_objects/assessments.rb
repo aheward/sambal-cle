@@ -21,6 +21,8 @@ class AssessmentsBase <BasePage
       element(:answer_point_value) { |b| b.frm.text_field(:id=>"itemForm:answerptr") }
       element(:assign_to_part) { |b| b.frm.select(:id=>"itemForm:assignToPart") }
       element(:assign_to_pool) { |b| b.frm.select(:id=>"itemForm:assignToPool") }
+      element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id186_textinput") }
+      element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id190_textinput") }
       element(:question_text) { |b| b.frm.text_field(:class=>"simple_text_area", :index=>0) }
       action(:save) { |b| b.frm.button(:value=>"Save").click }
       action(:cancel) { |b| b.frm.button(:id=>"itemForm:_id63").click }
@@ -363,6 +365,7 @@ class EditAssessment < AssessmentsBase
   action(:print) { |b| b.frm.button(:text=>"Print").click }
   action(:update_points) { |b| b.frm.button(:id=>"assesssmentForm:pointsUpdate").click }
 
+  # TODO: Fix this method. It doesn't work for some reason...
   pgmd(:add_question_to_part) { |part, p| p.assessment_form.row(:text=>/#{Regexp.escape(part)}/).select(:id=>/changeQType/) }
 
   element(:assessment_form) { |b| b.table(:id=>"assesssmentForm:parts") }
@@ -434,34 +437,12 @@ class MultipleChoice < AssessmentsBase
   element(:multi_single) { |b| b.frm.radio(:name=>"itemForm:chooseAnswerTypeForMC", :index=>1) }
   element(:multi_multi) { |b| b.frm.radio(:name=>"itemForm:chooseAnswerTypeForMC", :index=>2) }
 
-  element(:answer_a) { |b| b.frm.text_field(:id=>"itemForm:mcchoices:0:_id140_textinput") }
-  action(:remove_a) { |b| b.frm.link(:id=>"itemForm:mcchoices:0:removelinkSingle").click }
-  element(:answer_b) { |b| b.frm.text_field(:id=>"itemForm:mcchoices:1:_id140_textinput") }
-  action(:remove_b) { |b| b.frm.link(:id=>"itemForm:mcchoices:1:removelinkSingle").click }
-  element(:answer_c) { |b| b.frm.text_field(:id=>"itemForm:mcchoices:2:_id140_textinput") }
-  action(:remove_c) { |b| b.frm.link(:id=>"itemForm:mcchoices:2:removelinkSingle").click }
-  element(:answer_d) { |b| b.frm.text_field(:id=>"itemForm:mcchoices:3:_id140_textinput") }
-  action(:remove_d) { |b| b.frm.link(:id=>"itemForm:mcchoices:3:removelinkSingle").click }
-
-    # Radio buttons that appear when "single correct" is selected
-  element(:a_correct) { |b| b.frm.radio(:name=>"itemForm:mcchoices:0:mcradiobtn") }
-  element(:b_correct) { |b| b.frm.radio(:name=>"itemForm:mcchoices:1:mcradiobtn") }
-  element(:c_correct) { |b| b.frm.radio(:name=>"itemForm:mcchoices:2:mcradiobtn") }
-  element(:d_correct) { |b| b.frm.radio(:name=>"itemForm:mcchoices:3:mcradiobtn") }
-
-    # % Value fields that appear when "single correct" and "partial credit" selected
-  element(:a_value) { |b| b.frm.text_field(:id=>"itemForm:mcchoices:0:partialCredit") }
-  element(:b_value) { |b| b.frm.text_field(:id=>"itemForm:mcchoices:1:partialCredit") }
-  element(:c_value) { |b| b.frm.text_field(:id=>"itemForm:mcchoices:2:partialCredit") }
-  element(:d_value) { |b| b.frm.text_field(:id=>"itemForm:mcchoices:3:partialCredit") }
+  pgmd(:correct_answer) { |answer, b| b.frm.radio(:value=>answer) }
+  pgmd(:answer_text) { |answer, b| b.frm.text_field(:name=>"itemForm:mcchoices:#{answer.ord-65}:_id140_textinput") }
 
   action(:reset_score_values) { |b| b.frm.link(:text=>"Reset Score Values").click }
 
-    # Checkboxes that appear when "multiple correct" is selected
-  element(:check_a_correct) { |b| b.frm.checkbox(:name=>"itemForm:mcchoices:0:mccheckboxes") }
-  element(:check_b_correct) { |b| b.frm.checkbox(:name=>"itemForm:mcchoices:1:mccheckboxes") }
-  element(:check_c_correct) { |b| b.frm.checkbox(:name=>"itemForm:mcchoices:2:mccheckboxes") }
-  element(:check_d_correct) { |b| b.frm.checkbox(:name=>"itemForm:mcchoices:3:mccheckboxes") }
+  action(:remove_last_answer) { |b| b.frm.link(:text=>"Remove", :index=>-1).click }
 
   element(:insert_additional_answers) { |b| b.frm.select(:id=>"itemForm:insertAdditionalAnswerSelectMenu") }
   element(:randomize_answers_yes) { |b| b.frm.radio(:index=>0, :name=>"itemForm:_id162") }
@@ -485,6 +466,7 @@ class Survey < AssessmentsBase
   element(:unacceptable_excellent) { |b| b.frm.radio(:index=>5, :name=>"itemForm:selectscale") }
   element(:one_to_five) { |b| b.frm.radio(:index=>6, :name=>"itemForm:selectscale") }
   element(:one_to_ten) { |b| b.frm.radio(:index=>7, :name=>"itemForm:selectscale") }
+  element(:feedback) { |b| b.frm.text_field(:id=>"itemForm:_id140_textinput") }
 
 end
 
@@ -525,6 +507,8 @@ class Matching < AssessmentsBase
 
   element(:choice) { |b| b.frm.text_field(:id=>"itemForm:_id147_textinput") }
   element(:match) { |b| b.frm.text_field(:id=>"itemForm:_id151_textinput") }
+
+  action(:distractor) { |b| b.frm.select(:id=>"itemForm:controllingSequence").select "*distractor*" }
   action(:save_pairing) { |b| b.frm.button(:name=>"itemForm:_id164").click }
 
 end
@@ -536,8 +520,7 @@ class TrueFalse < AssessmentsBase
   question_page_elements
 
   element(:negative_point_value) { |b| b.frm.text_field(:id=>"itemForm:answerdsc") }
-  element(:answer_true) { |b| b.frm.radio(:index=>0, :name=>"itemForm:TF") }
-  element(:answer_false) { |b| b.frm.radio(:index=>1, :name=>"itemForm:TF") }
+  pgmd(:answer) { |answer, b| b.frm.radio(:value=>answer, :name=>"itemForm:TF") }
   element(:required_rationale_yes) { |b| b.frm.radio(:index=>0, :name=>"itemForm:rational") }
   element(:required_rationale_no) { |b| b.frm.radio(:index=>1, :name=>"itemForm:rational") }
 

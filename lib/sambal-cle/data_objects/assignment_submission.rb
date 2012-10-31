@@ -1,8 +1,8 @@
 class AssignmentSubmissionObject
 
-  include Positioning
-  include Utilities
-  include Randomizers
+  include Foundry
+  include DataFactory
+  include StringFactory
   include DateFactory
   include Workflows
 

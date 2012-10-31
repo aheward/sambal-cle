@@ -1,7 +1,8 @@
 class SyllabusObject
 
-  include Positioning
-  include Utilities
+  include Foundry
+  include DataFactory
+  include StringFactory
   include Workflows
 
   attr_accessor :title, :content, :site

@@ -1,7 +1,7 @@
 class FileObject
 
-  include Positioning
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :name, :site, :source_path, :target_folder, :href
@@ -36,8 +36,8 @@ class FileObject
 end
 
 class FolderObject
-  include Positioning
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :name, :parent_folder, :site
@@ -69,8 +69,8 @@ class FolderObject
 end
 
 class WebLinkObject
-  include Positioning
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :site
@@ -92,8 +92,8 @@ end
 
 class HTMLPageObject
 
-  include Positioning
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :name, :description, :site, :folder, :html, :url
@@ -154,8 +154,8 @@ class HTMLPageObject
 end
 
 class TextDocumentObject
-  include Positioning
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :site
@@ -177,8 +177,8 @@ class TextDocumentObject
 end
 
 class CitationListObject
-  include Positioning
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :site

@@ -51,7 +51,6 @@ class Announcements < BasePage
   # @param subject [String] the text of the announcement listing link.
   def preview_announcement(subject)
     frm.link(:text=>subject).click
-    PreviewAnnouncements.new(@browser)
   end
 
   # Selects the specified list item from the View selection list.

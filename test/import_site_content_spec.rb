@@ -6,7 +6,7 @@ describe "Import Site" do
   
   include Utilities
   include Workflows
-  include Positioning
+  include Foundry
 
   before :all do
     

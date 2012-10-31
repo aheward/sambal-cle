@@ -2,9 +2,9 @@
 # for Student submissions of an assignment, use AssignmentSubmissionObject
 class AssignmentObject
 
-  include Positioning
-  include Utilities
-  include Randomizers
+  include Foundry
+  include DataFactory
+  include StringFactory
   include DateFactory
   include Workflows
 

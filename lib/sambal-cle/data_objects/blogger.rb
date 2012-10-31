@@ -1,7 +1,7 @@
 class BloggerPostObject
 
-  include Positioning
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
   
   attr_accessor :title, :abstract, :site, :text, :read_only, :access, :allow_comments
@@ -37,7 +37,7 @@ class BloggerPostObject
   def delete
     
   end
-  
+
 end
     
       

@@ -6,8 +6,8 @@ describe "Duplicating an Assignment" do
 
   include Utilities
   include Workflows
-  include Positioning
-  include Randomizers
+  include Foundry
+  include StringFactory
   include DateFactory
 
   before :all do

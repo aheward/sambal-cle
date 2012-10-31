@@ -6,8 +6,8 @@ describe "Assessments" do
 
   include Utilities
   include Workflows
-  include Positioning
-  include Randomizers
+  include Foundry
+  include StringFactory
   include DateFactory
 
   before :all do
@@ -35,11 +35,9 @@ describe "Assessments" do
     @assessment = make AssessmentObject, :site=>@site.name
     @assessment.create
 
-    @assessment.add_part
-    @assessment.add_part
-    @assessment.add_question
-    exit
-
+    2.times{ @assessment.add_part }
+    30.times{ @assessment.add_question }#:type=>"True False" }
+exit
     @questions = [
         {:type=>"Multiple Choice", :point_value=>"5", :question_text=>"Who was the first US president?", :a=>"Jefferson", :b=>"Lincoln", :c=>"Grant", :d=>"Washington" },
         {:type=>"True False", :point_value=>"5", :question_text=>"The sky is blue."},
@@ -56,9 +54,6 @@ describe "Assessments" do
         {:type=>"True False", :question_text=>"Birds can fly." }
     ]
 
-
-
-
     @questions.each do |question|
       @assessment.add_question question
     end
@@ -67,9 +62,9 @@ describe "Assessments" do
     @part_2_info = "This is the information for Part 2"
 
     @settings = {
-        :available_date=>((Time.now - 60).strftime("%m/%d/%Y %I:%M:%S %p")),
-        :due_date=>((Time.now + (86400*3)).strftime("%m/%d/%Y %I:%M:%S %p")),
-        :retract_date=>((Time.now + (86400*3)).strftime("%m/%d/%Y %I:%M:%S %p"))
+        :available_date=>an_hour_ago,
+        :due_date=>tomorrow,
+        :retract_date=>next_week
     }
     @file_path = @config['data_directory']
     @pool_title = random_alphanums

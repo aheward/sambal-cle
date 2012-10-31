@@ -1,7 +1,8 @@
 class MessageObject
 
-  include Positioning
-  include Utilities
+  include Foundry
+  include DataFactory
+  include StringFactory
   include Workflows
 
   attr_accessor :site, :subject, :send_cc, :recipients, :message, :label
@@ -32,8 +33,8 @@ end
 
 class MessageFolderObject
 
-  include Positioning
-  include Utilities
+  include Foundry
+  include DataFactory
   include Workflows
 
   attr_accessor :site
