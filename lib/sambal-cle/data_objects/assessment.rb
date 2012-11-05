@@ -62,8 +62,8 @@ class AssessmentObject
   end
 
   def create
-    my_workspace.open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    tests_and_quizzes unless @browser.title=~/Tests & Quizzes$/
+    open_my_site_by_name @site
+    tests_and_quizzes
     reset
     on_page AssessmentsList do |page|
       page.title.set @title
@@ -132,8 +132,8 @@ class AssessmentObject
   end
 
   def publish
-    my_workspace.open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    tests_and_quizzes unless @browser.title=~/Tests & Quizzes$/
+    open_my_site_by_name @site
+    tests_and_quizzes
     reset
     on AssessmentsList do |list|
       list.publish @title
@@ -171,8 +171,8 @@ class AssessmentObject
   private
 
   def position
-    my_workspace.open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    tests_and_quizzes unless @browser.title=~/Tests & Quizzes$/
+    open_my_site_by_name @site
+    tests_and_quizzes
     unless @browser.frame(:class=>"portletMainIframe").h3.text=="Questions: #{@title}"
       reset
       on AssessmentsList do |list|
@@ -739,36 +739,73 @@ class FileUploadQuestion
   
 end
     
-class CalculatedQuestionObject
+class CalculatedQuestion
 
   include Foundry
   include DataFactory
   include StringFactory
   include Workflows
   
-  attr_accessor :text, :point_value, :variables, :formula,
+  attr_accessor :text, :point_value, :variables, :formulas, :part, :pool
 
-  FORMULAS = [
-      ""
-  ]
+  #TODO: Add randomization to this class!
 
   def initialize(browser, opts={})
     @browser = browser
     
     defaults = {
-      :text=>"ugh",
-      :point_value=>(rand(100)+1).to_s,
-      :variables=>[],
-      :formula=>,
+      :text=>"Two cars left from the same point at the same time, one traveling East at {x} mph and the other traveling South at {y} mph. In how many minutes will they be {z} miles apart?\n\nRound to the nearest minute.\n\n{{abc}}",
+      :variables=>{
+          :x=>{:min=>rand(50)+1,:max=>rand(50)+51, :decimals=>rand(11)},
+          :y=>{:min=>rand(50)+1,:max=>rand(50)+51, :decimals=>rand(11)},
+          :z=>{:min=>rand(50)+1,:max=>rand(50)+51, :decimals=>rand(11)}
+      },
+      :formulas=>[{
+          :name=>"abc",
+          :text=>"SQRT({z}^2/({x}^2+{y}^2))*60",
+          :tolerance=>"0.01",
+          :decimals=>"0"
+          }],
+      :point_value=>(rand(100)+1).to_s
     }
+
     options = defaults.merge(opts)
     
     set_options(options)
     requires @text
   end
-    
+
+  def calculation(x, y, z)
+    (Math.sqrt((z**2)/((x**2)+(y**2))))*60
+  end
+
   def create
-    
+    on EditAssessment do |edit|
+      edit.question_type "Calculated Question"
+    end
+    on CalculatedQuestions do |add|
+      add.question_text.set @text
+      add.answer_point_value.set @point_value
+      add.assign_to_part.select /#{@part}/
+      add.assign_to_pool.select @pool unless @pool==nil
+      add.question_text.set @text
+      add.extract_vs_and_fs
+
+      @variables.each do |name, attribs|
+        var = name.to_s
+        add.min_value(var).set attribs[:min]
+        add.max_value(var).set attribs[:max]
+        add.var_decimals(var).select attribs[:decimals]
+      end
+      @formulas.each do |formula|
+        add.formula(formula[:name]).set formula[:text]
+        add.tolerance(formula[:name]).set formula[:tolerance]
+        add.form_decimals(formula[:name]).select formula[:decimals]
+      end
+      add.correct_answer_feedback.set @correct_answer_feedback unless @correct_answer_feedback==nil
+      add.incorrect_answer_feedback.set @incorrect_answer_feedback unless @incorrect_answer_feedback==nil
+      add.save
+    end
   end
     
   def edit opts={}
@@ -838,5 +875,49 @@ class PartObject
   end
   
 end
+
+# TODO: Finish defining this class
+class PoolObject #TODO: Someday add support for sub pools
+
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include Workflows
+  
+  attr_accessor :site, :name, :questions, :creator, :department, :description,
+                :objectives, :keywords
+  
+  def initialize(browser, opts={})
+    @browser = browser
     
-      
+    defaults = {
+      :name=>random_alphanums
+    }
+    options = defaults.merge(opts)
+    
+    set_options(options)
+    requires @site
+  end
+
+  alias :group :department
+    
+  def create
+    
+  end
+    
+  def edit opts={}
+    
+    set_options(opts)
+  end
+    
+  def view
+    
+  end
+    
+  def delete
+    
+  end
+  
+end
+    
+            

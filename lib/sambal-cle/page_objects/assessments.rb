@@ -90,7 +90,7 @@ class AssessmentsList < AssessmentsBase
 
   pgmd(:publish) { |test_title, b| b.pending_table.tr(:text=>/#{Regexp.escape(test_title)}/).select(:name=>/Select/).select "Publish" }
 
-  pgmd(:edit) { |test_title, b| b.form(:id=>"authorIndexForm").tr(:text=>/#{Regexp.escape(test_title)}/).select(:name=>/Select/).select "Edit" }
+  pgmd(:edit) { |test_title, b| b.frm.form(:id=>"authorIndexForm").tr(:text=>/#{Regexp.escape(test_title)}/).select(:name=>/Select/).select "Edit" }
 
   element(:title) { |b| b.frm.text_field(:id=>"authorIndexForm:title") }
   element(:pending_table) { |b| b.frm.table(:id=>"authorIndexForm:coreAssessments") }
@@ -100,6 +100,62 @@ class AssessmentsList < AssessmentsBase
   element(:create_using_text) { |b| b.frm.radio(:name=>"authorIndexForm:_id29") }
   element(:select_assessment_type) { |b| b.frm.select(:id=>"authorIndexForm:assessmentTemplate") }
   action(:import) { |b| b.frm.button(:id=>"authorIndexForm:import").click }
+
+end
+
+# Page of Assessments accessible to a student user
+#
+# It may be that we want to deprecate this class and simply use
+# the AssessmentsList class alone.
+class StudentAssessmentsList < AssessmentsBase
+
+  # Returns an array containing the assessment names that appear on the page.
+  def available_assessments
+    list = []
+    table = available_assessments_table.to_a
+    table.delete_at(0)
+    table.each { |row| list<<row[0].gsub(/\s+$/, "") unless row[0]=="" }
+    list
+  end
+
+  # Method to get the titles of assessments that
+  # the student user has submitted. The titles are
+  # returned in an Array object.
+  def submitted_assessments
+    table_array = @browser.frame(:index=>1).table(:id=>"selectIndexForm:reviewTable").to_a
+    table_array.delete_at(0)
+    titles = []
+    table_array.each { |row|
+      unless row[0] == ""
+        titles << row[0]
+      end
+    }
+
+    return titles
+
+  end
+
+  # Clicks the specified assessment
+  # @param name [String] the name of the assessment you want to take
+  def take_assessment(name)
+    begin
+      frm.link(:text=>name).click
+    rescue Watir::Exception::UnknownObjectException
+      frm.link(:text=>CGI::escapeHTML(name)).click
+    end
+  end
+
+  # TODO This method is in need of improvement to make it more generalized for finding the correct test.
+  #
+  def feedback(test_name)
+    test_table = submitted_assessments_table.to_a
+    test_table.delete_if { |row| row[3] != "Immediate" }
+    index_value = test_table.index { |row| row[0] == test_name }
+    frm.link(:text=>"Feedback", :index=>index_value).click
+  end
+
+  element(:available_assessments_table) { |b| b.frm.table(:id=>"selectIndexForm:selectTable") }
+  element(:submitted_assessments_table) { |b| b.frm.table(:id=>"selectIndexForm:reviewTable") }
 
 end
 
@@ -161,8 +217,8 @@ class AssessmentSettings < AssessmentsBase
   element(:due_date) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:endDate") }
   element(:retract_date) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:retractDate") }
   # Assessment Released To
-  element(:released_to_anonymous) { |b| b.frm.radio(:name=>"assessmentSettingsAction:_id117") }
-  element(:released_to_site) { |b| b.frm.radio(:name=>"assessmentSettingsAction:_id117") }
+  element(:released_to_anonymous) { |b| b.frm.radio(:value=>"Anonymous Users") }
+  element(:released_to_site) { |b| b.frm.radio(:name=>"assessmentSettingsAction:_id117", :index=>1) }
   element(:specified_ips) { |b| b.frm.text_field(:name=>"assessmentSettingsAction:_id132") }
   # High Security
   element(:secondary_id) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:username") }
@@ -546,6 +602,25 @@ class FileUpload < AssessmentsBase
 
 end
 
+#  The page for setting up a calculated question
+class CalculatedQuestions < AssessmentsBase
+
+  menu_bar_elements
+  question_page_elements
+
+  action(:extract_vs_and_fs) { |b| b.frm.button(:value=>"Extract Variables and Formulas").click; b.variables_table.wait_until_present }
+
+  pgmd(:min_value) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.text_field(:name=>/itemForm:pairs:.:_id167/) }
+  pgmd(:max_value) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.text_field(:name=>/_id170/) }
+  pgmd(:var_decimals) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.select(:name=>/_id173/) }
+  pgmd(:formula) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.text_field(:name=>/_id186/) }
+  pgmd(:tolerance) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.text_field(:name=>/_id189/) }
+  pgmd(:form_decimals) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.select(:name=>/assignToPart/) }
+  element(:variables_table) { |b| b.frm.table(:id=>"itemForm:pairs") }
+  element(:formulas_table) { |b| b.frm.table(:id=>"itemForm:formulas") }
+
+end
+
 # The page that appears when you are editing a type of assessment
 class EditAssessmentType < AssessmentsBase
 
@@ -669,58 +744,7 @@ class SelectQuestionType < AssessmentsBase
 
 end
 
-# Page of Assessments accessible to a student user
-#
-# It may be that we want to deprecate this class and simply use
-# the AssessmentsList class alone.
-class TakeAssessmentList < AssessmentsBase
 
-  # Returns an array containing the assessment names that appear on the page.
-  def available_assessments
-    # define this later
-  end
-
-  # Method to get the titles of assessments that
-  # the student user has submitted. The titles are
-  # returned in an Array object.
-  def submitted_assessments
-    table_array = @browser.frame(:index=>1).table(:id=>"selectIndexForm:reviewTable").to_a
-    table_array.delete_at(0)
-    titles = []
-    table_array.each { |row|
-      unless row[0] == ""
-        titles << row[0]
-      end
-    }
-
-    return titles
-
-  end
-
-  # Clicks the specified assessment
-  # then instantiates the BeginAssessment
-  # page class.
-  # @param name [String] the name of the assessment you want to take
-  def take_assessment(name)
-    begin
-      frm.link(:text=>name).click
-    rescue Watir::Exception::UnknownObjectException
-      frm.link(:text=>CGI::escapeHTML(name)).click
-    end
-    BeginAssessment.new(@browser)
-  end
-
-  # TODO This method is in need of improvement to make it more generalized for finding the correct test.
-  #
-  def feedback(test_name)
-    test_table = frm.table(:id=>"selectIndexForm:reviewTable").to_a
-    test_table.delete_if { |row| row[3] != "Immediate" }
-    index_value = test_table.index { |row| row[0] == test_name }
-    frm.link(:text=>"Feedback", :index=>index_value).click
-    # Need to add a call to a New class here, when it's written
-  end
-
-end
 
 # The student view of the overview page of an Assessment
 class BeginAssessment < AssessmentsBase
