@@ -8,7 +8,7 @@ class CourseSiteObject
 
   attr_accessor :name, :id, :subject, :course, :section, :term, :authorizer,
     :web_content_source, :email, :joiner_role, :creation_date, :web_content_title,
-    :description, :short_description, :site_contact_name, :site_contact_email
+    :description, :short_description, :site_contact_name, :site_contact_email, :participants
 
   def initialize(browser, opts={})
     @browser = browser
@@ -24,7 +24,8 @@ class CourseSiteObject
       :joiner_role => "Student",
       :description => random_alphanums(30),
       :short_description => random_alphanums,
-      :site_contact_name => random_alphanums(5)+" "+random_alphanums(8)
+      :site_contact_name => random_alphanums(5)+" "+random_alphanums(8),
+      :participants=>{}
     }
     options = defaults.merge(opts)
     set_options(options)
@@ -256,20 +257,19 @@ class CourseSiteObject
 
   end
 
-  # TODO: Improve this method to better take advantage of the UserObject...
-  def add_official_participants opts={}
-    participants = opts[:participants].join("\n")
-    open_my_site_by_name @name
-    site_editor unless
+  def add_official_participants(role, *participants)
+    list_of_ids=participants.join("\n")
+    open_my_site_by_name @title
+    site_editor
     on SiteEditor do |site|
       site.add_participants
     end
     on SiteSetupAddParticipants do |add|
-      add.official_participants.set participants
+      add.official_participants.set list_of_ids
       add.continue
     end
     on SiteSetupChooseRole do |choose|
-      choose.radio_button(opts[:role]).set
+      choose.radio_button(role).set
       choose.continue
     end
     on SiteSetupParticipantEmail do |send|
@@ -277,6 +277,11 @@ class CourseSiteObject
     end
     on SiteSetupParticipantConfirm do |confirm|
       confirm.finish
+    end
+    if @participants.has_key?(role)
+      @participants[role].insert(-1, participants).flatten!
+    else
+      @participants.store(role, participants)
     end
   end
 

@@ -25,7 +25,7 @@ describe "Assessment Feedback" do
 
     @site = make CourseSiteObject
     @site.create
-    @site.add_official_participants :role=>@student.type, :participants=>[@student.id]
+    @site.add_official_participants @student.type, @student.id
 
     @assessment = make AssessmentObject, :site=>@site.name,
                        :feedback_delivery=>:immediate_feedback,

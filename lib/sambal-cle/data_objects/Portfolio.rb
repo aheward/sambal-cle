@@ -7,7 +7,7 @@ class PortfolioSiteObject
   
   attr_accessor :title, :description, :short_description, :contact_email, :site_email,
                 :site_contact_name, :access, :default_role, :creator, :status,
-                :creation_date, :id
+                :creation_date, :id, :participants
   
   def initialize(browser, opts={})
     @browser = browser
@@ -15,6 +15,7 @@ class PortfolioSiteObject
     defaults = {
       :title=>random_alphanums,
       :site_email=>random_nicelink(32),
+      :participants=>{}
     }
     options = defaults.merge(opts)
     
@@ -61,6 +62,7 @@ class PortfolioSiteObject
         confirm.create_site
       end
     end
+    # TODO: Add definition of @participants variable here
   end
     
   def edit opts={}
@@ -75,7 +77,33 @@ class PortfolioSiteObject
   def delete
     
   end
-  
+
+  def add_official_participants(role, *participants)
+    list_of_ids=participants.join("\n")
+    open_my_site_by_name @title
+    site_editor
+    on SiteEditor do |site|
+      site.add_participants
+    end
+    on SiteSetupAddParticipants do |add|
+      add.official_participants.set list_of_ids
+      add.continue
+    end
+    on SiteSetupChooseRole do |choose|
+      choose.radio_button(role).set
+      choose.continue
+    end
+    on SiteSetupParticipantEmail do |send|
+      send.continue
+    end
+    on SiteSetupParticipantConfirm do |confirm|
+      confirm.finish
+    end
+    if @participants.has_key?(role)
+      @participants[role].insert(-1, participants).flatten!
+    else
+      @participants.store(role, participants)
+    end
+  end
+
 end
-    
-      

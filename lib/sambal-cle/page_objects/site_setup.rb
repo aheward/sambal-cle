@@ -586,7 +586,7 @@ class PortfolioSiteInfo < BasePage
 
   element(:title) { |b| b.frm.text_field(:id=>"title") }
   element(:url_alias) { |b| b.frm.text_field(:id=>"alias_0") }
-  element(:short_description) { |b| b.frm.text_area(:id=>"short_description") }
+  element(:short_description) { |b| b.frm.text_field(:id=>"short_description") }
   element(:icon_url) { |b| b.frm.text_field(:id=>"iconUrl") }
   element(:site_contact_name) { |b| b.frm.text_field(:id=>"siteContactName") }
   element(:site_contact_email) { |b| b.frm.text_field(:id=>"siteContactEmail") }
