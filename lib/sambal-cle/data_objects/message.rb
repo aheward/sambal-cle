@@ -21,8 +21,8 @@ class MessageObject
   end
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    messages unless @browser.title=~/Messages$/
+    open_my_site_by_name @site
+    messages
   end
 
   alias compose create

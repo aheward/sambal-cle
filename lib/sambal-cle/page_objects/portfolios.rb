@@ -25,8 +25,6 @@ class Portfolios < BasePage
     frm.table(:class=>"listHier ospTable").row(:text=>/#{Regexp.escape(portfolio_name)}/)[5].text
   end
 
-
-
 end
 
 #

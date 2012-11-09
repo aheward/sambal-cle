@@ -23,8 +23,8 @@ class ChatRoomObject
   end
     
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    chat_room unless @browser.title=~/Chat Room$/
+    open_my_site_by_name
+    chat_room
     on ChatRoom do |chat|
       chat.options
     end

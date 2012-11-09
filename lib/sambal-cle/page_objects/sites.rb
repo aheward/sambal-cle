@@ -10,11 +10,7 @@ class Sites < BasePage
   # Clicks the first site Id link
   # listed. Useful when you've run a search and
   # you're certain you've got the result you want.
-  # It then instantiates the EditSiteInfo page class.
-  def click_top_item
-    frm.link(:href, /#{Regexp.escape("&panel=Main&sakai_action=doEdit")}/).click
-    EditSiteInfo.new(@browser)
-  end
+  action(:click_top_item) { |b| b.frm.link(:href, /#{Regexp.escape("&panel=Main&sakai_action=doEdit")}/).click }
 
   # Clicks the specified Site in the list, using the
   # specified id value to determine which item to click.
@@ -24,15 +20,9 @@ class Sites < BasePage
     frm.text_field(:id=>"search_site").value=id
     frm.link(:text=>"Site ID").click
     frm.link(:text, id).click
-    EditSiteInfo.new(@browser)
   end
 
-  # Clicks the New Site button, then instantiates
-  # the EditSiteInfo page class.
-  def new_site
-    frm.link(:text, "New Site").click
-    EditSiteInfo.new(@browser)
-  end
+  action(:new_site) { |b| b.frm.link(:text, "New Site").click }
 
   element(:search_field) { |b| b.frm.text_field(:id=>"search") }
   action(:search_button) { |b| b.frm.link(text=>"Search").click }

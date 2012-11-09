@@ -19,8 +19,8 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
   end
     
   def set opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    assignments unless @browser.title=~/Assignments$/
+    open_my_site_by_name @site
+    assignments
     reset
     on AssignmentsList do |list|
       list.permissions
@@ -43,8 +43,8 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
   end
 
   def get
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    assignments unless @browser.title=~/Assignments$/
+    open_my_site_by_name @site
+    assignments
     reset
     on AssignmentsList do |list|
       list.permissions

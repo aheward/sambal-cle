@@ -30,12 +30,12 @@ describe "Assignment Permissions" do
                         :type=>"Instructor"
     @instructor1.log_in
 
-    @site = make SiteObject
+    @site = make CourseSiteObject
     @site.create
-    @site.add_official_participants :role=>@student.type, :participants=>[@student.id]
-    @site.add_official_participants :role=>@instructor2.type, :participants=>[@instructor2.id]
+    @site.add_official_participants @student.type, @student.id
+    @site.add_official_participants @instructor2.type, @instructor2.id
 
-    @site = make SiteObject
+    @site = make CourseSiteObject
     @site.create
 
     @site.add_official_participants :role=>"Student", :participants=>[@student]

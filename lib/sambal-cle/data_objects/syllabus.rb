@@ -22,8 +22,8 @@ class SyllabusObject
   alias :name :title
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    syllabus unless @browser.title=~/Syllabus$/
+    open_my_site_by_name @site
+    syllabus
     on Syllabus do |add|
       add.create_edit
       add.add
@@ -36,8 +36,8 @@ class SyllabusObject
   end
 
   def edit opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    syllabus unless @browser.title=~/Syllabus$/
+    open_my_site_by_name @site
+    syllabus
     on Syllabus do |syllabus|
       reset
       syllabus.create_edit
@@ -46,15 +46,15 @@ class SyllabusObject
       edit.open_item @title
     end
     on AddEditSyllabusItem do |item|
-      item.title.set opts[:title] unless opts[:title]==nil
+      item.title.fit opts[:title]
       item.enter_source_text(item.editor, opts[:content]) unless opts[:content]==nil
     end
     set_options(opts)
   end
 
   def get_properties
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    syllabus unless @browser.title=~/Syllabus$/
+    open_my_site_by_name @site
+    syllabus
     on Syllabus do |syllabus|
       reset
       syllabus.create_edit

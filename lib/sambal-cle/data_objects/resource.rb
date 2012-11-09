@@ -19,8 +19,8 @@ class FileObject
   end
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    resources unless @browser.title=~/Resources$/
+    open_my_site_by_name @site
+    resources
     on Resources do |file|
       file.upload_file_to_folder @target_folder
     end
@@ -55,8 +55,8 @@ class FolderObject
   end
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    resources unless @browser.title=~/Resources$/
+    open_my_site_by_name @site
+    resources
     on_page Resources do |page|
       page.create_subfolders_in @parent_folder
     end
@@ -117,8 +117,8 @@ class HTMLPageObject
   alias :content :html
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    resources unless @browser.title=~/Resources$/
+    open_my_site_by_name @site
+    resources
     on_page Resources do |page|
       page.create_html_page_in @folder
     end
@@ -138,8 +138,8 @@ class HTMLPageObject
   end
 
   def edit_content(html_source)
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    resources unless @browser.title=~/Resources$/
+    open_my_site_by_name @site
+    resources
     on Resources do |fileslist|
       fileslist.open_folder @folder unless fileslist.item(@name).present? || @folder==nil
       fileslist.edit_content @name
@@ -170,8 +170,8 @@ class TextDocumentObject
   end
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    resources unless @browser.title=~/Resources$/
+    open_my_site_by_name @site
+    resources
   end
 
 end
@@ -193,8 +193,8 @@ class CitationListObject
   end
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    resources unless @browser.title=~/Resources$/
+    open_my_site_by_name @site
+    resources
   end
 
 end

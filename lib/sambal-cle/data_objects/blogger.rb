@@ -21,8 +21,8 @@ class BloggerPostObject
   end
     
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    blogs unless @browser.title=~/Blogs$/
+    open_my_site_by_name @site
+    blogs
     # TODO: More needed here
   end
     
@@ -37,7 +37,7 @@ class BloggerPostObject
   def delete
     
   end
-  
+
 end
     
       

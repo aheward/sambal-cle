@@ -312,7 +312,7 @@ class AssignmentsPreview < AssignmentsBase
   end
 
   # Grabs the Assignment Instructions text.
-  value(:instructions) { |b| b.frm.div(:class=>"textPanel").text }
+  value(:instructions) { |b| b.frm.div(:id=>"instructions").text }
 
   # Grabs the instructor comments text.
   value(:instructor_comments) { |b| b.frm.div(:class=>"portletBody").div(:class=>"textPanel", :index=>2).text }
@@ -396,10 +396,10 @@ class AssignmentStudentView < BasePage
   action(:back_to_list) { |b| b.frm.button(:value=>"Back to list").click }
   action(:preview) { |p| p.preview_button.click }
 
-  element(:instructor_comment_field) { |b| b.frm.form(:name=>"addSubmissionForm").div(:class=>"textPanel", :index=>1) }
+  element(:instructor_comment_field) { |b| b.frm.div(:id=>"instructor_comment") }
 
-  value(:instructions) { |b| b.frm.div(:class=>"portletBody").div(:class=>"textPanel").text }
-  value(:submission_text) { |b| b.frm.form(:name=>"addSubmissionForm").div(:class=>"textPanel").text }
+  value(:instructions) { |b| b.frm.div(:id=>"instructions").text }
+  value(:submission_text) { |b| b.frm.div(:id=>"submission").text }
   value(:instructor_comments) { |p| p.instructor_comment_field.text }
 
   # Returns an array of strings. Each element in the

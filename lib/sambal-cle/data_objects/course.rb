@@ -1,4 +1,4 @@
-class SiteObject
+class CourseSiteObject
 
   include Foundry
   include DataFactory
@@ -8,7 +8,7 @@ class SiteObject
 
   attr_accessor :name, :id, :subject, :course, :section, :term, :authorizer,
     :web_content_source, :email, :joiner_role, :creation_date, :web_content_title,
-    :description, :short_description, :site_contact_name, :site_contact_email
+    :description, :short_description, :site_contact_name, :site_contact_email, :participants
 
   def initialize(browser, opts={})
     @browser = browser
@@ -24,15 +24,16 @@ class SiteObject
       :joiner_role => "Student",
       :description => random_alphanums(30),
       :short_description => random_alphanums,
-      :site_contact_name => random_alphanums(5)+" "+random_alphanums(8)
+      :site_contact_name => random_alphanums(5)+" "+random_alphanums(8),
+      :participants=>{}
     }
     options = defaults.merge(opts)
     set_options(options)
   end
 
   def create
-    my_workspace unless @browser.title=~/My Workspace/
-    site_setup unless @browser.title=~/Site Setup/
+    my_workspace
+    site_setup
     on_page SiteSetup do |page|
       page.new
     end
@@ -104,8 +105,8 @@ class SiteObject
   end
 
   def create_and_reuse_site(site_name)
-    my_workspace unless @browser.title=~/My Workspace/
-    site_setup unless @browser.title=~/Site Setup/
+    my_workspace
+    site_setup
     on_page SiteSetup do |page|
       page.new
     end
@@ -216,7 +217,7 @@ class SiteObject
     }
     options = defaults.merge(opts)
 
-    new_site = make SiteObject, options
+    new_site = make CourseSiteObject, options
 
     new_site.name=options[:name]
     new_site.subject=options[:subject]
@@ -233,8 +234,8 @@ class SiteObject
     new_site.site_contact_email=options[:site_contact_email]
     new_site.term=options[:term]
 
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    site_editor unless @browser.title=~/Site Editor$/
+    open_my_site_by_name @site
+    site_editor
     on SiteEditor do |edit|
       edit.duplicate_site
     end
@@ -244,7 +245,7 @@ class SiteObject
       dupe.duplicate
     end
     my_workspace
-    site_setup unless @browser.title=~/Site Setup/
+    site_setup
     on SiteSetup do |sites|
       sites.search(Regexp.escape(new_site.name))
     end
@@ -256,20 +257,19 @@ class SiteObject
 
   end
 
-  # TODO: Improve this method to better take advantage of the UserObject...
-  def add_official_participants opts={}
-    participants = opts[:participants].join("\n")
-    open_my_site_by_name @name unless @browser.title=~/#{@name}/
-    site_editor unless @browser.title=~/Site Editor$/
+  def add_official_participants(role, *participants)
+    list_of_ids=participants.join("\n")
+    open_my_site_by_name @title
+    site_editor
     on SiteEditor do |site|
       site.add_participants
     end
     on SiteSetupAddParticipants do |add|
-      add.official_participants.set participants
+      add.official_participants.set list_of_ids
       add.continue
     end
     on SiteSetupChooseRole do |choose|
-      choose.radio_button(opts[:role]).set
+      choose.radio_button(role).set
       choose.continue
     end
     on SiteSetupParticipantEmail do |send|
@@ -278,7 +278,11 @@ class SiteObject
     on SiteSetupParticipantConfirm do |confirm|
       confirm.finish
     end
+    if @participants.has_key?(role)
+      @participants[role].insert(-1, participants).flatten!
+    else
+      @participants.store(role, participants)
+    end
   end
-
 
 end
