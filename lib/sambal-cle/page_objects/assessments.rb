@@ -21,8 +21,6 @@ class AssessmentsBase <BasePage
       element(:answer_point_value) { |b| b.frm.text_field(:id=>"itemForm:answerptr") }
       element(:assign_to_part) { |b| b.frm.select(:id=>"itemForm:assignToPart") }
       element(:assign_to_pool) { |b| b.frm.select(:id=>"itemForm:assignToPool") }
-      element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id186_textinput") }
-      element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id190_textinput") }
       element(:question_text) { |b| b.frm.text_field(:class=>"simple_text_area", :index=>0) }
       action(:save) { |b| b.frm.button(:value=>"Save").click }
       action(:cancel) { |b| b.frm.button(:id=>"itemForm:_id63").click }
@@ -228,52 +226,55 @@ class AssessmentSettings < AssessmentsBase
   element(:limit_hour) { |b| b.frm.select(:id=>"assessmentSettingsAction:timedHours") }
   element(:limit_mins) { |b| b.frm.select(:id=>"assessmentSettingsAction:timedMinutes") }
   # Assessment Organization
-  element(:linear_access) { |b| b.frm.radio(:name=>"assessmentSettingsAction:itemNavigation") }
-  element(:random_access) { |b| b.frm.radio(:name=>"assessmentSettingsAction:itemNavigation") }
-  element(:question_per_page) { |b| b.frm.radio(:name=>"assessmentSettingsAction:assessmentFormat") }
-  element(:part_per_page) { |b| b.frm.radio(:name=>"assessmentSettingsAction:assessmentFormat") }
-  element(:assessment_per_page) { |b| b.frm.radio(:name=>"assessmentSettingsAction:assessmentFormat") }
-  element(:continuous_numbering) { |b| b.frm.radio(:name=>"assessmentSettingsAction:itemNumbering") }
-  element(:restart_per_part) { |b| b.frm.radio(:name=>"assessmentSettingsAction:itemNumbering") }
+  element(:linear_access) { |b| b.frm.radio(:name=>"assessmentSettingsAction:itemNavigation", :value=>"1") }
+  element(:random_access) { |b| b.frm.radio(:name=>"assessmentSettingsAction:itemNavigation", :value=>"2") }
+  element(:question_per_page) { |b| b.frm.radio(:name=>"assessmentSettingsAction:assessmentFormat", :value=>"1") }
+  element(:part_per_page) { |b| b.frm.radio(:name=>"assessmentSettingsAction:assessmentFormat", :value=>"2") }
+  element(:assessment_per_page) { |b| b.frm.radio(:name=>"assessmentSettingsAction:assessmentFormat", :value=>"3") }
+  element(:continuous_numbering) { |b| b.frm.radio(:name=>"assessmentSettingsAction:itemNumbering", :value=>"1") }
+  element(:restart_per_part) { |b| b.frm.radio(:name=>"assessmentSettingsAction:itemNumbering", :value=>"2") }
   # Mark for review
   element(:add_mark_for_review) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:markForReview1") }
-  element(:unlimited_submissions) { |b| b.frm.radio(:name=>"assessmentSettingsAction:unlimitedSubmissions") }
-  element(:only_x_submissions) { |b| b.frm.radio(:name=>"assessmentSettingsAction:unlimitedSubmissions") }
+  element(:unlimited_submissions) { |b| b.frm.radio(:name=>"assessmentSettingsAction:unlimitedSubmissions", :value=>"1") }
+  element(:only_x_submissions) { |b| b.frm.radio(:name=>"assessmentSettingsAction:unlimitedSubmissions", :value=>"0") }
   element(:allowed_submissions) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:submissions_Allowed") }
-  element(:late_submissions_not_accepted) { |b| b.frm.radio(:name=>"assessmentSettingsAction:lateHandling") }
-  element(:late_submissions_accepted) { |b| b.frm.radio(:name=>"assessmentSettingsAction:lateHandling") }
+  element(:late_submissions_not_accepted) { |b| b.frm.radio(:name=>"assessmentSettingsAction:lateHandling", :value=>"2") }
+  element(:late_submissions_accepted) { |b| b.frm.radio(:name=>"assessmentSettingsAction:lateHandling", :value=>"1") }
   # Submission Message
   element(:submission_message) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:_id250_textinput") }
   element(:final_page_url) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:finalPageUrl") }
   # Feedback
-  element(:question_level_feedback) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackAuthoring") }
-  element(:selection_level_feedback) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackAuthoring") }
-  element(:both_feedback_levels) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackAuthoring") }
-  element(:immediate_feedback) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackDelivery") }
-  element(:feedback_on_submission) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackDelivery") }
-  element(:no_feedback) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackDelivery") }
-  element(:feedback_on_date) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackDelivery") }
+  element(:question_level_feedback) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackAuthoring", :value=>"1") }
+  element(:selection_level_feedback) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackAuthoring", :value=>"2") }
+  element(:both_feedback_levels) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackAuthoring", :value=>"3") }
+  element(:immediate_feedback) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackDelivery", :value=>"1") }
+  element(:feedback_on_submission) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackDelivery", :value=>"4") }
+  element(:no_feedback) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackDelivery", :value=>"3") }
+  element(:feedback_on_date) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackDelivery", :value=>"2") }
   element(:feedback_date) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:feedbackDate") }
-  element(:only_release_scores) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackComponentOption") }
-  element(:release_questions_and) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackComponentOption") }
-  element(:release_student_response) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:feedbackCheckbox1") }
-  element(:release_correct_response) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:feedbackCheckbox3") }
-  element(:release_students_assessment_scores) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:feedbackCheckbox5") }
-  element(:release_students_question_and_part_scores) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:feedbackCheckbox7") }
-  element(:release_question_level_feedback) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:feedbackCheckbox2") }
-  element(:release_selection_level_feedback) { |b| b.frm.text_field(:id=>"assessmentSettingsAction:feedbackCheckbox4") }
+  element(:only_release_scores) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackComponentOption", :value=>"1") }
+  element(:release_questions_and) { |b| b.frm.radio(:name=>"assessmentSettingsAction:feedbackComponentOption", :value=>"2") }
+  element(:release_student_response) { |b| b.frm.checkbox(:id=>"assessmentSettingsAction:feedbackCheckbox1") }
+  element(:release_correct_response) { |b| b.frm.checkbox(:id=>"assessmentSettingsAction:feedbackCheckbox3") }
+  element(:release_students_assessment_scores) { |b| b.frm.checkbox(:id=>"assessmentSettingsAction:feedbackCheckbox5") }
+  element(:release_students_question_and_part_scores) { |b| b.frm.checkbox(:id=>"assessmentSettingsAction:feedbackCheckbox7") }
+  element(:release_question_level_feedback) { |b| b.frm.checkbox(:id=>"assessmentSettingsAction:feedbackCheckbox2") }
+  element(:release_selection_level_feedback) { |b| b.frm.checkbox(:id=>"assessmentSettingsAction:feedbackCheckbox4") }
   element(:release_graders_comments) { |b| b.frm.checkbox(:id=>"assessmentSettingsAction:feedbackCheckbox6") }
   element(:release_statistics) { |b| b.frm.checkbox(:id=>"assessmentSettingsAction:feedbackCheckbox8") }
-  element(:student_ids_seen) { |b| b.frm.radio(:name=>"assessmentSettingsAction:anonymousGrading1") }
-  element(:anonymous_grading) { |b| b.frm.radio(:name=>"assessmentSettingsAction:anonymousGrading1") }
+  # Grading
+  element(:student_ids_seen) { |b| b.frm.radio(:name=>"assessmentSettingsAction:anonymousGrading1", :value=>"2") }
+  element(:anonymous_grading) { |b| b.frm.radio(:name=>"assessmentSettingsAction:anonymousGrading1", :value=>"1") }
     #radio_button(:no_gradebook_options) { |b| b.frm.radio(:name=>"") }
     #radio_button(:grades_sent_to_gradebook) { |b| b.frm.radio(:name=>"") }
+  # Graphics
     #radio_button(:record_highest_score) { |b| b.frm.radio(:name=>"") }
     #radio_button(:record_last_score) { |b| b.frm.radio(:name=>"") }
     #radio_button(:background_color) { |b| b.frm.radio(:name=>"") }
     #text_field(:color_value, :id=>"") }
     #radio_button(:background_image) { |b| b.frm.radio(:name=>"") }
     #text_field(:image_name, :=>"") }
+  # Metadata
     #text_field(:keywords, :=>"") }
     #text_field(:objectives, :=>"") }
     #text_field(:rubrics, :=>"") }
@@ -495,6 +496,10 @@ class MultipleChoice < AssessmentsBase
 
   pgmd(:correct_answer) { |answer, b| b.frm.radio(:value=>answer) }
   pgmd(:answer_text) { |answer, b| b.frm.text_field(:name=>"itemForm:mcchoices:#{answer.ord-65}:_id140_textinput") }
+  pgmd(:answer_feedback_text) { |answer, b| b.frm.text_field(:name=>"itemForm:mcchoices:#{answer.ord-65}:_id143_textinput") }
+
+  element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id186_textinput") }
+  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id190_textinput") }
 
   action(:reset_score_values) { |b| b.frm.link(:text=>"Reset Score Values").click }
 
@@ -533,6 +538,7 @@ class ShortAnswer < AssessmentsBase
   question_page_elements
 
   element(:model_short_answer) { |b| b.frm.text_field(:id=>"itemForm:_id129_textinput") }
+  element(:feedback) { |b| b.frm.text_field(:id=>"itemForm:_id133_textinput") }
 
 end
 
@@ -544,6 +550,8 @@ class FillInBlank < AssessmentsBase
 
   element(:case_sensitive) { |b| b.frm.checkbox(:name=>"itemForm:_id76") }
   element(:mutually_exclusive) { |b| b.frm.checkbox(:name=>"itemForm:_id78") }
+  element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id144_textinput") }
+  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id147_textinput") }
 
 end
 
@@ -552,6 +560,9 @@ class NumericResponse < AssessmentsBase
 
   menu_bar_elements
   question_page_elements
+
+  element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id141_textinput") }
+  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id143_textinput") }
 
 end
 
@@ -563,6 +574,10 @@ class Matching < AssessmentsBase
 
   element(:choice) { |b| b.frm.text_field(:id=>"itemForm:_id147_textinput") }
   element(:match) { |b| b.frm.text_field(:id=>"itemForm:_id151_textinput") }
+  element(:correct_match_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id155_textinput") }
+  element(:incorrect_match_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id160_textinput") }
+  element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id184_textinput") }
+  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id189_textinput") }
 
   action(:distractor) { |b| b.frm.select(:id=>"itemForm:controllingSequence").select "*distractor*" }
   action(:save_pairing) { |b| b.frm.button(:name=>"itemForm:_id164").click }
@@ -579,6 +594,8 @@ class TrueFalse < AssessmentsBase
   pgmd(:answer) { |answer, b| b.frm.radio(:value=>answer, :name=>"itemForm:TF") }
   element(:required_rationale_yes) { |b| b.frm.radio(:index=>0, :name=>"itemForm:rational") }
   element(:required_rationale_no) { |b| b.frm.radio(:index=>1, :name=>"itemForm:rational") }
+  element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id148_textinput") }
+  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id152_textinput") }
 
 end
 
@@ -590,6 +607,7 @@ class AudioRecording < AssessmentsBase
 
   element(:time_allowed) { |b| b.frm.text_field(:id=>"itemForm:timeallowed") }
   element(:number_of_attempts) { |b| b.frm.select(:id=>"itemForm:noattempts") }
+  element(:feedback) { |b| b.frm.text_field(:id=>"itemForm:_id146_textinput") }
 
 end
 
@@ -599,6 +617,7 @@ class FileUpload < AssessmentsBase
 
   menu_bar_elements
   question_page_elements
+  element(:feedback) { |b| b.frm.text_field(:id=>"itemForm:_id130_textinput") }
 
 end
 
@@ -618,6 +637,9 @@ class CalculatedQuestions < AssessmentsBase
   pgmd(:form_decimals) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.select(:name=>/assignToPart/) }
   element(:variables_table) { |b| b.frm.table(:id=>"itemForm:pairs") }
   element(:formulas_table) { |b| b.frm.table(:id=>"itemForm:formulas") }
+
+  element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id207_textinput") }
+  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id211_textinput") }
 
 end
 
@@ -745,39 +767,30 @@ class SelectQuestionType < AssessmentsBase
 end
 
 
+# The student view of the overview/intro page of an Assessment
+class BeginAssessment < BasePage
 
-# The student view of the overview page of an Assessment
-class BeginAssessment < AssessmentsBase
+  frame_element
 
-  # Clicks the Begin Assessment button.
-  def begin_assessment
-    frm.button(:value=>"Begin Assessment").click
-  end
+  action(:begin_assessment) { |b| b.frm.button(:value=>"Begin Assessment").click }
 
-  # Clicks the Cancel button and instantiates the X Class.
-  def cancel
-    # Define this later
-  end
+  value(:assessment_introduction) { |b| b.frm.div(:class=>"assessmentIntroduction").text }
 
-  # Selects the specified radio button answer
-  def multiple_choice_answer(letter)
-    # TODO: Convert this to a hash instead of case statement
-    index = case(letter.upcase)
-              when "A" then "0"
-              when "B" then "1"
-              when "C" then "2"
-              when "D" then "3"
-              when "E" then "4"
-            end
-    frm.radio(:name=>/takeAssessmentForm.+:deliverMultipleChoice.+:_id.+:#{index}/).click
-  end
+  element(:info_table) { |b| b.frm.table(:index=>0) }
 
-  # Enters the answer into the specified blank number (1-based).
-  # @param answer [String]
-  def fill_in_blank_answer(answer, blank_number)
-    index = blank_number.to_i-1
-    frm.text_field(:name=>/deliverFillInTheBlank:_id.+:#{index}/).value=answer
-  end
+  #TODO: Write methods to extract pertinent info from the info table.
+
+end
+
+# Pages student sees when taking an assessment
+# Note that this class will only work when the Assessment being taken
+# is set up to only display one question per page.
+class TakeAssessment < AssessmentsBase
+
+  pgmd(:multiple_choice_answer) { |answer_text, b| b.frm }
+
+  pgmd(:fill_in_blank_answer) { |box, b| b.frm.text_field(:name=>/deliverFillInTheBlank:_id.+:#{box.to_i}/) }
+  pgmd(:numeric_answer) { |box, b| b.frm.text_field(:name=>/deliverFillInNumeric:_id.+:#{box.to_i}/) }
 
   # Clicks either the True or the False radio button, as specified.
   def true_false_answer(answer)
@@ -790,16 +803,9 @@ class BeginAssessment < AssessmentsBase
     frm.text_field(:name=>/:deliverTrueFalse:rationale/).value=text
   end
 
-  # Enters the specified text into the "Short Answer" field.
-  def short_answer(answer)
-    frm.text_field(:name=>/deliverShortAnswer/).value=answer
-  end
+  element(:short_answer) { |b| b.frm.text_field(:name=>/deliverShortAnswer/) }
 
-  # Selects the specified matching value, at the spot specified by the number (1-based counting).
-  def match_answer(answer, number)
-    index = number.to_i-1
-    frm.select(:name=>/deliverMatching/, :index=>index).select(answer)
-  end
+  pgmd(:match_answer) { |match_text, b| b.frm.td(:text=>/#{Regexp.escape(match_text)}/).parent.select(:index=>0) }
 
   # Enters the specified file name in the file field. You can include the path to the file
   # as an optional second parameter.
@@ -809,16 +815,11 @@ class BeginAssessment < AssessmentsBase
   end
 
   # Clicks the Next button and instantiates the BeginAssessment Class.
-  def next
-    frm.button(:value=>"Next").click
-    BeginAssessment.new(@browser)
-  end
+  action(:next) { |b| b.frm.button(:value=>"Next").click }
 
   # Clicks the Submit for Grading button and instantiates the ConfirmSubmission Class.
-  def submit_for_grading
-    frm.button(:value=>"Submit for Grading").click
-    ConfirmSubmission.new(@browser)
-  end
+  action(:submit_for_grading){ |b| b.frm.button(:value=>"Submit for Grading").click }
+
 end
 
 # The confirmation page that appears when submitting an Assessment.

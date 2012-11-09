@@ -525,11 +525,13 @@ end
 class ConfirmSiteSetup < BasePage
 
   frame_element
-  
+
+  element(:request_button) { |b| b.frm.button(:value=>"Request Site") }
+
   # Clicks the Request Site button, then
   # instantiates the SiteSetup Class.
-  action(:request_site){ |b| b.frm.button(:value=>"Request Site").click }
-  
+  action(:request_site){ |p| p.request_button.click }
+
   # For portfolio sites...
   # Clicks the "Create Site" button and
   # instantiates the SiteSetup class.
@@ -569,10 +571,15 @@ end
 # 
 class PortfolioSiteInfo < BasePage
 
+  include FCKEditor
   frame_element
 
+  expected_element :editor
+
+  element(:editor) { |b| b.frm.frame(:id, "description___Frame") }
+
   def description=(text)
-    frm.frame(:id, "description___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
   action(:continue) { |b| b.frm.button(:value=>"Continue").click }
@@ -594,7 +601,8 @@ class PortfolioSiteTools < BasePage
   action(:continue) { |b| b.frm.button(:value=>"Continue").click }
 
   element(:all_tools) { |b| b.frm.checkbox(:id=>"all") }
-    
+  #TODO Add support for individual tool selection
+
 end
 
 # 

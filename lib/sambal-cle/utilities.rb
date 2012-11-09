@@ -16,10 +16,4 @@ module Utilities
     return $~.to_s
   end
 
-  # TODO: Pull this out because it's a dupe. Fix anything that's broken because this is commented out...
-  # Shorthand method for making a data object for testing.
-  #def make data_object_class, opts={}
-  #  data_object_class.new @browser, opts
-  #end
-
 end

@@ -3,7 +3,7 @@ module Workflows
 
   def self.menu_link name, title, opts={}
     define_method name.to_s do
-      @browser.link(opts).click unless @browser.title=~/#{title}$/
+        @browser.link(opts).click unless @browser.title=~/#{title}/
     end
   end
 
@@ -127,7 +127,7 @@ module Workflows
   menu_link :my_sites, :text=>"My Sites"
 
   # MyWorkspace Class.
-  menu_link :my_workspace, :text=>"My Workspace"
+  menu_link :my_workspace, "My Workspace", :text=>"My Workspace"
 
   # News
   menu_link :news, "News", :class=>"icon-sakai-news"

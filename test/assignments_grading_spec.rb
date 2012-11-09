@@ -28,7 +28,7 @@ describe "Assignments grading" do
                         :type=>"Instructor"
     @instructor1.log_in
 
-    @site = make SiteObject
+    @site = make CourseSiteObject
     @site.create
     @site.add_official_participants :role=>@student.type, :participants=>[@student.id]
     @site.add_official_participants :role=>@instructor2.type, :participants=>[@instructor2.id]

@@ -25,8 +25,8 @@ class AnnouncementObject
   alias :name :title
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    announcements unless @browser.title=~/Announcements$/
+    open_my_site_by_name
+    announcements
     on_page Announcements do |page|
       page.add
     end
@@ -43,13 +43,13 @@ class AnnouncementObject
   end
 
   def edit opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    announcements unless @browser.title=~/Announcements$/
+    open_my_site_by_name @site
+    announcements
     on_page Announcements do |list|
       list.edit @title
     end
     on AddEditAnnouncements do |edit|
-      edit.title.set opts[:title] unless opts[:title]==nil
+      edit.title.fit opts[:title]
       edit.send(opts[:access]) unless opts[:access]==nil
       edit.send(opts[:availability]) unless opts[:availability]==nil
       unless opts[:body]==nil
@@ -61,8 +61,8 @@ class AnnouncementObject
   end
 
   def view
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    announcements unless @browser.title=~/Announcements$/
+    open_my_site_by_name @site
+    announcements
     on Announcements do |list|
       list.view @title
     end

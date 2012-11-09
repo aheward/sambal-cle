@@ -24,7 +24,7 @@ describe "Duplicate Site" do
     # Log in to Sakai
     @sakai.page.login(@instructor, @ipassword)
 
-    @site1 = make SiteObject, :description=>"Original Site"
+    @site1 = make CourseSiteObject, :description=>"Original Site"
     @site1.create
 
     @source_site_string << "<br />\n<br />\nSite ID: #{@site1.id}<br />\n<br />\n"

@@ -38,10 +38,10 @@ class AssignmentObject
   alias :name :title
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
+    open_my_site_by_name @site
 
     # Go to assignments page
-    assignments unless @browser.title=~/Assignments$/
+    assignments
 
     on_page AssignmentsList do |list|
       list.add
@@ -50,40 +50,40 @@ class AssignmentObject
       @allow_resubmission==nil ? @allow_resubmission=checkbox_setting(add.allow_resubmission) : add.allow_resubmission.send(@allow_resubmission)
       if @allow_resubmission==:set
         add.num_resubmissions.wait_until_present
-        @num_resubmissions==nil ? @num_resubmissions=add.num_resubmissions.selected_options[0].text : add.num_resubmissions.select(@num_resubmissions)
-        @resubmission[:MON]==nil ? @resubmission[:MON]=add.resub_until_month.selected_options[0].text : add.resub_until_month.select(@resubmission[:MON])
-        @resubmission[:day_of_month]==nil ? @resubmission[:day_of_month]=add.resub_until_day.selected_options[0].text : add.select(@resubmission[:day_of_month])
-        @resubmission[:year]==nil ? @resubmission[:year]=add.resub_until_year.selected_options[0].text : add.select(@resubmission[:year])
-        @resubmission[:hour]==nil ? @resubmission[:hour]=add.resub_until_hour.selected_options[0].text : add.select(@resubmission[:hour])
-        @resubmission[:minute_rounded]==nil ? @resubmission[:minute_rounded]=add.resub_until_minute.selected_options[0].text : add.select(@resubmission[:minute_rounded])
-        @resubmission[:MERIDIAN]==nil ? @resubmission[:MERIDIAN]=add.resub_until_meridian.selected_options[0].text : add.select(@resubmission[:MERIDIAN])
+        @num_resubmissions=get_or_select(@num_resubmissions, add.num_resubmissions)
+        @resubmission[:MON]=get_or_select(@resubmission[:MON], add.resub_until_month)
+        @resubmission[:day_of_month]=get_or_select(@resubmission[:day_of_month], add.resub_until_day)
+        @resubmission[:year]=get_or_select(@resubmission[:year], add.resub_until_year)
+        @resubmission[:hour]=get_or_select(@resubmission[:hour], add.resub_until_hour)
+        @resubmission[:minute_rounded]=get_or_select(@resubmission[:minute_rounded], add.resub_until_minute)
+        @resubmission[:MERIDIAN]=get_or_select(@resubmission[:MERIDIAN], add.resub_until_meridian)
       end
       add.title.set @title
       add.instructions=@instructions
-      @student_submissions==nil ? @student_submissions=add.student_submissions.selected_options[0].text : add.student_submissions.select(@student_submissions)
-      @grade_scale==nil ? @grade_scale=add.grade_scale.selected_options[0].text : add.grade_scale.select(@grade_scale)
-      @open[:MON]==nil ? @open[:MON]=add.open_month.selected_options[0].text : add.open_month.select(@open[:MON])
+      @student_submissions=get_or_select(@student_submissions, add.student_submissions)
+      @grade_scale=get_or_select(@grade_scale, add.grade_scale)
+      @open[:MON]=get_or_select(@open[:MON], add.open_month)
       add.max_points.set(@max_points) unless @max_points==nil
-      @open[:year]==nil ? @open[:year]=add.open_year.selected_options[0].text : add.open_year.select(@open[:year])
-      @open[:day_of_month]==nil ? @open[:day_of_month]=add.open_day.selected_options[0].text : add.open_day.select(@open[:day_of_month])
-      @open[:hour]==nil ? @open[:hour]=add.open_hour.selected_options[0].text : add.open_hour.select(@open[:hour])
-      @open[:minute_rounded]==nil ? @open[:minute_rounded]=add.open_minute.selected_options[0].text : add.open_minute.select(@open[:minute_rounded])
-      @open[:MERIDIAN]==nil ? @open[:MERIDIAN]=add.open_meridian.selected_options[0].text : add.open_meridian.select(@open[:MERIDIAN])
+      @open[:year]=get_or_select(@open[:year], add.open_year)
+      @open[:day_of_month]=get_or_select(@open[:day_of_month], add.open_day)
+      @open[:hour]=get_or_select(@open[:hour], add.open_hour)
+      @open[:minute_rounded]=get_or_select(@open[:minute_rounded], add.open_minute)
+      @open[:MERIDIAN]=get_or_select(@open[:MERIDIAN], add.open_meridian)
       @add_due_date==nil ? @add_due_date=checkbox_setting(add.add_due_date) : add.add_due_date.send(@add_due_date)
       @add_open_announcement==nil ? @add_open_announcement=checkbox_setting(add.add_open_announcement) : add.add_open_announcement.send(@add_open_announcement)
       @add_to_gradebook==nil ? @add_to_gradebook=radio_setting(add.add_to_gradebook) : add.add_to_gradebook.send(@add_to_gradebook)
-      @due[:MON]==nil ? @due[:MON]=add.due_month.selected_options[0].text : add.due_month.select(@due[:MON])
-      @due[:year]==nil ? @due[:year]=add.due_year.selected_options[0].text : add.due_year.select(@due[:year])
-      @due[:day_of_month]==nil ? @due[:day_of_month]=add.due_day.selected_options[0].text : add.due_day.select(@due[:day_of_month])
-      @due[:hour]==nil ? @due[:hour]=add.due_hour.selected_options[0].text : add.due_hour.select(@due[:hour])
-      @due[:minute_rounded]==nil ? @due[:minute_rounded]=add.due_minute.selected_options[0].text : add.due_minute.select(@due[:minute_rounded])
-      @due[:MERIDIAN]==nil ? @due[:MERIDIAN]=add.due_meridian.selected_options[0].text : add.due_meridian.select(@due[:MERIDIAN])
-      @accept_until[:MON]==nil ? @accept_until[:MON]=add.accept_month.selected_options[0].text : add.accept_month.select(@accept_until[:MON])
-      @accept_until[:year]==nil ? @accept_until[:year]=add.accept_year.selected_options[0].text : add.accept_year.select(@accept_until[:year])
-      @accept_until[:day_of_month]==nil ? @accept_until[:day_of_month]=add.accept_day.selected_options[0].text : add.accept_day.select(@accept_until[:day_of_month])
-      @accept_until[:hour]==nil ? @accept_until[:hour]=add.accept_hour.selected_options[0].text : add.accept_hour.select(@accept_until[:hour])
-      @accept_until[:minute_rounded]==nil ? @accept_until[:minute_rounded]=add.accept_minute.selected_options[0].text : add.accept_minute.select(@accept_until[:minute_rounded])
-      @accept_until[:MERIDIAN]==nil ? @accept_until[:MERIDIAN]=add.accept_meridian.selected_options[0].text : add.accept_meridian.select(@accept_until[:MERIDIAN])
+      @due[:MON]=get_or_select(@due[:MON], add.due_month)
+      @due[:year]=get_or_select(@due[:year], add.due_year)
+      @due[:day_of_month]=get_or_select(@due[:day_of_month], add.due_day)
+      @due[:hour]=get_or_select(@due[:hour], add.due_hour)
+      @due[:minute_rounded]=get_or_select(@due[:minute_rounded], add.due_minute)
+      @due[:MERIDIAN]=get_or_select(@due[:MERIDIAN], add.due_meridian)
+      @accept_until[:MON]=get_or_select(@accept_until[:MON], add.accept_month)
+      @accept_until[:year]=get_or_select(@accept_until[:year], add.accept_year)
+      @accept_until[:day_of_month]=get_or_select(@accept_until[:day_of_month], add.accept_day)
+      @accept_until[:hour]=get_or_select(@accept_until[:hour], add.accept_hour)
+      @accept_until[:minute_rounded]=get_or_select(@accept_until[:minute_rounded], add.accept_minute)
+      @accept_until[:MERIDIAN]=get_or_select(@accept_until[:MERIDIAN], add.accept_meridian)
       #@do_not_add_to_gradebook==nil ? @do_not_add_to_gradebook=radio_setting(add.do_not_add_gradebook.set?) :
       if @status=="Draft"
         add.save_draft
@@ -99,8 +99,8 @@ class AssignmentObject
   end
 
   def edit opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    assignments unless @browser.title=~/Assignments$/
+    open_my_site_by_name @site
+    assignments
     on AssignmentsList do |list|
       if @status=="Draft"
         list.edit_assignment "Draft - #{@title}"
@@ -110,12 +110,12 @@ class AssignmentObject
     end
 
     on AssignmentAdd do |edit|
-      edit.title.set opts[:title] unless opts[:title]==nil
+      edit.title.fit opts[:title]
       unless opts[:instructions]==nil
         edit.enter_source_text edit.editor, opts[:instructions]
       end
-      edit.grade_scale.select opts[:grade_scale] unless opts[:grade_scale]==nil
-      edit.max_points.set opts[:max_points] unless opts[:max_points]==nil
+      edit.grade_scale.fit opts[:grade_scale]
+      edit.max_points.fit opts[:max_points]
 
       #TODO: All the rest goes here
 
@@ -140,8 +140,8 @@ class AssignmentObject
   end
 
   def get_info
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    assignments unless @browser.title=~/Assignments$/
+    open_my_site_by_name @site
+    assignments
     on AssignmentsList do |list|
       @id = list.get_assignment_id @title
       @status=list.status_of @title
@@ -179,8 +179,8 @@ class AssignmentObject
   end
 
   def duplicate
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    assignments unless @browser.title=~/Assignments$/
+    open_my_site_by_name @site
+    assignments
     reset
     on AssignmentsList do |list|
       list.duplicate @title
@@ -199,8 +199,8 @@ class AssignmentObject
   # Use this method to open a submitted assignment for viewing
   # the page.
   def view_submission
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    assignments unless @browser.title=~/Assignments$/
+    open_my_site_by_name @site
+    assignments
     reset
     on AssignmentsList do |list|
       list.open_assignment @title

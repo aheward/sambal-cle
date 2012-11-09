@@ -21,8 +21,8 @@ class ModuleObject
   alias :name :title
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    lessons unless @browser.title=~/Lessons$/
+    open_my_site_by_name @site
+    lessons
     reset
     on_page Lessons do |page|
       page.add_module
@@ -74,8 +74,8 @@ class ContentSectionObject
   alias :name :title
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    lessons unless @browser.title=~/Lessons$/
+    open_my_site_by_name @site
+    lessons
     reset
     on_page Lessons do |page|
       page.open_lesson @module
@@ -89,12 +89,13 @@ class ContentSectionObject
       @modality.each do |content|
         page.send(content)
       end
-      page.content_type.select @content_type unless @content_type==nil
+      page.content_type.fit @content_type
     end
 
     on AddEditContentSection do |page| # Note we are reinstantiating the class here because of
                                        # an issue with Selenium Webdriver throwing a
                                        # WeakReference error, given the partial page reload.
+                                       # TODO: Figure out if there's a better solution for this
       case @content_type
         when "Compose content with editor"
           page.enter_source_text page.content_editor, @editor_content
@@ -135,16 +136,16 @@ class ContentSectionObject
   end
 
   def edit opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    lessons unless @browser.title=~/Lessons$/
+    open_my_site_by_name @site
+    lessons
     reset
     on Lessons do |list|
       list.check_section @title
       list.edit
     end
     on AddEditContentSection do |edit|
-      edit.title.set opts[:title] unless opts[:title]==nil
-      edit.instructions.set opts[:instructions] unless opts[:instructions]==nil
+      edit.title.fit opts[:title]
+      edit.instructions.fit opts[:instructions]
       if opts[:modality].class==Array
         opts[:modality].each do |item|
           edit.send(item)

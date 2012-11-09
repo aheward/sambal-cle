@@ -21,8 +21,8 @@ class WebContentObject
   end
 
   def create
-    my_workspace unless @browser.title=~/My Workspace/
-    site_setup unless @browser.title=~/Site Setup$/
+    my_workspace
+    site_setup
     on_page SiteSetup do |page|
       page.edit @site
     end

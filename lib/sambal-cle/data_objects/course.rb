@@ -1,4 +1,4 @@
-class SiteObject
+class CourseSiteObject
 
   include Foundry
   include DataFactory
@@ -31,8 +31,8 @@ class SiteObject
   end
 
   def create
-    my_workspace unless @browser.title=~/My Workspace/
-    site_setup unless @browser.title=~/Site Setup/
+    my_workspace
+    site_setup
     on_page SiteSetup do |page|
       page.new
     end
@@ -104,8 +104,8 @@ class SiteObject
   end
 
   def create_and_reuse_site(site_name)
-    my_workspace unless @browser.title=~/My Workspace/
-    site_setup unless @browser.title=~/Site Setup/
+    my_workspace
+    site_setup
     on_page SiteSetup do |page|
       page.new
     end
@@ -216,7 +216,7 @@ class SiteObject
     }
     options = defaults.merge(opts)
 
-    new_site = make SiteObject, options
+    new_site = make CourseSiteObject, options
 
     new_site.name=options[:name]
     new_site.subject=options[:subject]
@@ -233,8 +233,8 @@ class SiteObject
     new_site.site_contact_email=options[:site_contact_email]
     new_site.term=options[:term]
 
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    site_editor unless @browser.title=~/Site Editor$/
+    open_my_site_by_name @site
+    site_editor
     on SiteEditor do |edit|
       edit.duplicate_site
     end
@@ -244,7 +244,7 @@ class SiteObject
       dupe.duplicate
     end
     my_workspace
-    site_setup unless @browser.title=~/Site Setup/
+    site_setup
     on SiteSetup do |sites|
       sites.search(Regexp.escape(new_site.name))
     end
@@ -259,8 +259,8 @@ class SiteObject
   # TODO: Improve this method to better take advantage of the UserObject...
   def add_official_participants opts={}
     participants = opts[:participants].join("\n")
-    open_my_site_by_name @name unless @browser.title=~/#{@name}/
-    site_editor unless @browser.title=~/Site Editor$/
+    open_my_site_by_name @name
+    site_editor unless
     on SiteEditor do |site|
       site.add_participants
     end
@@ -279,6 +279,5 @@ class SiteObject
       confirm.finish
     end
   end
-
 
 end

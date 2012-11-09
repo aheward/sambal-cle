@@ -22,8 +22,8 @@ class PollObject
   end
     
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    polls unless @browser.title=~/Polls$/
+    open_my_site_by_name @site
+    polls
     on Polls do |polls|
       polls.add
     end
