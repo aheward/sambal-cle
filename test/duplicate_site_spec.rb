@@ -13,7 +13,7 @@ describe "Duplicate Site" do
     # Get the test configuration data
     @config = YAML.load_file("config.yml")
     @directory = YAML.load_file("directory.yml")
-    @sakai = SakaiCLE.new(@config['browser'], @config['url'])
+    @sakai = SambalCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
     # This test case uses the logins of several users
     @instructor = @directory['person3']['id']

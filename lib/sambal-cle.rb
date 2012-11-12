@@ -9,7 +9,7 @@ Dir["#{File.dirname(__FILE__)}/sambal-cle/data_objects/*.rb"].each {|f| require 
 #
 # The initialization will return the LoginPage class object as well as
 # create the @browser variable used throughout the page classes
-class SakaiCLE
+class SambalCLE
 
   attr_reader :browser
 
