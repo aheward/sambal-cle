@@ -36,16 +36,34 @@ class GlossaryTermObject
   end
     
   def edit opts={}
-    
+    open_my_site_by_name @portfolio
+    glossary
+    on Glossary do |list|
+      list.edit @term
+    end
+    on AddEditTerm do |term|
+      term.term.fit opts[:term]
+      term.short_description.fit opts[:short_description]
+      term.long_description=opts[:long_description] unless opts[:long_description]==nil
+      term.save_changes
+    end
     set_options(opts)
   end
     
-  def view
-    
+  def open
+    open_my_site_by_name @portfolio
+    glossary
+    on Glossary do |list|
+      list.open @term
+    end
   end
     
   def delete
-    
+    open_my_site_by_name @portfolio
+    glossary
+    on Glossary do |list|
+      list.delete @term
+    end
   end
   
 end

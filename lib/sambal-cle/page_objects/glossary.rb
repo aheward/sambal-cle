@@ -6,26 +6,15 @@ class Glossary < BasePage
 
   frame_element
 
-  def add
-    frm.link(:text=>"Add").click
-  end
+  action(:add) { |b| b.frm.link(:text=>"Add").click }
+  action(:import) { |b| b.frm.link(:text=>"Import").click }
 
-  def import
-    frm.link(:text=>"Import").click
-  end
+  pgmd(:edit) { |term, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(term)}/).link(:text=>"Edit").click }
+  pgmd(:delete) { |term, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(term)}/).link(:text=>"Delete").click }
 
-  def edit(term)
-    frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(term)}/).link(:text=>"Edit").click
-  end
-
-  def delete(term)
-    frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(term)}/).link(:text=>"Delete").click
-  end
-
-  def open(term)
-    frm.link(:text=>term).click
-    #FIXME!
-    # Need to do special handling here because of the new window.
+  pgmd(:open) do |term, b|
+    b.frm.link(:text=>term).click
+    b.window(:title=>term).use
   end
 
   # Returns an array containing the string values of the terms
@@ -71,12 +60,8 @@ class GlossaryImport < BasePage
 
   frame_element
 
-  def select_file
-    frm.link(:text=>"Select file...").click
-  end
+  action(:select_file) { |b| b.frm.link(:text=>"Select file...").click }
 
-  def import
-    frm.button(:value=>"Import").click
-  end
+  action(:import) { |b| b.frm.button(:value=>"Import").click }
 
 end

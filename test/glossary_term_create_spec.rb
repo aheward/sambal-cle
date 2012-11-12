@@ -2,7 +2,7 @@ require 'rspec'
 require 'sambal-cle'
 require 'yaml'
 
-describe "Create Portfolio Glossary Term" do
+describe "Portfolio Glossary Term CRUD" do
 
   include Workflows
   include Foundry
@@ -27,16 +27,45 @@ describe "Create Portfolio Glossary Term" do
     @portfolio = make PortfolioSiteObject
     @portfolio.create
     @portfolio.add_official_participants "Participant", @student.id, @student2.id
-
+    @term1 = make GlossaryTermObject, :portfolio=>@portfolio.title
+    @term1.create
+    @term2 = make GlossaryTermObject, :portfolio=>@portfolio.title
+    @term2.create
+    @term3 = make GlossaryTermObject, :portfolio=>@portfolio.title
+    @term3.create
   end
 
   after :all do
     @browser.close
   end
 
-  it "A Glossary Term can be created" do
-    @term = make GlossaryTermObject, :portfolio=>@portfolio.title
-    @term.create
+  it "Terms can be created" do
+    on Glossary do |list|
+      list.terms.should include @term1.term
+      list.terms.should include @term2.term
+      list.terms.should include @term3.term
+    end
+  end
+
+  it "Terms can be updated" do
+    @term1.edit :term=>random_alphanums, :short_description=>random_alphanums, :long_description=>random_alphanums
+    on Glossary do |list|
+      list.terms.should include @term1.term
+    end
+  end
+
+  it "Terms can be deleted" do
+    @term2.delete
+    on Glossary do |list|
+      list.terms.should_not include @term2.term
+    end
+  end
+
+  it "Terms can be read" do
+    @instructor.log_out
+    @student.log_in
+    @term1.open
+    @browser.text.should include @term1.long_description
   end
 
 end
