@@ -525,11 +525,13 @@ end
 class ConfirmSiteSetup < BasePage
 
   frame_element
-  
+
+  element(:request_button) { |b| b.frm.button(:value=>"Request Site") }
+
   # Clicks the Request Site button, then
   # instantiates the SiteSetup Class.
-  action(:request_site){ |b| b.frm.button(:value=>"Request Site").click }
-  
+  action(:request_site){ |p| p.request_button.click }
+
   # For portfolio sites...
   # Clicks the "Create Site" button and
   # instantiates the SiteSetup class.
@@ -569,17 +571,22 @@ end
 # 
 class PortfolioSiteInfo < BasePage
 
+  include FCKEditor
   frame_element
 
+  expected_element :editor
+
+  element(:editor) { |b| b.frm.frame(:id, "description___Frame") }
+
   def description=(text)
-    frm.frame(:id, "description___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
   action(:continue) { |b| b.frm.button(:value=>"Continue").click }
 
   element(:title) { |b| b.frm.text_field(:id=>"title") }
   element(:url_alias) { |b| b.frm.text_field(:id=>"alias_0") }
-  element(:short_description) { |b| b.frm.text_area(:id=>"short_description") }
+  element(:short_description) { |b| b.frm.text_field(:id=>"short_description") }
   element(:icon_url) { |b| b.frm.text_field(:id=>"iconUrl") }
   element(:site_contact_name) { |b| b.frm.text_field(:id=>"siteContactName") }
   element(:site_contact_email) { |b| b.frm.text_field(:id=>"siteContactEmail") }
@@ -594,7 +601,8 @@ class PortfolioSiteTools < BasePage
   action(:continue) { |b| b.frm.button(:value=>"Continue").click }
 
   element(:all_tools) { |b| b.frm.checkbox(:id=>"all") }
-    
+  #TODO Add support for individual tool selection
+
 end
 
 # 

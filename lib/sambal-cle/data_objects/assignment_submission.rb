@@ -59,8 +59,8 @@ class AssignmentSubmissionObject
   end
 
   def grade_submission opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    assignments unless @browser.title=~/Assignments$/
+    open_my_site_by_name @site
+    assignments
     reset
     on AssignmentsList do |list|
       list.grade @title
@@ -113,8 +113,8 @@ class AssignmentSubmissionObject
   end
 
   def open
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    assignments unless @browser.title=~/Assignments$/
+    open_my_site_by_name @site
+    assignments
     reset
     on AssignmentsList do |list|
       list.open_assignment @title

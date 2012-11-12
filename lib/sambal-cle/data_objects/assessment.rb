@@ -6,6 +6,21 @@ class AssessmentObject
   include DateFactory
   include Workflows
 
+  def question_types
+    {
+      :"Multiple Choice"=>MultipleChoiceQuestion,
+      :Survey=>SurveyQuestion,
+      :"Short Answer/Essay"=>ShortAnswerQuestion,
+      :"Fill in the Blank"=>FillInBlankQuestion,
+      :"Numeric Response"=>NumericResponseQuestion,
+      :Matching=>MatchingQuestion,
+      :"True False"=>TrueFalseQuestion,
+      :"Audio Recording"=>AudioRecordingQuestion,
+      :"File Upload"=>FileUploadQuestion,
+      :"Calculated Question"=>CalculatedQuestion
+    }
+  end
+
   attr_accessor :title, :site, :questions, :parts, :status, :type, :available_date,
                 :due_date, :retract_date, :feedback_authoring, :feedback_delivery, :feedback_date,
                 :release_to, :release, :release_options, :secondary_id, :secondary_password,
@@ -47,8 +62,8 @@ class AssessmentObject
   end
 
   def create
-    my_workspace.open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    tests_and_quizzes unless @browser.title=~/Tests & Quizzes$/
+    open_my_site_by_name @site
+    tests_and_quizzes
     reset
     on_page AssessmentsList do |page|
       page.title.set @title
@@ -117,8 +132,8 @@ class AssessmentObject
   end
 
   def publish
-    my_workspace.open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    tests_and_quizzes unless @browser.title=~/Tests & Quizzes$/
+    open_my_site_by_name @site
+    tests_and_quizzes
     reset
     on AssessmentsList do |list|
       list.publish @title
@@ -144,10 +159,11 @@ class AssessmentObject
     position
     defaults = {
         :assessment=>@title,
-        :part=>@parts[rand(@parts.length)].title
+        :part=>@parts[rand(@parts.length)].title,
+        :type=>question_types.keys.shuffle[0]
     }
     options = defaults.merge(opts)
-    question = make QuestionObject, options
+    question = make question_types[options[:type].to_sym], options
     question.create
     @questions << question
   end
@@ -155,8 +171,8 @@ class AssessmentObject
   private
 
   def position
-    my_workspace.open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    tests_and_quizzes unless @browser.title=~/Tests & Quizzes$/
+    open_my_site_by_name @site
+    tests_and_quizzes
     unless @browser.frame(:class=>"portletMainIframe").h3.text=="Questions: #{@title}"
       reset
       on AssessmentsList do |list|
@@ -167,75 +183,10 @@ class AssessmentObject
 
 end
 
-class QuestionObject
-
-  include Foundry
-  include Utilities
-  include Workflows
-  include StringFactory
-
-  attr_accessor :type, :assessment, :text, :point_value, :part,
-                # Multiple Choice attributes...
-                :correct_type, :answer_credit, :negative_point_value
-
-  def initialize(browser, opts={})
-    @browser = browser
-    defaults = {
-        :type=>QUESTION_TYPES.keys[rand(QUESTION_TYPES.length)],
-        :text=>random_alphanums,
-        :point_value=>(rand(100)+1).to_s
-
-    }
-    options = defaults.merge(opts)
-    set_options(options)
-    requires @assessment
-  end
-
-  QUESTION_TYPES = {
-      :"Multiple Choice"=>:add_multiple_choice,
-      :Survey=>:add_survey#,
-      #:"Short Answer/Essay"=>:add_short_answer,
-      #:"Fill in the Blank"=>:add_fill_in_the_blank,
-      #:"Numeric Response"=>:add_numeric,
-      #:Matching=>:add_matching,
-      #:"True False"=>:add_true_false,
-      #:"Audio Recording"=>:add_audio,
-      #:"File Upload"=>:add_file_upload,
-      #:"Calculated Question"=>:add_calculated_question
-  }
-
-  def create
-    on EditAssessment do |edit|
-      edit.add_question_to_part(@part).select @type
-    end
-    self.send(QUESTION_TYPES[@type.to_sym])
-  end
-
-  private
-
-  def add_multiple_choice
-    on MultipleChoice do |add|
-      add.answer_point_value.set @point_value
-      add.question_text.set @text
-      add.send(@correct_type).set
-      add.send(@answer_credit).set unless @answer_credit==nil
-      add.negative_point_value.set @negative_point_value unless @negative_point_value==nil
-
-    end
-  end
-
-  def add_survey
-    on Survey do |add|
-
-    end
-  end
-
-end
-
 class PartObject
 
   include Foundry
-  include Utilities
+  include DataFactory
   include Workflows
   include StringFactory
 
@@ -284,5 +235,3 @@ class PartObject
   end
   
 end
-    
-      

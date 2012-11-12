@@ -24,28 +24,28 @@ class ForumObject
   alias :name :title
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    forums unless @browser.title=~/Forums$/
+    open_my_site_by_name
+    forums
     on Forums do |forums|
       forums.new_forum
     end
     on EditForum do |edit|
       edit.title.set @title
-      edit.short_description.set @short_description unless @short_description==nil
+      edit.short_description.fit @short_description
       edit.enter_source_text(edit.editor, @description) unless @description==nil
       edit.save
     end
   end
     
   def edit opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
+    open_my_site_by_name @site
     forums unless @browser.title=~/Forums$/
     on Forums do |forum|
       forum.forum_settings @title
     end
     on EditForum do |edit|
-      edit.title.set opts[:title] unless opts[:title] == nil
-      edit.short_description.set opts[:short_description] unless opts[:short_description]==nil
+      edit.title.fit opts[:title]
+      edit.short_description.fit opts[:short_description]
       unless opts[:description] == nil
         edit.enter_source_text edit.editor, opts[:description]
       end
@@ -55,8 +55,8 @@ class ForumObject
   end
     
   def view
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    forums unless @browser.title=~/Forums$/
+    open_my_site_by_name @site
+    forums
     on Forums do |forum|
       forum.open_forum @title
     end
@@ -72,8 +72,8 @@ class ForumObject
   end
 
   def get_entity_info
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    forums unless @browser.title=~/Forums$/
+    open_my_site_by_name @site
+    forums
     # TODO: Something will probably be needed here, in case we're currently
     # on a Forum page already.
     on Forums do |forum|
@@ -117,15 +117,14 @@ class TopicObject
     options = defaults.merge(opts)
     
     set_options(options)
-    raise "You must define a site for your Topic" if @site==nil
-    raise "You must specify an existing Forum for your Topic" if @forum==nil
+    requires @site, @forum
   end
 
   alias :name :title
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    forums unless @browser.title=~/Forums$/
+    open_my_site_by_name @site
+    forums
     on Forums do |forums|
       forums.new_topic_for_forum @forum
     end
@@ -138,15 +137,15 @@ class TopicObject
   end
 
   def edit opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    forums unless @browser.title=~/Forums$/
+    open_my_site_by_name @site
+    forums
     on Forums do |forum|
       reset
       forum.topic_settings @title
     end
     on AddEditTopic do |edit|
-      edit.title.set opts[:title] unless opts[:title] == nil
-      edit.short_description.set opts[:short_description] unless opts[:short_description]==nil
+      edit.title.fit opts[:title]
+      edit.short_description.fit opts[:short_description]
       unless opts[:description] == nil
         edit.enter_source_text edit.editor, opts[:description]
       end
@@ -156,8 +155,8 @@ class TopicObject
   end
     
   def view
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    forums unless @browser.title=~/Forums$/
+    open_my_site_by_name @site
+    forums
     on Forums do |forum|
       reset
       forum.open_topic @title
@@ -174,8 +173,8 @@ class TopicObject
   end
 
   def get_entity_info
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    forums unless @browser.title=~/Forums$/
+    open_my_site_by_name @site
+    forums
     on Forums do |forums|
       forums.topic_settings @title
     end

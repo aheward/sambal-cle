@@ -30,8 +30,8 @@ class EventObject
   end
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    calendar unless @browser.title=~/Calendar$/
+    open_my_site_by_name @site
+    calendar
     on Calendar do |cal|
       cal.add_event
     end
@@ -63,8 +63,8 @@ class EventObject
   end
 
   def view
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    calendar unless @browser.title=~/Calendar$/
+    open_my_site_by_name @site
+    calendar
     on Calendar do |cal|
       cal.open_event @title
     end
