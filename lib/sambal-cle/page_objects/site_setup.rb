@@ -349,23 +349,23 @@ class ReUseMaterial < SiteSetupBase
 
   menu_elements
 
-  thing(:announcements_checkbox) { |b| b.frm.checkbox(name: "sakai.announcements") }
-  thing(:calendar_checkbox) { |b| b.frm.checkbox(name: "sakai.schedule") }
-  thing(:discussion_forums_checkbox) { |b| b.frm.checkbox(name: "sakai.jforum.tool") }
-  thing(:forums_checkbox) { |b| b.frm.checkbox(name: "sakai.forums") }
-  thing(:chat_room_checkbox) { |b| b.frm.checkbox(name: "sakai.chat") }
-  thing(:polls_checkbox) { |b| b.frm.checkbox(name: "sakai.poll") }
-  thing(:syllabus_checkbox) { |b| b.frm.checkbox(name: "sakai.syllabus") }
-  thing(:lessons_checkbox) { |b| b.frm.checkbox(name: "sakai.melete") }
-  thing(:resources_checkbox) { |b| b.frm.checkbox(name: "sakai.resources") }
-  thing(:assignments_checkbox) { |b| b.frm.checkbox(name: "sakai.assignment.grades") }
-  thing(:tests_and_quizzes_checkbox) { |b| b.frm.checkbox(name: "sakai.samigo") }
-  thing(:gradebook_checkbox) { |b| b.frm.checkbox(name: "sakai.gradebook.tool") }
-  thing(:gradebook2_checkbox) { |b| b.frm.checkbox(name: "sakai.gradebook.gwt.rpc") }
-  thing(:wiki_checkbox) { |b| b.frm.checkbox(name: "sakai.rwiki") }
-  thing(:news_checkbox) { |b| b.frm.checkbox(name: "sakai.news") }
-  thing(:web_content_checkbox) { |b| b.frm.checkbox(name: "sakai.iframe") }
-  thing(:site_statistics_checkbox) { |b| b.frm.checkbox(name: "sakai.sitestats") }
+  element(:announcements_checkbox) { |b| b.frm.checkbox(name: "sakai.announcements") }
+  element(:calendar_checkbox) { |b| b.frm.checkbox(name: "sakai.schedule") }
+  element(:discussion_forums_checkbox) { |b| b.frm.checkbox(name: "sakai.jforum.tool") }
+  element(:forums_checkbox) { |b| b.frm.checkbox(name: "sakai.forums") }
+  element(:chat_room_checkbox) { |b| b.frm.checkbox(name: "sakai.chat") }
+  element(:polls_checkbox) { |b| b.frm.checkbox(name: "sakai.poll") }
+  element(:syllabus_checkbox) { |b| b.frm.checkbox(name: "sakai.syllabus") }
+  element(:lessons_checkbox) { |b| b.frm.checkbox(name: "sakai.melete") }
+  element(:resources_checkbox) { |b| b.frm.checkbox(name: "sakai.resources") }
+  element(:assignments_checkbox) { |b| b.frm.checkbox(name: "sakai.assignment.grades") }
+  element(:tests_and_quizzes_checkbox) { |b| b.frm.checkbox(name: "sakai.samigo") }
+  element(:gradebook_checkbox) { |b| b.frm.checkbox(name: "sakai.gradebook.tool") }
+  element(:gradebook2_checkbox) { |b| b.frm.checkbox(name: "sakai.gradebook.gwt.rpc") }
+  element(:wiki_checkbox) { |b| b.frm.checkbox(name: "sakai.rwiki") }
+  element(:news_checkbox) { |b| b.frm.checkbox(name: "sakai.news") }
+  element(:web_content_checkbox) { |b| b.frm.checkbox(name: "sakai.iframe") }
+  element(:site_statistics_checkbox) { |b| b.frm.checkbox(name: "sakai.sitestats") }
   action(:continue) { |b| b.frm.button(name: "eventSubmit_doContinue").click }
 
 end

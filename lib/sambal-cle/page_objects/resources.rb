@@ -300,7 +300,7 @@ end
 
 class CreateFolders < ResourcesBase
 
-  thing(:folder_name) { |b| b.frm.text_field(:id=>"content_0") }
+  element(:folder_name) { |b| b.frm.text_field(:id=>"content_0") }
   action(:create_folders_now) { |b| b.frm.button(:value=>"Create Folders Now").click }
 
 end
@@ -310,7 +310,7 @@ class EditHTMLPageContent < BasePage
   frame_element
   include FCKEditor
 
-  thing(:editor) { |b| b.frm.frame(:id=>"content___Frame") }
+  element(:editor) { |b| b.frm.frame(:id=>"content___Frame") }
   action(:continue) { |b| b.frm.button(id: "saveChanges").click }
   element(:email_notification) { |b| b.frm.select(:id=>"notify") }
 
@@ -318,8 +318,8 @@ end
 
 class EditHTMLPageProperties < ResourcesBase
 
-  thing(:name) { |b| b.frm.text_field(id: "displayName_0") }
-  thing(:description) { |b| b.frm.text_field(id: "description_0") }
+  element(:name) { |b| b.frm.text_field(id: "displayName_0") }
+  element(:description) { |b| b.frm.text_field(id: "description_0") }
 
   action(:finish) { |b| b.frm.button(id: "finish_button").click }
 

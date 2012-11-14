@@ -93,7 +93,7 @@ class CourseSiteObject
     end
 
     # Create a string that will match the new Site's "creation date" string
-    @creation_date = make_date(Time.now)
+    @creation_date = right_now[:sakai]
 
     on SiteSetup do |site_setup|
       site_setup.search(Regexp.escape(@subject))

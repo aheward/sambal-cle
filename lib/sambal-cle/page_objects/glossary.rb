@@ -9,10 +9,10 @@ class Glossary < BasePage
   action(:add) { |b| b.frm.link(:text=>"Add").click }
   action(:import) { |b| b.frm.link(:text=>"Import").click }
 
-  pgmd(:edit) { |term, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(term)}/).link(:text=>"Edit").click }
-  pgmd(:delete) { |term, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(term)}/).link(:text=>"Delete").click }
+  action(:edit) { |term, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(term)}/).link(:text=>"Edit").click }
+  action(:delete) { |term, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(term)}/).link(:text=>"Delete").click }
 
-  pgmd(:open) do |term, b|
+  action(:open) do |term, b|
     b.frm.link(:text=>term).click
     b.window(:title=>term).use
   end

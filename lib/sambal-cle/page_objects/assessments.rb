@@ -84,11 +84,11 @@ class AssessmentsList < AssessmentsBase
   # Opens the selected test for scoring
   # then instantiates the AssessmentTotalScores class.
   # @param test_title [String] the title of the test to be clicked.
-  pgmd(:score_test) { |test_title, b| b.frm.tbody(:id=>"authorIndexForm:_id88:tbody_element").row(:text=>/#{Regexp.escape(test_title)}/).link(:id=>/authorIndexToScore/).click }
+  action(:score_test) { |test_title, b| b.frm.tbody(:id=>"authorIndexForm:_id88:tbody_element").row(:text=>/#{Regexp.escape(test_title)}/).link(:id=>/authorIndexToScore/).click }
 
-  pgmd(:publish) { |test_title, b| b.pending_table.tr(:text=>/#{Regexp.escape(test_title)}/).select(:name=>/Select/).select "Publish" }
+  action(:publish) { |test_title, b| b.pending_table.tr(:text=>/#{Regexp.escape(test_title)}/).select(:name=>/Select/).select "Publish" }
 
-  pgmd(:edit) { |test_title, b| b.frm.form(:id=>"authorIndexForm").tr(:text=>/#{Regexp.escape(test_title)}/).select(:name=>/Select/).select "Edit" }
+  action(:edit) { |test_title, b| b.frm.form(:id=>"authorIndexForm").tr(:text=>/#{Regexp.escape(test_title)}/).select(:name=>/Select/).select "Edit" }
 
   element(:title) { |b| b.frm.text_field(:id=>"authorIndexForm:title") }
   element(:pending_table) { |b| b.frm.table(:id=>"authorIndexForm:coreAssessments") }
@@ -313,7 +313,7 @@ class AssessmentTotalScores < BasePage
   # selecting the appropriate comment box.
   # @param student_id [String] the target student id
   # @param comment [String] the text of the comment being made to the student
-  pgmd(:comment_for_student) { |student_id, comment, b|
+  action(:comment_for_student) { |student_id, comment, b|
     index_val = b.student_ids.index(student_id)
     b.frm.text_field(:name=>"editTotalResults:totalScoreTable:#{index_val}:_id345").value=comment
   }
@@ -340,7 +340,7 @@ class AssessmentTotalScores < BasePage
   end
 
   # Clicks the Assessments link on the page
-  # then instantiates the AssessmentsList class.                                          pgmd(:
+  # then instantiates the AssessmentsList class.                                          action(:
   def assessments
     frm.link(:text=>"Assessments").click
     AssessmentsList.new(@browser)
@@ -391,7 +391,7 @@ class EditAssessment < AssessmentsBase
   # Allows removing a specified
   # Assessment part number.
   # @param part_num [String] the part number of the assessment you want
-  pgmd(:remove_part) { |part_num, b| b.frm.link(:xpath, "//a[contains(@onclick, 'assesssmentForm:parts:#{part_num.to_i-1}:copyToPool')]").click }
+  action(:remove_part) { |part_num, b| b.frm.link(:xpath, "//a[contains(@onclick, 'assesssmentForm:parts:#{part_num.to_i-1}:copyToPool')]").click }
 
   # Clicks the Add Part button, then
   # instantiates the AddEditAssessmentPart page class.
@@ -399,7 +399,7 @@ class EditAssessment < AssessmentsBase
 
   # Selects the desired question type from the
   # drop down list at the top of the page.
-  pgmd(:question_type) { |qtype, b| b.frm.select(:id=>"assesssmentForm:changeQType").select(qtype) }
+  action(:question_type) { |qtype, b| b.frm.select(:id=>"assesssmentForm:changeQType").select(qtype) }
 
   # Clicks the Preview button,
   # then instantiates the PreviewOverview page class.
@@ -417,13 +417,13 @@ class EditAssessment < AssessmentsBase
   # text, by part and question number.
   # @param part_num [String] the Part number containing the question you want
   # @param question_num [String] the number of the question you want
-  pgmd(:get_question_text) { |part_number, question_number, b|  b.frm.table(:id=>"assesssmentForm:parts:#{part_number.to_i-1}:parts").div(:class=>"tier3", :index=>question_number.to_i-1).text }
+  action(:get_question_text) { |part_number, question_number, b|  b.frm.table(:id=>"assesssmentForm:parts:#{part_number.to_i-1}:parts").div(:class=>"tier3", :index=>question_number.to_i-1).text }
 
   action(:print) { |b| b.frm.button(:text=>"Print").click }
   action(:update_points) { |b| b.frm.button(:id=>"assesssmentForm:pointsUpdate").click }
 
   # TODO: Fix this method. It doesn't work for some reason...
-  pgmd(:add_question_to_part) { |part, p| p.assessment_form.row(:text=>/#{Regexp.escape(part)}/).select(:id=>/changeQType/) }
+  action(:add_question_to_part) { |part, p| p.assessment_form.row(:text=>/#{Regexp.escape(part)}/).select(:id=>/changeQType/) }
 
   element(:assessment_form) { |b| b.table(:id=>"assesssmentForm:parts") }
 
@@ -494,9 +494,9 @@ class MultipleChoice < AssessmentsBase
   element(:multi_single) { |b| b.frm.radio(:name=>"itemForm:chooseAnswerTypeForMC", :index=>1) }
   element(:multi_multi) { |b| b.frm.radio(:name=>"itemForm:chooseAnswerTypeForMC", :index=>2) }
 
-  pgmd(:correct_answer) { |answer, b| b.frm.radio(:value=>answer) }
-  pgmd(:answer_text) { |answer, b| b.frm.text_field(:name=>"itemForm:mcchoices:#{answer.ord-65}:_id140_textinput") }
-  pgmd(:answer_feedback_text) { |answer, b| b.frm.text_field(:name=>"itemForm:mcchoices:#{answer.ord-65}:_id143_textinput") }
+  action(:correct_answer) { |answer, b| b.frm.radio(:value=>answer) }
+  action(:answer_text) { |answer, b| b.frm.text_field(:name=>"itemForm:mcchoices:#{answer.ord-65}:_id140_textinput") }
+  action(:answer_feedback_text) { |answer, b| b.frm.text_field(:name=>"itemForm:mcchoices:#{answer.ord-65}:_id143_textinput") }
 
   element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id186_textinput") }
   element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id190_textinput") }
@@ -591,7 +591,7 @@ class TrueFalse < AssessmentsBase
   question_page_elements
 
   element(:negative_point_value) { |b| b.frm.text_field(:id=>"itemForm:answerdsc") }
-  pgmd(:answer) { |answer, b| b.frm.radio(:value=>answer, :name=>"itemForm:TF") }
+  action(:answer) { |answer, b| b.frm.radio(:value=>answer, :name=>"itemForm:TF") }
   element(:required_rationale_yes) { |b| b.frm.radio(:index=>0, :name=>"itemForm:rational") }
   element(:required_rationale_no) { |b| b.frm.radio(:index=>1, :name=>"itemForm:rational") }
   element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id148_textinput") }
@@ -629,12 +629,12 @@ class CalculatedQuestions < AssessmentsBase
 
   action(:extract_vs_and_fs) { |b| b.frm.button(:value=>"Extract Variables and Formulas").click; b.variables_table.wait_until_present }
 
-  pgmd(:min_value) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.text_field(:name=>/itemForm:pairs:.:_id167/) }
-  pgmd(:max_value) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.text_field(:name=>/_id170/) }
-  pgmd(:var_decimals) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.select(:name=>/_id173/) }
-  pgmd(:formula) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.text_field(:name=>/_id186/) }
-  pgmd(:tolerance) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.text_field(:name=>/_id189/) }
-  pgmd(:form_decimals) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.select(:name=>/assignToPart/) }
+  action(:min_value) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.text_field(:name=>/itemForm:pairs:.:_id167/) }
+  action(:max_value) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.text_field(:name=>/_id170/) }
+  action(:var_decimals) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.select(:name=>/_id173/) }
+  action(:formula) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.text_field(:name=>/_id186/) }
+  action(:tolerance) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.text_field(:name=>/_id189/) }
+  action(:form_decimals) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.select(:name=>/assignToPart/) }
   element(:variables_table) { |b| b.frm.table(:id=>"itemForm:pairs") }
   element(:formulas_table) { |b| b.frm.table(:id=>"itemForm:formulas") }
 
@@ -787,10 +787,10 @@ end
 # is set up to only display one question per page.
 class TakeAssessment < AssessmentsBase
 
-  pgmd(:multiple_choice_answer) { |answer_text, b| b.frm }
+  action(:multiple_choice_answer) { |answer_text, b| b.frm }
 
-  pgmd(:fill_in_blank_answer) { |box, b| b.frm.text_field(:name=>/deliverFillInTheBlank:_id.+:#{box.to_i}/) }
-  pgmd(:numeric_answer) { |box, b| b.frm.text_field(:name=>/deliverFillInNumeric:_id.+:#{box.to_i}/) }
+  action(:fill_in_blank_answer) { |box, b| b.frm.text_field(:name=>/deliverFillInTheBlank:_id.+:#{box.to_i}/) }
+  action(:numeric_answer) { |box, b| b.frm.text_field(:name=>/deliverFillInNumeric:_id.+:#{box.to_i}/) }
 
   # Clicks either the True or the False radio button, as specified.
   def true_false_answer(answer)
@@ -805,7 +805,7 @@ class TakeAssessment < AssessmentsBase
 
   element(:short_answer) { |b| b.frm.text_field(:name=>/deliverShortAnswer/) }
 
-  pgmd(:match_answer) { |match_text, b| b.frm.td(:text=>/#{Regexp.escape(match_text)}/).parent.select(:index=>0) }
+  action(:match_answer) { |match_text, b| b.frm.td(:text=>/#{Regexp.escape(match_text)}/).parent.select(:index=>0) }
 
   # Enters the specified file name in the file field. You can include the path to the file
   # as an optional second parameter.

@@ -14,7 +14,7 @@ describe "Assessments" do
     # Get the test configuration data
     @config = YAML.load_file("config.yml")
     @directory = YAML.load_file("directory.yml")
-    @sakai = SakaiCLE.new(@config['browser'], @config['url'])
+    @sakai = SambalCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
 
     @student = make UserObject, :id=>@directory['person1']['id'], :password=>@directory['person1']['password'],
