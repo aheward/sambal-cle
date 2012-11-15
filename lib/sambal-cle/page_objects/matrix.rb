@@ -124,20 +124,25 @@ class EditMatrixCells < BasePage
   frame_element
 
   # Clicks on the cell that is specified, based on
-  # the row number, then the column number.
-  #
-  # Note that the numbering begins in the upper left
-  # of the Matrix, with (1, 1) being the first EDITABLE
-  # cell, NOT the first cell in the table itself.
-  #
-  # In other words, ignore the header row and header column
-  # in your count (or, if you prefer, consider those
-  # to be numbered "0").
-  action(:edit) { |row, column, b| b.frm.div(:class=>"portletBody").table(:summary=>"Matrix Scaffolding (click on a cell to edit)").tr(:index=>row).td(:index=>column-1).fire_event("onclick") }
+  # the "id" found in the onclick tag for the cell.
+  action(:edit_cell_by_id) { |id, b| b.matrix_scaffolding.td(:html=>/#{id}/).fire_event("onclick") }
 
   # Clicks the "Return to List" link and
   # instantiates the Matrices Class.
   action(:return_to_list) { |b| b.frm.link(:text=>"Return to List").click }
+
+  element(:matrix_scaffolding) { |b| b.frm.div(:class=>"portletBody").table(:summary=>"Matrix Scaffolding (click on a cell to edit)") }
+
+  element(:cells) { |b| b.frm.tds(:class=>/matrix-cell-border/).to_a }
+
+  element(:column_headers) { |b| b.matrix_scaffolding.tr(:index=>0).ths.to_a }
+
+  def edit_cell_by_row_and_column(row, column)
+    columns = []
+    column_headers.each { |col| columns << col.text }
+    columns.delete_at(0)
+    matrix_scaffolding.row(:text=>/#{Regexp.escape(row)}/).td(:index=>columns.index(column)).fire_event("onclick")
+  end
 
 end
 

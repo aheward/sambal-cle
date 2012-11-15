@@ -5,7 +5,7 @@ class MatrixObject
   include StringFactory
   include Workflows
   
-  attr_accessor :portfolio, :title, :description, :columns, :rows, :status
+  attr_accessor :portfolio, :title, :description, :columns, :rows, :status, :cells
   
   def initialize(browser, opts={})
     @browser = browser
@@ -23,11 +23,12 @@ class MatrixObject
           {:name=>random_alphanums, :bg_color=>random_hex_color, :font_color=>random_hex_color},
           {:name=>random_alphanums, :bg_color=>random_hex_color, :font_color=>random_hex_color}
       ],
+      :cells=>[]
     }
     options = defaults.merge(opts)
-    
     set_options(options)
     requires @portfolio
+
   end
     
   def create
@@ -67,8 +68,8 @@ class MatrixObject
     on AddEditMatrix do |add|
       add.save_changes
     end
-    on EditMatrixCells do |cells|
-      cells.return_to_list
+    on EditMatrixCells do |matrix|
+      matrix.return_to_list
     end
   end
     
@@ -102,7 +103,7 @@ class CellObject
   include StringFactory
   include Workflows
   
-  attr_accessor :title, :instructions, :rationale, :examples, :matrix, :row, :column
+  attr_accessor :title, :instructions, :rationale, :examples, :matrix, :row, :column, :id
   
   def initialize(browser, opts={})
     @browser = browser
@@ -120,7 +121,7 @@ class CellObject
   end
     
   def create
-    
+    #:id=>cell.html[/(?<=hrefViewCell\(\').+(?=')/]
   end
     
   def edit opts={}
