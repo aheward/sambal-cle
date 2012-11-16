@@ -72,9 +72,7 @@ class AnnouncementsMerge < BasePage
 
   # Checks the checkbox for the specified site name
   # @param site_name [String] the name of the relevant site displayed in the table
-  def check(site_name)
-    frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(site_name)}/).checkbox(:id=>/site/).set
-  end
+  action(:check) { |site_name, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(site_name)}/).checkbox(:id=>/site/).set }
 
   # Clicks the Save button and goes to the Announcements class.
   action(:save) { |b| b.frm.button(:value=>"Save").click }

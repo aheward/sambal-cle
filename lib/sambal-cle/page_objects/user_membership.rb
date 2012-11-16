@@ -33,9 +33,7 @@ class UserMembership < BasePage
 
   # Returns the text contents of the "instruction" paragraph that
   # appears when there are no search results.
-  def alert_text
-    frm.p(:class=>"instruction").text
-  end
+  value(:alert_text) { |b| b.frm.p(:class=>"instruction").text }
 
   element(:user_type) { |b| b.frm.select_list(:id=>"userlistForm:selectType") }
   element(:user_authority) { |b| b.frm.select_list(:id=>"userlistForm:selectAuthority") }

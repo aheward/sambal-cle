@@ -9,7 +9,7 @@ class EditUser < BasePage
 
   def update_details
     frm.button(:name=>"eventSubmit_doSave").click
-    sleep 1
+    sleep 1 # FIXME - Need to set this to wait for a page element instead.
   end
 
   action(:remove_user) { |b| b.frm.link(text=>"Remove User").click }
@@ -27,34 +27,21 @@ class Users < BasePage
 
   frame_element
 
-  def new_user
-    frm.link(:text=>"New User").click
-    CreateNewUser.new @browser
-  end
+  action(:new_user) { |b| b.frm.link(:text=>"New User").click }
 
   # Returns the contents of the Name cell
   # based on the specified user ID value.
-  def name(user_id)
-    frm.table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(user_id)}/i)[1].text
-  end
+  action(:name) { |user_id, b| b.frm.table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(user_id)}/i)[1].text }
 
   # Returns the contents of the Email cell
   # based on the specified user ID value.
-  def email(user_id)
-    frm.table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(user_id)}/i)[2].text
-  end
+  action(:email) { |user_id, b| b.frm.table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(user_id)}/i)[2].text }
 
   # Returns the contents of the Type cell
   # based on the specified user ID value.
-  def type(user_id)
-    frm.table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(user_id)}/i)[3].text
-  end
+  action(:type) { |user_id, b| b.frm.table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(user_id)}/i)[3].text }
 
-  def search_button
-    frm.link(:text=>"Search").click
-    frm.table(:class=>"listHier lines").wait_until_present
-    Users.new @browser
-  end
+  action(:search_button) { |b| b.frm.link(:text=>"Search").click; b.frm.table(:class=>"listHier lines").wait_until_present }
 
   action(:clear_search) { |b| b.frm.link(text=>"Clear Search").click }
   element(:search_field) { |b| b.frm.text_field(:id=>"search") }
@@ -72,10 +59,7 @@ class CreateNewUser < BasePage
 
   frame_element
 
-  def save_details
-    frm.button(:name=>"eventSubmit_doSave").click
-    Users.new(@browser)
-  end
+  action(:save_details) { |b| b.frm.button(:name=>"eventSubmit_doSave").click }
 
   element(:user_id) { |b| b.frm.text_field(:id=>"eid") }
   element(:first_name) { |b| b.frm.text_field(:id=>"first-name") }
