@@ -200,9 +200,7 @@ class AddEditEvent < CalendarBase
   # on the page. The "field" variable is the name of the
   # field, while the "text" is the string you want to put into
   # it.
-  def custom_field_text(field, text)
-    frm.text_field(:name=>field).set(text)
-  end
+  action(:custom_field) { |field, b| b.frm.text_field(:name=>field) }
 
   element(:title) { |b| b.frm.text_field(:id=>"activitytitle") }
   element(:month) { |b| b.frm.select(:id=>"month") }
@@ -250,9 +248,7 @@ class AddEditFields < CalendarBase
   action(:create_field) { |b| b.frm.button(:value=>"Create Field").click }
 
   # Checks the checkbox for the specified field
-  def check_remove(field_name)
-    frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(field_name)}/).checkbox.set
-  end
+  action(:check_remove) { |field_name, b| b.frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(field_name)}/).checkbox.set }
 
   element(:field_name) { |b| b.frm.text_field(:id=>"textfield") }
 
@@ -313,14 +309,10 @@ class ImportStepThree < BasePage
   end
 
   # Returns the date of the specified event
-  def event_date(event_name)
-    frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(event_name)}/)[0].text
-  end
+  action(:event_date) { |event_name, b| b.frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(event_name)}/)[0].text }
 
   # Unchecks the checkbox for the specified event
-  def uncheck_event(event_name)
-    frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(event_name)}/)
-  end
+  action(:uncheck_event) { |event_name, b| b.frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(event_name)}/).checkbox.clear }
 
   element(:import_events_for_site) { |b| b.frm.radio(:id=>"site") }
   element(:import_events_for_selected_groups) { |b| b.frm.radio(:id=>"groups") }

@@ -13,6 +13,8 @@ class BasePage < PageFactory
       value(:header) { |b| b.frm.div(:class=>"portletBody").h3.text }
       element(:cancel_button) { |b| b.frm.button(:value=>"Cancel") }
       action(:cancel) { |p| p.cancel_button.click }
+      action(:save) { |b| b.frm.button(:value=>"Save").click }
+      action(:back) {|b| b.button(:value=>"Back").click }
     end
 
     # More element group defs go here...

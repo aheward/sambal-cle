@@ -37,13 +37,9 @@ class AddEditTerm < BasePage
 
   expected_element :editor
 
-  def add_term
-    frm.button(:value=>"Add Term").click
-  end
+  action(:add_term) { |b| b.frm.button(:value=>"Add Term").click }
 
-  def save_changes
-    frm.button(:value=>"Save Changes").click
-  end
+  action(:save_changes) { |b| b.frm.button(:value=>"Save Changes").click }
 
   def long_description=(text)
     editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)

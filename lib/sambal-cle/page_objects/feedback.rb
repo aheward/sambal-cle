@@ -7,10 +7,7 @@ class Feedback < BasePage
 
   frame_element
 
-  def add
-    frm.link(:text=>"Add").click
-    AddUpdateFeedback.new(@browser)
-  end
+  action(:add) { |b| b.frm.link(:text=>"Add").click }
 
   # Returns an array containing the titles
   # of the Feedback items listed on the page.
@@ -29,7 +26,6 @@ end
 class AddUpdateFeedback < BasePage
 
   frame_element
-
 
   element(:title) { |b| b.frm.text_field(:id=>"_idJsp1:title") }
 

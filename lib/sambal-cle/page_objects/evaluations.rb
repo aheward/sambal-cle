@@ -29,11 +29,7 @@ end
 class AddTemplateTitle < BasePage
 
   frame_element
-
-  def save
-    frm.button(:value=>"Save").click
-    EditTemplate.new(@browser)
-  end
+  basic_page_elements
 
   element(:title) { |b| b.frm.text_field(:id=>"title") }
   element(:description) { |b| b.frm.text_area(:id=>"description") }
@@ -60,7 +56,6 @@ class EditTemplate < BasePage
   def save_item
     frm.button(:value=>"Save item").click
     frm.link(:text=>"New evaluation").wait_until_present
-    EditTemplate.new @browser
   end
 
   element(:item) { |b| b.frm.select_list(:id=>"add-item-control::add-item-classification-selection").click }

@@ -8,13 +8,9 @@ class Announcements < BasePage
 
   # Edits the specified announcement in the list.
   # @param subject [String] the text of the announcement listing link.
-  def edit(subject)
-    frm.table(:class=>"listHier").row(:text=>/#{Regexp.escape(subject)}/).link(:text=>"Edit").click
-  end
+  action(:edit) { |subject, b| b.frm.table(:class=>"listHier").row(:text=>/#{Regexp.escape(subject)}/).link(:text=>"Edit").click }
 
-  def view(title)
-    frm.link(:text=>title).click
-  end
+  action(:view) { |title, b| b.frm.link(:text=>title).click }
 
   # Returns an array of the subject strings of the announcements
   # listed on the page.
@@ -25,9 +21,7 @@ class Announcements < BasePage
     return subjects
   end
 
-  def href(subject)
-    frm.link(:text=>subject).href
-  end
+  action(:href) { |subject, b| b.frm.link(:text=>subject).href }
 
   # Returns true or false depending on whether the specified announcement has an attachment.
   # @param subject [String] the text of the announcement listing link.
@@ -43,15 +37,11 @@ class Announcements < BasePage
   # Returns the text of the "For" column for
   # the specified announcement.
   # @param subject [String] the text of the announcement listing link.
-  def for_column(subject)
-    frm.table(:class=>"listHier").row(:text=>/#{Regexp.escape(subject)}/)[4].text
-  end
+  action(:for_column) { |subject, b| b.frm.table(:class=>"listHier").row(:text=>/#{Regexp.escape(subject)}/)[4].text }
 
   # Clicks the specified announcement link and instantiates the PreviewAnnouncements class.
   # @param subject [String] the text of the announcement listing link.
-  def preview_announcement(subject)
-    frm.link(:text=>subject).click
-  end
+  action(:preview_announcement) { |subject, b| b.frm.link(:text=>subject).click }
 
   # Selects the specified list item from the View selection list.
   # @param list_item [String] the text of the option in the selection list.
@@ -123,7 +113,6 @@ class AddEditAnnouncements < BasePage
   # Clicks the Preview button. Next is the PreviewAnnouncements class.
   action(:preview){ |b| b.frm.button(:value=>"Preview").click }
 
-
   # Sends the specified text block to the rich text editor
   # @param text [String] the text that you want to add to the editor.
   def body=(text)
@@ -137,9 +126,7 @@ class AddEditAnnouncements < BasePage
   # when you've set the announcement access to display
   # to groups.
   # @param group_name [String] the name of the group in the table that you intend to select.
-  def check_group(group_name)
-    frm.table(:id=>"groupTable").row(:text=>/#{Regexp.escape(group_name)}/).checkbox(:name=>"selectedGroups").set
-  end
+  action(:check_group) { |group_name, b| b.frm.table(:id=>"groupTable").row(:text=>/#{Regexp.escape(group_name)}/).checkbox(:name=>"selectedGroups").set }
 
   element(:title) { |b| b.frm.text_field(:id=>"subject") }
   element(:site_members) { |b| b.frm.radio(:id=>"site") }

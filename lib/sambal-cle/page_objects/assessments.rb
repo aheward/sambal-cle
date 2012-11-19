@@ -319,9 +319,7 @@ class AssessmentTotalScores < BasePage
   }
 
   # Clicks the Submit Date link in the table header to sort/reverse sort the list.
-  def sort_by_submit_date
-    frm.link(:text=>"Submit Date").click
-  end
+  action(:sort_by_submit_date) { |b| b.frm.link(:text=>"Submit Date").click }
 
   # Enters the specified string into the topmost box listed on the page.
   #
@@ -334,17 +332,11 @@ class AssessmentTotalScores < BasePage
 
   # Clicks the Update button, then instantiates
   # the AssessmentTotalScores class.
-  def update
-    frm.button(:value=>"Update").click
-    AssessmentTotalScores.new(@browser)
-  end
+  action(:update) { |b| b.frm.button(:value=>"Update").click }
 
   # Clicks the Assessments link on the page
-  # then instantiates the AssessmentsList class.                                          action(:
-  def assessments
-    frm.link(:text=>"Assessments").click
-    AssessmentsList.new(@browser)
-  end
+  # then instantiates the AssessmentsList class.
+  action(:assessments) { |b| b.frm.link(:text=>"Assessments").click }
 
 end
 
