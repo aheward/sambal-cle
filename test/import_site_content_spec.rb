@@ -199,7 +199,7 @@ describe "Import Site" do
     check_this_stuff(@new_topic.description_html)
   end
 
-  xit "imports Lessons correctly" do
+  it "imports Lessons correctly" do
     lessons
     on Lessons do |lessons|
       lessons.lessons_list.should include @module.title

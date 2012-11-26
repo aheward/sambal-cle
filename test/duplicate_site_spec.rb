@@ -15,7 +15,7 @@ describe "Duplicate Site" do
     @directory = YAML.load_file("directory.yml")
     @sakai = SambalCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
-    # This test case uses the logins of several users
+
     @instructor = @directory['person3']['id']
     @ipassword = @directory['person3']['password']
     @file_path = @config['data_directory']
@@ -136,12 +136,12 @@ describe "Duplicate Site" do
     @new_assignment.get_info
 
   end
-=begin
+
   after :all do
     # Close the browser window
     @browser.close
   end
-=end
+
   def check_this_stuff(thing)
     thing.should match /Site ID: #{@site2.id}/
     thing.should match /\(y\) <a href..#{@new_assignment.direct_url}/
@@ -166,7 +166,6 @@ describe "Duplicate Site" do
   end
 
   it "duplicates Assignments correctly" do
-
     check_this_stuff(@new_assignment.instructions)
   end
 
@@ -197,7 +196,7 @@ describe "Duplicate Site" do
     check_this_stuff(@new_topic.description_html)
   end
 
-  xit "duplicates Lessons correctly" do
+  it "duplicates Lessons correctly" do
     lessons
     on Lessons do |lessons|
       lessons.lessons_list.should include @module.title
