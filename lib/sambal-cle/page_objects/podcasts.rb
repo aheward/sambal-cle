@@ -7,10 +7,7 @@ class Podcasts < BasePage
 
   frame_element
 
-  def add
-    frm.link(:text=>"Add").click
-    AddEditPodcast.new(@browser)
-  end
+  action(:add) { |b| b.frm.link(:text=>"Add").click }
 
   def podcast_titles
     titles = []
@@ -21,7 +18,5 @@ class Podcasts < BasePage
     end
     return titles
   end
-
-
 
 end

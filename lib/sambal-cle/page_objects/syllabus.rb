@@ -62,9 +62,7 @@ class SyllabusEdit < SyllabusBase
   action(:update) { |b| b.frm.button(:value=>"Update").click }
 
   # Opens the specified item
-  def open_item(title)
-    frm.link(:text=>title).click
-  end
+  action(:open_item) { | title, b| b.frm.link(:text=>title).click }
 
   # Returns an array containing the titles of the syllabus items
   # displayed on the page.
@@ -93,9 +91,7 @@ class AddEditSyllabusItem < SyllabusBase
 
   # Defines the text area of the FCKEditor that appears on the page for
   # the Syllabus content.
-  def editor
-    frm.frame(:id=>/_textarea___Frame/)
-  end
+  element(:editor) { |b| b.frm.frame(:id=>/_textarea___Frame/) }
 
   # Sends the specified string to the FCKEditor text area on the page.
   def content=(text)
@@ -120,10 +116,7 @@ class AddEditSyllabusItem < SyllabusBase
 
   # Clicks the preview button and
   # instantiates the SyllabusPreview class
-  def preview
-    frm.button(:value=>"Preview").click
-    SyllabusPreview.new(@browser)
-  end
+  action(:preview) { |b| b.frm.button(:value=>"Preview").click }
 
   element(:title) { |b| b.frm.text_field(:id=>"_id4:title") }
   element(:only_members_of_this_site) { |b| b.frm.radio_button(:name=>/_id\d+:_id\d+/, :value=>"no") }

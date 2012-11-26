@@ -7,24 +7,17 @@ class Profile < BasePage
 
   frame_element
 
-  def edit_my_profile
-    frm.link(:text=>"Edit my Profile").click
-    EditProfile.new(@browser)
-  end
+  action(:edit_my_profile) { |b| b.frm.link(:text=>"Edit my Profile").click }
 
-  def show_my_profile
-    frm.link(:text=>"Show my Profile").click
-    Profile.new @browser
-  end
+  action(:show_my_profile) { |b| b.frm.link(:text=>"Show my Profile").click }
 
   def photo
     source = frm.image(:id=>"profileForm:image1").src
     return source.split("/")[-1]
   end
 
-  def email
-    frm.link(:id=>"profileForm:email").text
-  end
+  action(:email) { |b| b.frm.link(:id=>"profileForm:email").text }
+
 end
 
 #
@@ -32,10 +25,7 @@ class EditProfile < BasePage
 
   frame_element
 
-  def save
-    frm.button(:value=>"Save").click
-    Profile.new(@browser)
-  end
+  action(:save) { |b| b.frm.button(:value=>"Save").click }
 
   def picture_file(filename, filepath="")
     frm.file_field(:name=>"editProfileForm:uploadFile.uploadId").set(filepath + filename)

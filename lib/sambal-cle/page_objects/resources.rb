@@ -10,201 +10,191 @@ class ResourcesBase < BasePage
 
   frame_element
 
-  element(:files_table) { |b| b.frm.table(:class=>/listHier lines/) }
+  class << self
 
-  # Returns an array of the displayed folder names.
-  def folder_names
-    names = []
-    files_table.rows.each do |row|
-      next if row.td(:class=>"specialLink").exist? == false
-      next if row.td(:class=>"specialLink").link(:title=>"Folder").exist? == false
-      names << row.td(:class=>"specialLink").link(:title=>"Folder").text
-    end
-    names
-  end
+    def resources_elements
+      element(:files_table) { |b| b.frm.table(:class=>/listHier lines/) }
 
-  # Returns an array of the file names currently listed
-  # on the page.
-  #
-  # It excludes folder names.
-  def file_names
-    names = []
-    files_table.rows.each do |row|
-      next if row.td(:class=>"specialLink").exist? == false
-      next if row.td(:class=>"specialLink").link(:title=>"Folder").exist?
-      names << row.td(:class=>"specialLink").link(:href=>/access.content/, :index=>1).text
-    end
-    names
-  end
+      # Returns an array of the displayed folder names.
+      def folder_names
+        names = []
+        files_table.rows.each do |row|
+          next if row.td(:class=>"specialLink").exist? == false
+          next if row.td(:class=>"specialLink").link(:title=>"Folder").exist? == false
+          names << row.td(:class=>"specialLink").link(:title=>"Folder").text
+        end
+        names
+      end
 
-  # Use this as a means of checking if the file is visible or not
-  def item(name)
-    frm.link(:text=>name)
-  end
+      # Returns an array of the file names currently listed
+      # on the page.
+      #
+      # It excludes folder names.
+      def file_names
+        names = []
+        files_table.rows.each do |row|
+          next if row.td(:class=>"specialLink").exist? == false
+          next if row.td(:class=>"specialLink").link(:title=>"Folder").exist?
+          names << row.td(:class=>"specialLink").link(:href=>/access.content/, :index=>1).text
+        end
+        names
+      end
 
-  # Clicks the Select button next to the specified file.
-  def select_file(filename)
-    files_table.row(:text, /#{Regexp.escape(filename)}/).link(:text=>"Select").click
-  end
+      # Use this as a means of checking if the file is visible or not
+      action(:item) { |name, b| b.frm.link(:text=>name) }
 
-  # Clicks the Remove button.
-  action(:remove) { |b| b.frm.button(:value=>"Remove").click }
+      # Clicks the Select button next to the specified file.
+      action(:select_file) { |filename, b| b.files_table.row(:text, /#{Regexp.escape(filename)}/).link(:text=>"Select").click }
 
-  # Clicks the remove link for the specified item in the attachment list.
-  def remove_item(file_name)
-    files_table.row(:text=>/#{Regexp.escape(file_name)}/).link(:href=>/doRemoveitem/).click
-  end
+      # Clicks the Remove button.
+      action(:remove) { |b| b.frm.button(:value=>"Remove").click }
 
-  # Clicks the Move button.
-  action(:move) { |b| b.frm.button(:value=>"Move").click }
+      # Clicks the remove link for the specified item in the attachment list.
+      action(:remove_item) { |file_name, b| b.files_table.row(:text=>/#{Regexp.escape(file_name)}/).link(:href=>/doRemoveitem/).click }
 
-  # Clicks the Show Other Sites link.
-  action(:show_other_sites) { |b| b.frm.link(:text=>"Show other sites").click }
+      # Clicks the Move button.
+      action(:move) { |b| b.frm.button(:value=>"Move").click }
 
-  def href(item)
-    frm.link(:text=>item).href
-  end
+      # Clicks the Show Other Sites link.
+      action(:show_other_sites) { |b| b.frm.link(:text=>"Show other sites").click }
 
-  # Clicks on the specified folder image, which
-  # will open the folder tree and remain on the page.
-  def open_folder(foldername)
-    files_table.row(:text=>/#{Regexp.escape(foldername)}/).link(:title=>"Open this folder").click
-  end
+      action(:href) { |item, b| b.frm.link(:text=>item).href }
 
-  # Clicks on the specified folder name, which should open
-  # the folder contents on a refreshed page.
-  def go_to_folder(foldername)
-    frm.link(:text=>foldername).click
-  end
+      # Clicks on the specified folder image, which
+      # will open the folder tree and remain on the page.
+      action(:open_folder) { |foldername, b| b.files_table.row(:text=>/#{Regexp.escape(foldername)}/).link(:title=>"Open this folder").click }
 
-  # Sets the URL field to the specified value.
-  def url=(url_string)
-    frm.text_field(:id=>"url").set(url_string)
-  end
+      # Clicks on the specified folder name, which should open
+      # the folder contents on a refreshed page.
+      action(:go_to_folder) { |foldername, b| b.frm.link(:text=>foldername).click }
 
-  # Clicks the Add button next to the URL field.
-  action(:add) { |b| b.frm.button(:value=>"Add").click }
+      # Sets the URL field to the specified value.
+      action(:url=) { |url_string, b| b.frm.text_field(:id=>"url").set(url_string) }
 
-  # Gets the value of the access level cell for the specified
-  # file.
-  def access_level(filename)
-    files_table.row(:text=>/#{Regexp.escape(filename)}/)[6].text
-  end
+      # Clicks the Add button next to the URL field.
+      action(:add) { |b| b.frm.button(:value=>"Add").click }
 
-  def edit_details(name)
-    open_actions_menu(name)
-    files_table.row(:text=>/#{Regexp.escape(name)}/).link(:text=>"Edit Details").click
-  end
+      # Gets the value of the access level cell for the specified
+      # file.
+      action(:access_level) { |filename, b| b.files_table.row(:text=>/#{Regexp.escape(filename)}/)[6].text }
 
-  def edit_content(html_page_name)
-    open_actions_menu(html_page_name)
-    files_table.row(:text=>/#{Regexp.escape(html_page_name)}/).link(:text=>"Edit Content").click
-  end
+      def edit_details(name)
+        open_actions_menu(name)
+        files_table.row(:text=>/#{Regexp.escape(name)}/).link(:text=>"Edit Details").click
+      end
 
-  # Clicks the Create Folders menu item in the
-  # Add menu of the specified folder.
-  def create_subfolders_in(folder_name)
-    open_add_menu(folder_name)
-    files_table.row(:text=>/#{Regexp.escape(folder_name)}/).link(:text=>"Create Folders").click
-  end
+      def edit_content(html_page_name)
+        open_actions_menu(html_page_name)
+        files_table.row(:text=>/#{Regexp.escape(html_page_name)}/).link(:text=>"Edit Content").click
+      end
 
-  def create_html_page_in(folder_name)
-    open_add_menu(folder_name)
-    files_table.row(:text=>/#{Regexp.escape(folder_name)}/).link(:text=>"Create HTML Page").click
-  end
+      # Clicks the Create Folders menu item in the
+      # Add menu of the specified folder.
+      def create_subfolders_in(folder_name)
+        open_add_menu(folder_name)
+        files_table.row(:text=>/#{Regexp.escape(folder_name)}/).link(:text=>"Create Folders").click
+      end
 
-  element(:upload_file_field) { |b| b.frm.file_field(:id=>"upload") }
+      def create_html_page_in(folder_name)
+        open_add_menu(folder_name)
+        files_table.row(:text=>/#{Regexp.escape(folder_name)}/).link(:text=>"Create HTML Page").click
+      end
 
-  # Enters the specified file into the file field name (assuming it's in the
-  # data/sakai-cle-test-api folder or a subfolder therein)
-  #
-  def upload_file(filename, filepath="")
-    upload_file_field.set(filepath + filename)
-    if frm.div(:class=>"alertMessage").exist?
-      sleep 2
-      upload_file(filename)
-    end
-  end
+      element(:upload_file_field) { |b| b.frm.file_field(:id=>"upload") }
 
-  # Enters the specified file into the file field name (assuming it's in the
-  # data/sakai-cle-test-api folder or a subfolder therein)
-  #
-  # Use this method ONLY for instances where there's a file field on the page
-  # with an "upload" id.
-  def upload_local_file(filename, filepath="")
-    upload_file_field.set(filepath + filename)
-    if frm.div(:class=>"alertMessage").exist?
-      sleep 2
-      upload_local_file(filename)
-    end
-  end
+      # Enters the specified file into the file field name (assuming it's in the
+      # data/sakai-cle-test-api folder or a subfolder therein)
+      #
+      def upload_file(filename, filepath="")
+        upload_file_field.set(filepath + filename)
+        if frm.div(:class=>"alertMessage").exist?
+          sleep 2
+          upload_file(filename)
+        end
+      end
 
-  # Clicks the Add Menu for the specified
-  # folder, then selects the Upload Files
-  # command in the menu that appears.
-  def upload_files_to_folder(folder_name)
-    if frm.li(:text=>/A/, :class=>"menuOpen").exist?
-      files_table.row(:text=>/#{Regexp.escape(folder_name)}/).li(:text=>/A/, :class=>"menuOpen").fire_event("onclick")
-    else
-      files_table.row(:text=>/#{Regexp.escape(folder_name)}/).link(:text=>"Start Add Menu").fire_event("onfocus")
-    end
-    files_table.row(:text=>/#{Regexp.escape(folder_name)}/).link(:text=>"Upload Files").click
-  end
-  alias upload_file_to_folder upload_files_to_folder
+      # Enters the specified file into the file field name (assuming it's in the
+      # data/sakai-cle-test-api folder or a subfolder therein)
+      #
+      # Use this method ONLY for instances where there's a file field on the page
+      # with an "upload" id.
+      def upload_local_file(filename, filepath="")
+        upload_file_field.set(filepath + filename)
+        if frm.div(:class=>"alertMessage").exist?
+          sleep 2
+          upload_local_file(filename)
+        end
+      end
 
-  # Clicks the "Attach a copy" link for the specified
-  # file, then reinstantiates the Class.
-  # If an alert box appears, the method will call itself again.
-  # Note that this can lead to an infinite loop. Will need to fix later.
-  def attach_a_copy(file_name)
-    files_table.row(:text=>/#{Regexp.escape(file_name)}/).link(:href=>/doAttachitem/).click
-    if frm.div(:class=>"alertMessage").exist?
-      sleep 1
-      attach_a_copy(file_name) # TODO - This can loop infinitely
-    end
-  end
+      # Clicks the Add Menu for the specified
+      # folder, then selects the Upload Files
+      # command in the menu that appears.
+      def upload_files_to_folder(folder_name)
+        if frm.li(:text=>/A/, :class=>"menuOpen").exist?
+          files_table.row(:text=>/#{Regexp.escape(folder_name)}/).li(:text=>/A/, :class=>"menuOpen").fire_event("onclick")
+        else
+          files_table.row(:text=>/#{Regexp.escape(folder_name)}/).link(:text=>"Start Add Menu").fire_event("onfocus")
+        end
+        files_table.row(:text=>/#{Regexp.escape(folder_name)}/).link(:text=>"Upload Files").click
+      end
+      alias upload_file_to_folder upload_files_to_folder
 
-  # Takes the specified array object containing pointers
-  # to local file resources, then uploads those files to
-  # the folder specified, checks if they all uploaded properly and
-  # if not, re-tries the ones that failed the first time.
-  #
-  # Finally, it re-instantiates the appropriate page class.
-  # Note that it expects all files to be located in the same folder (can be in subfolders of that folder).
-  def upload_multiple_files_to_folder(folder, file_array, file_path="")
+      # Clicks the "Attach a copy" link for the specified
+      # file, then reinstantiates the Class.
+      # If an alert box appears, the method will call itself again.
+      # Note that this can lead to an infinite loop. Will need to fix later.
+      def attach_a_copy(file_name)
+        files_table.row(:text=>/#{Regexp.escape(file_name)}/).link(:href=>/doAttachitem/).click
+        if frm.div(:class=>"alertMessage").exist?
+          sleep 1
+          attach_a_copy(file_name) # TODO - This can loop infinitely
+        end
+      end
 
-    upload = upload_files_to_folder folder
+      # Takes the specified array object containing pointers
+      # to local file resources, then uploads those files to
+      # the folder specified, checks if they all uploaded properly and
+      # if not, re-tries the ones that failed the first time.
+      #
+      # Finally, it re-instantiates the appropriate page class.
+      # Note that it expects all files to be located in the same folder (can be in subfolders of that folder).
+      def upload_multiple_files_to_folder(folder, file_array, file_path="")
 
-    file_array.each do |file|
-      upload.file_to_upload(file, file_path)
-      upload.add_another_file
-    end
+        upload = upload_files_to_folder folder
 
-    resources = upload.upload_files_now
+        file_array.each do |file|
+          upload.file_to_upload(file, file_path)
+          upload.add_another_file
+        end
 
-    file_array.each do |file|
-      file =~ /(?<=\/).+/
-      # puts $~.to_s # For debugging purposes
-      unless resources.file_names.include?($~.to_s)
-        upload_files = resources.upload_files_to_folder(folder)
-        upload_files.file_to_upload(file, file_path)
-        upload_files.upload_files_now
+        resources = upload.upload_files_now
+
+        file_array.each do |file|
+          file =~ /(?<=\/).+/
+          # puts $~.to_s # For debugging purposes
+          unless resources.file_names.include?($~.to_s)
+            upload_files = resources.upload_files_to_folder(folder)
+            upload_files.file_to_upload(file, file_path)
+            upload_files.upload_files_now
+          end
+        end
+      end
+
+      # Clicks the Continue button
+      def continue
+        frm.div(:class=>"highlightPanel").span(:id=>"submitnotifxxx").wait_while_present
+        frm.button(:value=>"Continue").click
+      end
+
+      def open_add_menu(folder_name)
+        files_table.row(:text=>/#{Regexp.escape(folder_name)}/).link(:text=>"Start Add Menu").fire_event("onfocus")
+      end
+
+      def open_actions_menu(name)
+        files_table.row(:text=>/#{Regexp.escape(name)}/).li(:text=>/Action/, :class=>"menuOpen").fire_event("onclick")
       end
     end
-  end
 
-  # Clicks the Continue button
-  def continue
-    frm.div(:class=>"highlightPanel").span(:id=>"submitnotifxxx").wait_while_present
-    frm.button(:value=>"Continue").click
-  end
-
-  def open_add_menu(folder_name)
-    files_table.row(:text=>/#{Regexp.escape(folder_name)}/).link(:text=>"Start Add Menu").fire_event("onfocus")
-  end
-
-  def open_actions_menu(name)
-    files_table.row(:text=>/#{Regexp.escape(name)}/).li(:text=>/Action/, :class=>"menuOpen").fire_event("onclick")
   end
 
 end
@@ -212,11 +202,13 @@ end
 # Resources page for a given Site, in the Course Tools menu
 class Resources < ResourcesBase
 
-
+  resources_elements
 
 end
 
 class ResourcesUploadFiles < ResourcesBase
+
+  resources_elements
 
   @@filex=0 # TODO: This is almost certainly not going to work right.
 
@@ -254,48 +246,29 @@ class EditFileDetails < ResourcesBase
 
   # Clicks the Update button, then instantiates
   # the Resources page class.
-  def update
-    frm.button(:value=>"Update").click
-    Resources.new(@browser)
-  end
+  action(:update) { |b| b.frm.button(:value=>"Update").click }
 
   # Enters the specified string into the title field.
-  def title=(title)
-    frm.text_field(:id=>"displayName_0").set(title)
-  end
+  element(:title) { b.frm.text_field(:id=>"displayName_0") }
 
   # Enters the specified string into the description field.
-  def description=(description)
-    frm.text_field(:id=>"description_0").set(description)
-  end
+  element(:description) { |b| b.frm.text_field(:id=>"description_0") }
 
-  # Sets the radio button for publically viewable.
-  def select_publicly_viewable
-    frm.radio(:id=>"access_mode_public_0").set
-  end
+  element(:publicly_viewable) { |b| b.frm.radio(:id=>"access_mode_public_0") }
 
-  # Checks the checkbox for showing only on the specifed
-  # condition.
-  def check_show_only_if_condition
-    frm.checkbox(:id=>"cbCondition_0")
-  end
+  element(:show_only_if_condition) { |b| b.frm.checkbox(:id=>"cbCondition_0") }
 
   # Selects the specified Gradebook item value in the
   # select list.
-  def gradebook_item=(item)
-    frm.select(:id=>"selectResource_0").select(item)
-  end
+  element(:gradebook_item) { |b| b.frm.select(:id=>"selectResource_0") }
 
   # Selects the specified value in the item condition
   # field.
-  def item_condition=(condition)
-    frm.select(:id=>"selectCondition_0").select(condition)
-  end
+  element(:item_condition) { |b| b.frm.select(:id=>"selectCondition_0") }
 
   # Sets the Grade field to the specified value.
-  def assignment_grade=(grade)
-    frm.text_field(:id=>"assignment_grade_0").set(grade)
-  end
+  element(:assignment_grade) { |b| b.frm.text_field(:id=>"assignment_grade_0") }
+
 end
 
 class CreateFolders < ResourcesBase

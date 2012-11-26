@@ -1,22 +1,11 @@
-
 # The page where you search for public courses and projects.
 class SearchPublic < BasePage
 
   frame_element
 
-  def home
-    @browser.frame(:index=>0).link(:text=>"Home").click
-    Login.new(@browser)
-  end
-
-  def search_for=(string)
-    @browser.frame(:index=>0).text_field(:id=>"searchbox").set(Regexp.escape(string))
-  end
-
-  def search_for_sites
-    @browser.frame(:index=>0).button(:value=>"Search for Sites").click
-    SearchPublicResults.new(@browser)
-  end
+  action(:home) { |b| b.frame(:index=>0).link(:text=>"Home").click }
+  element(:search_for) { |b| b.frame(:index=>0).text_field(:id=>"searchbox") }
+  action(:search_for_sites) { |b| b.frame(:index=>0).button(:value=>"Search for Sites").click }
 
 end
 
@@ -25,15 +14,8 @@ class SearchPublicResults < BasePage
 
   frame_element
 
-  def click_site(site_name)
-    @browser.frame(:index=>0).link(:text=>site_name).click
-    SiteSummaryPage.new(@browser)
-  end
-
-  def home
-    @browser.frame(:id=>"ifrm").link(:text=>"Home").click
-    Login.new(@browser)
-  end
+  action(:click_site) { |site_name, b| b.frame(:index=>0).link(:text=>site_name).click }
+  action(:home) { |b| b.frame(:id=>"ifrm").link(:text=>"Home").click }
 
 end
 
@@ -43,10 +25,7 @@ class SiteSummaryPage < BasePage
 
   frame_element
 
-  def return_to_list
-    @browser.frame(:index=>0).button(:value=>"Return to List").click
-    SearchPublicResults.new(@browser)
-  end
+  action(:return_to_list) { |b| b.frame(:index=>0).button(:value=>"Return to List").click }
 
   def syllabus_attachments
     links = []

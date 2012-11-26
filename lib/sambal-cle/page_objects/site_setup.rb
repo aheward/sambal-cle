@@ -169,12 +169,10 @@ class DuplicateSite < SiteSetupBase
   end
 
   # Returns the site name in the header, for verification.
-  def site_name
-    frm.div(:class=>"portletBody").h3.span(:class=>"highlight").text
-  end
+  value(:site_name) { |b| b.frm.div(:class=>"portletBody").h3.span(:class=>"highlight").text }
+  element(:site_title) { |b| b.frm.text_field(:id=>"title") }
+  element(:academic_term) { |b| b.frm.select(:id=>"selectTerm") }
 
-    element(:site_title) { |b| b.frm.text_field(:id=>"title") }
-    element(:academic_term) { |b| b.frm.select(:id=>"selectTerm") }
 end
 
 # Page for Adding Participants to a Site in Site Setup
@@ -194,7 +192,6 @@ class SiteSetupAddParticipants < SiteSetupBase
     
 end
 
-
 # Page for selecting Participant roles individually
 class SiteSetupChooseRolesIndiv < SiteSetupBase
 
@@ -208,7 +205,6 @@ class SiteSetupChooseRolesIndiv < SiteSetupBase
 
 end
 
-
 # Page for selecting the same role for All. This class is used for
 # both Course and Portfolio sites.
 class SiteSetupChooseRole < BasePage
@@ -220,9 +216,7 @@ class SiteSetupChooseRole < BasePage
   # Use this method for radio buttons that aren't
   # included in the default list below. Enter the
   # radio button's label in the UI.
-  def radio_button(label)
-    frm.radio(:value=>label)
-  end
+  action(:radio_button) { |label, b| b.frm.radio(:value=>label) }
 
   action(:back) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Aback&Fast%20track%20action=siteAddParticipantHandler.processSameRoleBack").click }
   action(:cancel) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Acancel&Fast%20track%20action=siteAddParticipantHandler.processCancel").click }

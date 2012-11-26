@@ -1,93 +1,62 @@
-module Profile2Nav
+class Profile2Base <  BasePage
 
-  def preferences
-    frm.link(:class=>"icon preferences").click
-    Profile2Preferences.new @browser
-  end
+  frame_element
 
-  def privacy
-    frm.link(:text=>"Privacy").click
-    Profile2Privacy.new @browser
-  end
+  class << self
 
-  def my_profile
-    frm.link(:text=>"My profile").click
-    Profile2.new(@browser)
-  end
+    def profile2_elements
+      action(:preferences) { |b| b.frm.link(:class=>"icon preferences").click }
+      action(:privacy) { |b| b.frm.link(:text=>"Privacy").click }
+      action(:my_profile) { |b| b.frm.link(:text=>"My profile").click }
+      action(:connections) { |b| b.frm.link(:class=>"icon connections").click }
+      action(:pictures) { |b| b.frm.link(:text=>"Pictures").click }
+      action(:messages) { |b| b.frm.link(:text=>"Messages").click }
+      action(:search_for_connections) { |b| b.frm.link(:class=>"icon search").click }
+    end
 
-  def connections
-    frm.link(:class=>"icon connections").click
-    Profile2Connections.new @browser
-  end
-
-  def pictures
-    frm.link(:text=>"Pictures").click
-    Profile2Pictures.new @browser
-  end
-
-  def messages
-    frm.link(:text=>"Messages").click
-    Profile2Messages.new @browser
-  end
-
-  def search_for_connections
-    frm.link(:class=>"icon search").click
-    Profile2Search.new @browser
   end
 
 end
 #
-class Profile2 < BasePage
+class Profile2 < Profile2Base
 
-  frame_element
-  include Profile2Nav
+  profile2_elements
+
+  element(:main_panel) { |b| b.frm.div(:id=>"mainPanel") }
+  
   def edit_basic_info
-    frm.div(:id=>"mainPanel").span(:text=>"Basic Information").fire_event("onmouseover")
-    frm.div(:id=>"mainPanel").link(:href=>/myInfo:editButton/).click
-    sleep 0.5
-    Profile2.new @browser
+    main_panel.span(:text=>"Basic Information").fire_event("onmouseover")
+    main_panel.link(:href=>/myInfo:editButton/).click
   end
 
   def edit_contact_info
-    frm.div(:id=>"mainPanel").span(:text=>"Contact Information").fire_event("onmouseover")
-    frm.div(:id=>"mainPanel").link(:href=>/myContact:editButton/).click
-    sleep 0.5
-    Profile2.new @browser
+    main_panel.span(:text=>"Contact Information").fire_event("onmouseover")
+    main_panel.link(:href=>/myContact:editButton/).click
   end
 
   def edit_staff_info
-    frm.div(:id=>"mainPanel").span(:text=>"Staff Information").fire_event("onmouseover")
-    frm.div(:id=>"mainPanel").link(:href=>/myStaff:editButton/).click
-    sleep 0.5
-    Profile2.new @browser
+    main_panel.span(:text=>"Staff Information").fire_event("onmouseover")
+    main_panel.link(:href=>/myStaff:editButton/).click
   end
 
   def edit_student_info
-    frm.div(:id=>"mainPanel").span(:text=>"Student Information").fire_event("onmouseover")
-    frm.div(:id=>"mainPanel").link(:href=>/myStudent:editButton/).click
-    sleep 0.5
-    Profile2.new @browser
+    main_panel.span(:text=>"Student Information").fire_event("onmouseover")
+    main_panel.link(:href=>/myStudent:editButton/).click
   end
 
   def edit_social_networking
-    frm.div(:id=>"mainPanel").span(:text=>"Social Networking").fire_event("onmouseover")
-    frm.div(:id=>"mainPanel").link(:href=>/mySocialNetworking:editButton/).click
-    sleep 0.5
-    Profile2.new @browser
+    main_panel.span(:text=>"Social Networking").fire_event("onmouseover")
+    main_panel.link(:href=>/mySocialNetworking:editButton/).click
   end
 
   def edit_personal_info
-    frm.div(:id=>"mainPanel").span(:text=>"Personal Information").fire_event("onmouseover")
-    frm.div(:id=>"mainPanel").link(:href=>/myInterests:editButton/).click
-    sleep 0.5
-    Profile2.new @browser
+    main_panel.span(:text=>"Personal Information").fire_event("onmouseover")
+    main_panel.link(:href=>/myInterests:editButton/).click
   end
 
   def change_picture
     frm.div(:id=>"myPhoto").fire_event("onmouseover")
     frm.div(:id=>"myPhoto").link(:class=>"edit-image-button").click
-    sleep 0.5
-    Profile2.new @browser
   end
 
   # Enters the specified filename in the file field.
@@ -95,15 +64,12 @@ class Profile2 < BasePage
   # Note that the file should be inside the data/sakai-cle-test-api folder.
   # The file or folder name used for the filename variable
   # should not include a preceding slash ("/") character.
+  # TODO: This needs to be updated to use the filename plus filepath pattern.
   def image_file=(filename)
     frm.file_field(:name=>"picture").set(File.expand_path(File.dirname(__FILE__)) + "/../../data/sakai-cle-test-api/" + filename)
   end
 
-  def upload
-    frm.button(:value=>"Upload").click
-    sleep 0.5
-    Profile2.new @browser
-  end
+  action(:upload) { |b| b.frm.button(:value=>"Upload").click }
 
   def personal_summary=(text)
     frm.frame(:id=>"id1a_ifr").send_keys([:command, 'a'], :backspace)
@@ -118,10 +84,7 @@ class Profile2 < BasePage
     frm.link(:text=>day.to_s).click
   end
 
-  def save_changes
-    frm.button(:value=>"Save changes").click
-    Profile2.new @browser
-  end
+  action(:save_changes) { |b| b.frm.button(:value=>"Save changes").click }
 
   # Returns the number (as a string) displayed next to
   # the "Connections" link in the menu. If there are no
@@ -161,17 +124,15 @@ class Profile2 < BasePage
 end
 
 #
-class Profile2Preferences < BasePage
+class Profile2Preferences < Profile2Base
 
-  frame_element
-  include Profile2Nav
+  profile2_elements
 
 end
 
-class Profile2Privacy < BasePage
+class Profile2Privacy < Profile2Base
 
-  frame_element
-  include Profile2Nav
+  profile2_elements
 
   element(:profile_image) { |b| b.frm.select(:name=>"profileImageContainer:profileImage") }
   element(:basic_info) { |b| b.frm.select(:name=>"basicInfoContainer:basicInfo") }
@@ -190,35 +151,21 @@ class Profile2Privacy < BasePage
 
 end
 
-class Profile2Search < BasePage
+class Profile2Search < Profile2Base
 
-  frame_element
-  include Profile2Nav
-  def search_by_name_or_email
-    frm.button(:value=>"Search by name or email").click
-    sleep 0.5
-    Profile2Search.new(@browser)
-  end
+  profile2_elements
 
-  def search_by_common_interest
-    frm.button(:value=>"Search by common interest").click
-    sleep 0.5
-    Profile2Search.new(@browser)
-  end
+  action(:search_by_name_or_email) { |b| b.frm.button(:value=>"Search by name or email").click }
+  action(:search_by_common_interest) { |b| b.frm.button(:value=>"Search by common interest").click }
 
   def add_as_connection(name)
     frm.div(:class=>"search-result", :text=>/#{Regexp.escape(name)}/).link(:class=>"icon connection-add").click
     frm.div(:class=>"modalWindowButtons").wait_until_present
     frm.div(:class=>"modalWindowButtons").button(:value=>"Add connection").click
     frm.div(:class=>"modalWindowButtons").wait_while_present
-    sleep 0.5
-    Profile2Search.new @browser
   end
 
-  def view(name)
-    frm.link(:text=>name).click
-    Profile2View.new(@browser)
-  end
+  action(:view) { |name, b| b.frm.link(:text=>name).click }
 
   # Returns an array containing strings of the names of the users returned
   # in the search.
@@ -232,27 +179,21 @@ class Profile2Search < BasePage
     return results
   end
 
-  def clear_results
-    frm.button(:value=>"Clear results").click
-    Profile2Search.new(@browser)
-  end
-
+  action(:clear_results) { |b| b.frm.button(:value=>"Clear results").click }
   element(:persons_name_or_email) { |b| b.frm.text_field(:name=>"searchName") }
   element(:common_interest) { |b| b.frm.text_field(:name=>"searchInterest") }
 
 end
 
-class Profile2Connections < BasePage
+class Profile2Connections < Profile2Base
 
-  frame_element
-  include Profile2Nav
+  profile2_elements
+
   def confirm_request(name)
     frm.div(:class=>"connection", :text=>name).link(:title=>"Confirm connection request").click
     frm.div(:class=>"modalWindowButtons").wait_until_present
     frm.div(:class=>"modalWindowButtons").button(:value=>"Confirm connection request").click
     frm.div(:class=>"modalWindowButtons").wait_while_present
-    sleep 0.5
-    Profile2Connections.new @browser
   end
 
   # Returns an array containing the names of the connected users.
@@ -268,14 +209,11 @@ class Profile2Connections < BasePage
 
 end
 
-class Profile2View < BasePage
+class Profile2View < Profile2Base
 
-  frame_element
-  include Profile2Nav
+  profile2_elements
   #
-  def connection
-    frm.div(:class=>"leftPanel").span(:class=>/instruction icon/).text
-  end
+  value(:connection) { |b| b.frm.div(:class=>"leftPanel").span(:class=>/instruction icon/).text }
 
   #
   def basic_information
@@ -285,7 +223,6 @@ class Profile2View < BasePage
         hash.store(row[0].text, row[1].text)
       end
     rescue Watir::Exception::UnknownObjectException
-
     end
     return hash
   end
@@ -298,7 +235,6 @@ class Profile2View < BasePage
         hash.store(row[0].text, row[1].text)
       end
     rescue Watir::Exception::UnknownObjectException
-
     end
     return hash
   end
@@ -311,7 +247,6 @@ class Profile2View < BasePage
         hash.store(row[0].text, row[1].text)
       end
     rescue Watir::Exception::UnknownObjectException
-
     end
     return hash
   end
@@ -324,7 +259,6 @@ class Profile2View < BasePage
         hash.store(row[0].text, row[1].text)
       end
     rescue Watir::Exception::UnknownObjectException
-
     end
     return hash
   end
@@ -337,7 +271,6 @@ class Profile2View < BasePage
         hash.store(row[0].text, row[1].text)
       end
     rescue Watir::Exception::UnknownObjectException
-
     end
     return hash
   end
