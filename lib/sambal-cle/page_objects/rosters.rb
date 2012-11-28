@@ -7,7 +7,7 @@ class Roster < BasePage
 
   frame_element
 
-  action(:find) { |b| b.frm.button(:value=>"Find").click }
+  button("Find")
 
   def names
     list = []
@@ -33,7 +33,7 @@ class RosterProfileView < BasePage
 
   frame_element
 
-  action(:back) { |b| b.frm.button(:value=>"Back").click }
+  button("Back")
 
   # Returns a hash containing the contents of the Public Information
   # table on the page, with the keys being the row headers and the values

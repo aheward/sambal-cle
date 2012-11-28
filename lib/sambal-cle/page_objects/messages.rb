@@ -4,17 +4,17 @@ class Messages < BasePage
 
   value(:header) { |b| b.frm.div(:class=>"breadCrumb specialLink").text }
   value(:alert_message_text) { |b| b.frm.span(:class=>"success").text }
-  action(:compose_message) { |b| b.frm.link(:text=>"Compose Message").click }
-  action(:messages) { |b| b.frm.link(:text=>"Messages").click }
+  link "Compose Message"
+  link "Messages"
   action(:open_message) { |subject, b| b.frm.link(:text, /#{Regexp.escape(subject)}/).click }
   action(:check_message) { |subject, b|
     index=subjects.index(subject)
     b.frm.checkbox(:name=>"prefs_pvt_form:pvtmsgs:#{index}:_id122").set }
-  action(:mark_read) { |b| b.frm.link(:text=>"Mark Read").click }
+  link "Mark Read"
   element(:view) { |b| b.frm.select(:id=>"prefs_pvt_form:viewlist") }
-  action(:check_all) { |b| b.frm.link(:text=>"Check All").click }
-  action(:delete) { |b| b.frm.link(:text=>"Delete").click }
-  action(:move) { |b| b.frm.link(:text, "Move").click }
+  link "Check All"
+  link "Delete"
+  link "Move"
 
   # Creates an array consisting of the
   # message subject lines.
@@ -37,13 +37,14 @@ class MessageFolders < BasePage
 
   frame_element
 
-  action(:received) { |b| b.frm.link(:text=>"Received").click }
-  action(:sent) { |b| b.frm.link(:text=>"Sent").click }
-  action(:deleted) { |b| b.frm.link(:text=>"Deleted").click }
-  action(:draft) { |b| b.frm.link(:text=>"Draft").click }
+  link "Received"
+  link "Sent"
+  link "Deleted"
+  link "Draft"
+  link "New Folder"
+  link "Settings"
+
   action(:open_folder) { |foldername, b| b.frm.link(:text=>foldername).click }
-  action(:new_folder) { |b| b.frm.link(:text=>"New Folder").click }
-  action(:settings) { |b| b.frm.link(:text=>"Settings").click }
 
   # Gets the count of messages
   # in the specified folder
@@ -73,7 +74,7 @@ class MoveMessageTo < BasePage
 
   frame_element
 
-  action(:move_messages) { |b| b.frm.button(:value=>"Move Messages").click }
+  button "Move Messages"
 
   # Method for selecting any custom folders
   # present on the screen--and *only* the custom
@@ -96,16 +97,16 @@ class MessageView < BasePage
   # Returns the contents of the message body.
   value(:message_text) { |b| b.frm.div(:class=>"textPanel").text }
 
-  action(:reply) { |b| b.frm.button(:value=>"Reply").click }
+  button "Reply"
 
   action(:forward) { |b| b.frm.button(:value=>"Forward ").click }
 
-  action(:received) { |b| b.frm.link(:text=>"Received").click }
+  link "Received"
 
   # Clicks the "Messages" breadcrumb link to return
   # to the top level of Messages. Then instantiates
   # the Messages class.
-  action(:messages) { |b| b.frm.link(:text=>"Messages").click }
+  link "Messages"
 
 end
 
@@ -122,11 +123,9 @@ class ComposeMessage < BasePage
     editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
-  action(:add_attachments) { |b| b.frm.button(:value=>"Add attachments").click }
-
-  action(:preview) { |b| b.frm.button(:value=>"Preview").click }
-
-  action(:save_draft) {|b| b.frm.button(:value=>"Save Draft").click }
+  button "Add attachments"
+  button "Preview"
+  button "Save Draft"
   element(:send_to) { |b| b.frm.select(:id=>"compose:list1") }
   element(:send_cc) { |b| b.frm.checkbox(:id=>"compose:send_email_out") }
   element(:subject) { |b| b.frm.text_field(:id=>"compose:subject") }
@@ -147,11 +146,9 @@ class ReplyToMessage < BasePage
     editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
-  action(:add_attachments) { |b| b.frm.button(:value=>"Add attachments").click }
-
-  action(:preview) { |b| b.frm.button(:value=>"Preview").click }
-
-  action(:save_draft) {|b| b.frm.button(:value=>"Save Draft").click }
+  button "Add attachments"
+  button "Preview"
+  button "Save Draft"
   element(:select_additional_recipients) { |b| b.frm.select(:id=>"compose:list1") }
   element(:send_cc) { |b| b.frm.checkbox(:id=>"compose:send_email_out") }
   element(:subject) { |b| b.frm.text_field(:id=>"compose:subject") }
@@ -173,11 +170,9 @@ class ForwardMessage < BasePage
     editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
-  action(:add_attachments) { |b| b.frm.button(:value=>"Add attachments").click }
-
-  action(:preview) { |b| b.frm.button(:value=>"Preview").click }
-
-  action(:save_draft) {|b| b.frm.button(:value=>"Save Draft").click }
+  button "Add attachments"
+  button "Preview"
+  button "Save Draft"
   element(:select_forward_recipients) { |b| b.frm.select(:id=>"pvtMsgForward:list1") }
   element(:send_cc) { |b| b.frm.checkbox(:id=>"compose:send_email_out") }
   element(:subject) { |b| b.frm.text_field(:id=>"compose:subject") }
@@ -193,7 +188,7 @@ class MessageDeleteConfirmation < BasePage
 
   value(:alert_message_text) { |b| b.frm.span(:class=>"alertMessage").text }
 
-  action(:delete_messages) { |b| b.frm.button(:value=>"Delete Message(s)").click }
+  button "Delete Message(s)"
 
   #FIXME
   # Want eventually to have a method that will return
@@ -205,7 +200,7 @@ class MessagesNewFolder < BasePage
 
   frame_element
 
-  action(:add) { |b| b.frm.button(:value=>"Add").click }
+  button"Add"
 
   element(:title) { |b| b.frm.text_field(:id=>"pvtMsgFolderAdd:title") }
 
@@ -216,11 +211,9 @@ class MessageFolderSettings < BasePage
 
   frame_element
 
-  action(:rename_folder) { |b| b.frm.button(:value=>"Rename Folder").click }
-
-  action(:add) { |b| b.frm.button(:value=>"Add").click }
-
-  action(:delete) { |b| b.frm.button(:value=>"Delete").click }
+  button "Rename Folder"
+  button "Add"
+  button "Delete"
 
 end
 
@@ -229,6 +222,6 @@ class FolderDeleteConfirm < BasePage
 
   frame_element
 
-  action(:delete) { |b| b.frm.button(:value=>"Delete").click }
+  button "Delete"
 
 end

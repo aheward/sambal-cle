@@ -93,7 +93,7 @@ class ViewModule < LessonsBase
     return list
   end
 
-  action(:next) { |b| b.frm.link(:text=>"Next").click }
+  link "Next"
 
   # Returns the text of the Module title row
   value(:module_title) { |b| b.frm.span(:id=>/modtitle/).text }
@@ -140,13 +140,9 @@ class LessonManage < LessonsBase
 
   menu_elements
 
-  action(:manage_content) {|b| b.frm.link(:text=>"Manage Content").click }
-
-  action(:sort) {|b| b.frm.link(:text=>"Sort").click }
-
-  # Clicks the Import/Export button and
-  # next is the LessonImportExport class.
-  action(:import_export) {|b| b.frm.link(:text=>"Import/Export").click }
+  link "Manage Content"
+  link "Sort"
+  link "Import/Export"
 
 end
 

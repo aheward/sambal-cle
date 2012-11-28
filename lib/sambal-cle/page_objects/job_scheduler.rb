@@ -9,7 +9,7 @@ class JobScheduler < BasePage
 
   # Clicks the Jobs link, then instantiates
   # the JobList Class.
-  action(:jobs) { |b| b.frm.link(:text=>"Jobs").click }
+  link "Jobs"
 
 end
 
@@ -20,11 +20,11 @@ class JobList < BasePage
 
   # Clicks the New Job link, then
   # instantiates the CreateNewJob Class.
-  action(:new_job) { |b| b.frm.link(:text=>"New Job").click }
+  link "New Job"
 
   action(:triggers) { |job_name, b| b.frm.div(:class=>"portletBody").table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(job_name)}/).link(:text=>/Triggers/).click }
 
-  action(:event_log) { |b| b.frm.link(:text=>"Event Log").click }
+  link "Event Log"
 
 end
 
@@ -35,7 +35,7 @@ class CreateNewJob < BasePage
 
   # Clicks the Post button, then
   # instantiates the JobList Class.
-  action(:post) { |b| b.frm.button(:value=>"Post").click }
+  button "Post"
 
   element(:job_name) { |b| b.frm.text_field(:id=>"_id2:job_name") }
   element(:type) { |b| b.frm.select_list(:name=>"_id2:_id10") }
@@ -51,9 +51,8 @@ class EditTriggers < BasePage
   # instantiates the RunJobConfirmation Class.
   action(:run_job_now) { |b| b.frm.div(:class=>"portletBody").link(:text=>"Run Job Now").click }
 
-  action(:return_to_jobs) { |b| b.frm.link(:text=>"Return_to_Jobs").click }
-
-  action(:new_trigger) { |b| b.frm.link(:text=>"New Trigger").click }
+  link "Return_to_Jobs"
+  link "New Trigger"
 
 end
 
@@ -62,7 +61,7 @@ class CreateTrigger < BasePage
 
   frame_element
 
-  action(:post) { |b| b.frm.button(:value=>"Post").click }
+  button "Post"
 
   element(:name) { |b| b.frm.text_field(:id=>"_id2:trigger_name") }
   element(:cron_expression) { |b| b.frm.text_field(:id=>"_id2:trigger_expression") }
@@ -77,7 +76,7 @@ class RunJobConfirmation < BasePage
 
   # Clicks the "Run Now" button, then
   # instantiates the JobList Class.
-  action(:run_now) { |b| b.frm.button(:value=>"Run Now").click }
+  button "Run Now"
 
 end
 

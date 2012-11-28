@@ -7,20 +7,16 @@ class Blogger < BasePage
 
   frame_element
 
-  # Clicks the View All button, then reinstantiates the Class.
-  action(:view_all) { |b| b.frm.link(:text=>"View all").click }
+  link "View all"
 
-  # Clicks the View Members Blog link, then instantiates the
-  # ViewMembersBlog Class.
-  action(:view_members_blog) { |b| b.frm.link(:text=>"View member's blog").click }
+  link "View member's blog"
 
   # Returns true if the specified post title exists in the list. Otherwise returns false.
   def post_private?(post_title)
     frm.table(:class=>"tableHeader").row(:text=>/#{Regexp.escape(post_title)}/).image(:alt=>"p").exist?
   end
 
-  # Clicks the Create New Post link and instantiates the CreateBloggerPost Class.
-  action(:create_new_post) { |b| b.frm.link(:text=>"Create new post").click }
+  link "Create new post"
 
   # Clicks on the specified post title, then instantiates
   # the ViewBloggerPost Class.
@@ -104,23 +100,20 @@ class CreateBloggerPost < BasePage
     frm().file_field(:name=>"PostForm:tab3:_id51").set(filepath + filename)
   end
 
-  # Clicks the Preview button and instantiates the PreviewBloggerPost Class.
-  action(:preview) { |b| b.frm().button(:value=>"Preview").click }
-
-  # Clicks the Save button and instantiates the Blogger Class.
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
+  button "Preview"
+  button "Save"
 
   element(:title) { |b| b.frm.text_field(:id=>"PostForm:idTitle") }
   element(:keywords) { |b| b.frm.text_field(:id=>"PostForm:keyWords") }
   element(:access) { |b| b.frm.select(:id=>"PostForm:selectVisibility") }
   element(:read_only) { |b| b.frm.checkbox(:id=>"PostForm:readOnlyCheckBox") }
   element(:allow_comments) { |b| b.frm.checkbox(:id=>"PostForm:allowCommentsCheckBox") }
-  action(:text) { |b| b.frm.button(:value=>"Text").click }
-  action(:images) { |b| b.frm.button(:value=>"Images").click }
-  action(:links) { |b| b.frm.button(:value=>"Links").click }
+  button "Text"
+  button "Images"
+  button "Links"
   element(:description) { |b| b.frm.text_field(:id=>"PostForm:tab2:idLinkDescription") }
   element(:url) { |b| b.frm.text_field(:id=>"PostForm:tab2:idLinkExpression") }
-  action(:files) { |b| b.frm.button(:value=>"Files").click }
+  button "Files"
 
 end
 
@@ -137,9 +130,7 @@ class ViewBloggerPost < BasePage
 
   frame_element
 
-  # Clicks the button for adding a comment to a blog post, then
-  # instantiates the AddBloggerComment Class.
-  action(:add_comment) { |b| b.frm.button(:value=>"Add comment").click }
+  button "Add comment"
 
 end
 

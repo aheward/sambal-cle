@@ -7,7 +7,7 @@ class Search < BasePage
 
   frame_element
 
-  action(:admin) { |b| b.frm.link(:text=>"Admin").click }
+  link "Admin"
   element(:search_field) { |b| b.frm.text_field(:id=>"search") }
   action(:search_button) { |b| b.frm.button(:name=>"sb").click }
   element(:this_site) { |b| b.frm.radio(:id=>"searchSite") }
@@ -21,14 +21,14 @@ class SearchAdmin < BasePage
 
   frame_element
 
-  action(:search) { |b| b.frm.link(:text=>"Search").click }
-  action(:rebuild_site_index) { |b| b.frm.link(:text=>"Rebuild Site Index").click }
-  action(:refresh_site_index) { |b| b.frm.link(:text=>"Refresh Site Index").click }
-  action(:rebuild_whole_index) { |b| b.frm.link(:text=>"Rebuild Whole Index").click }
-  action(:refresh_whole_index) { |b| b.frm.link(:text=>"Refresh Whole Index").click }
-  action(:remove_lock) { |b| b.frm.link(:text=>"Remove Lock").click }
-  action(:reload_index) { |b| b.frm.link(:text=>"Reload Index").click }
-  action(:enable_diagnostics) { |b| b.frm.link(:text=>"Enable Diagnostics").click }
-  action(:disable_diagnostics) { |b| b.frm.link(:text=>"Disable Diagnostics").click }
+  link "Search"
+  link "Rebuild Site Index"
+  link "Refresh Site Index"
+  link "Rebuild Whole Index"
+  link "Refresh Whole Index"
+  link "Remove Lock"
+  link "Reload Index"
+  link "Enable Diagnostics"
+  link "Disable Diagnostics"
 
 end

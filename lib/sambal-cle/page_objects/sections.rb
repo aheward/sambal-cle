@@ -9,12 +9,10 @@ class SectionsBase < BasePage
 
   class << self
     def menu_elements
-      # Clicks the Add Sections button/link and instantiates
-      # the AddEditSections Class.
-      action(:add_sections) { |b| b.frm.link(:text=>"Add Sections").click }
-      action(:overview) { |b| b.frm.link(:text=>"Overview").click }
-      action(:student_memberships) { |b| b.frm.link(:text=>"Student Memberships").click }
-      action(:options) { |b| b.frm.link(:text=>"Options").click }
+      link("Add Sections")
+      link("Overview")
+      link("Student Memberships")
+      link("Options")
     end
   end
 end
@@ -44,7 +42,7 @@ class Sections < SectionsBase
     return names
   end
 
-  action(:remove_sections) { |b| b.frm.button(:value=>"Remove Sections").click }
+  button("Remove Sections")
 
   # Returns the text of the Teach Assistant cell for the specified
   # Section.
@@ -81,7 +79,7 @@ class AddEditSections < SectionsBase
   menu_elements
 
   # The Update button is only available when editing an existing Sections record.
-  action(:update) { |b| b.frm.button(:value=>"Update").click }
+  button("Update")
 
   # This method takes an array object containing strings of the
   # days of the week and then clicks the appropriate checkboxes, based
@@ -118,35 +116,39 @@ class AddEditSections < SectionsBase
 
 end
 
-#
-class AssignTeachingAssistants < SectionsBase
+class AssignBase < SectionsBase
 
   menu_elements
 
-  action(:assign_TAs) { |b| b.frm.button(:value=>"Assign TAs").click }
+  class << self
+    def assign_elements
+      element(:available_tas) { |b| b.frm.select(:id=>"memberForm:availableUsers") }
+      element(:assigned_tas) { |b| b.frm.select(:id=>"memberForm:selectedUsers") }
+      action(:assign) { |b| b.frm.button(:value=>">").click }
+      action(:unassign) { |b| b.frm.button(:value=>"<").click }
+      action(:assign_all) { |b| b.frm.button(:value=>">>").click }
+      action(:unassign_all) { |b| b.frm.button(:value=>"<<").click }
+    end
 
-  element(:available_tas) { |b| b.frm.select(:id=>"memberForm:availableUsers") }
-  element(:assigned_tas) { |b| b.frm.select(:id=>"memberForm:selectedUsers") }
-  action(:assign) { |b| b.frm.button(:value=>">").click }
-  action(:unassign) { |b| b.frm.button(:value=>"<").click }
-  action(:assign_all) { |b| b.frm.button(:value=>">>").click }
-  action(:unassign_all) { |b| b.frm.button(:value=>"<<").click }
+  end
 
 end
 
 #
-class AssignStudents < SectionsBase
+class AssignTeachingAssistants < AssignBase
 
-  menu_elements
+  assign_elements
 
-  action(:assign_students) { |b| b.frm.button(:value=>"Assign students").click }
+  button "Assign TAs"
 
-  element(:available_students) { |b| b.frm.select(:id=>"memberForm:availableUsers") }
-  element(:assigned_students) { |b| b.frm.select(:id=>"memberForm:selectedUsers") }
-  action(:assign) { |b| b.frm.button(:value=>">").click }
-  action(:unassign) { |b| b.frm.button(:value=>"<").click }
-  action(:assign_all) { |b| b.frm.button(:value=>">>").click }
-  action(:unassign_all) { |b| b.frm.button(:value=>"<<").click }
+end
+
+#
+class AssignStudents < AssignBase
+
+  assign_elements
+
+  button "Assign students"
 
 end
 

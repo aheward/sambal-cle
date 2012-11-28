@@ -16,13 +16,14 @@ describe "Duplicate Site" do
     @sakai = SambalCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
 
-    @instructor = @directory['person3']['id']
-    @ipassword = @directory['person3']['password']
+    @instructor = make UserObject, :id=>@directory['person3']['id'], :password=>@directory['person3']['password'],
+                       :first_name=>@directory['person3']['firstname'], :last_name=>@directory['person3']['lastname'],
+                       :type=>"Instructor"
     @file_path = @config['data_directory']
     @source_site_string = "Links to various items in this site:"
 
     # Log in to Sakai
-    @sakai.page.login(@instructor, @ipassword)
+    @instructor.login
 
     @site1 = make CourseSiteObject, :description=>"Original Site"
     @site1.create

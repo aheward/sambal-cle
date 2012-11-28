@@ -2,33 +2,58 @@
 # Evaluation System Pages
 #================
 
-# The "Evaluations Dashboard"
-class EvaluationSystem < BasePage
+class EvaluationSystemBase < BasePage
 
   frame_element
 
-  # MyTemplates
-  action(:my_templates) { |b| b.frm.link(:text=>"My Templates").click }
+  class << self
 
-  # AddTemplateTitle
-  action(:add_template) { |b| b.frm.link(:text=>"Add Template").click }
+    def menu_elements
+      link("Administrate")
+      link("Evaluations dashboard")
+      link("My Evaluations")
+      link("My Templates")
+      link("My Items")
+      link("My Scales")
+      link("My Email Templates")
+      action(:take_evaluation) { |evaluation_name, b| b.frm.div(:class=>"summaryBox").table(:text=>/#{Regexp.escape(evaluation_name)}/).link.click }
+      action(:status_of) { |evaluation_name, b| b.frm.div(:class=>"summaryBox").table(:text=>/#{Regexp.escape(evaluation_name)}/)[1][1].text }
 
-  # TakeEvaluation
-  def take_evaluation(evaluation_name)
-    frm.div(:class=>"summaryBox").table(:text=>/#{Regexp.escape(evaluation_name)}/).link.click
-    TakeEvaluation.new(@browser)
-  end
+    end
 
-  def status_of(evaluation_name)
-    frm.div(:class=>"summaryBox").table(:text=>/#{Regexp.escape(evaluation_name)}/)[1][1].text
   end
 
 end
 
-#
-class AddTemplateTitle < BasePage
+class EvaluationAdministrate < EvaluationSystemBase
 
-  frame_element
+  menu_elements
+
+  # TODO: The "Search" link will need to be defined differently because there are multiple "Searches" on the page
+
+  link("Control Reporting")
+  link("Control Email Settings")
+  link("Control Eval Admin")
+  link("Test EvalGroupProvider")
+  link("Synchronize Group Memberships")
+
+  button("Save Settings")
+
+end
+
+class EvaluationsDashboard < EvaluationSystemBase
+
+  menu_elements
+
+  link("Add Template")
+  link("Add Evaluation")
+
+end
+
+#
+class AddTemplateTitle < EvaluationSystemBase
+
+  menu_elements
   basic_page_elements
 
   element(:title) { |b| b.frm.text_field(:id=>"title") }
@@ -36,17 +61,17 @@ class AddTemplateTitle < BasePage
 
 end
 
-
 #
 class EditTemplate < BasePage
 
+  include FCKEditor
   frame_element
 
   def item_text=(text)
     frm.frame(:id, "item-text___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
-  action(:new_evaluation) { |b| b.frm.link(:text=>"New evaluation").click }
+  link("New evaluation")
 
   def add
     frm.button(:value=>"Add").click
@@ -59,6 +84,7 @@ class EditTemplate < BasePage
   end
 
   element(:item) { |b| b.frm.select_list(:id=>"add-item-control::add-item-classification-selection").click }
+
 end
 
 
@@ -72,10 +98,7 @@ class NewEvaluation < BasePage
 
   element(:editor) { |b| b.frm.frame(:id, "instructions:1:input___Frame") }
 
-  def continue_to_settings
-    frm.button(:value=>"Continue to Settings").click
-    EvaluationSettings.new(@browser)
-  end
+  button("Continue to Settings")
 
   def instructions=(text)
     frm.frame(:id, "instructions:1:input___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
@@ -85,37 +108,29 @@ class NewEvaluation < BasePage
 
 end
 
-
 #
 class EvaluationSettings < BasePage
 
   frame_element
 
-  def continue_to_assign_to_courses
-    frm.button(:value=>"Continue to Assign to Courses").click
-    EditEvaluationAssignment.new(@browser)
-  end
-
+  button("Continue to Assign to Courses")
 
 end
-
 
 #
 class EditEvaluationAssignment < BasePage
 
   frame_element
 
-  def save_assigned_groups
-    frm.button(:value=>"Save Assigned Groups").click
-    ConfirmEvaluation.new(@browser)
-  end
+  button("Save Assigned Groups")
 
   def check_group(title)
     frm.table(:class=>"listHier lines nolines").wait_until_present
     frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(title)}/).checkbox(:name=>"selectedGroupIDs").set
   end
 
-  action(:assign_to_evaluation_groups) { |b| b.frm.link(:text=>"Assign to Evaluation Groups").click }
+  link("Assign to Evaluation Groups")
+
 end
 
 
@@ -124,18 +139,40 @@ class ConfirmEvaluation < BasePage
 
   frame_element
 
-  def done
-    frm.button(:value=>"Done").click
-    MyEvaluations.new(@browser)
-  end
+  action(:done) { |b| b.frm.button(:value=>"Done").click }
 
 end
 
 #
-class MyEvaluations < BasePage
+class MyEvaluations < EvaluationSystemBase
 
-  frame_element
+  menu_elements
 
+  link("Add Evaluation")
+
+end
+
+class MyTemplates < EvaluationSystemBase
+
+  menu_elements
+
+end
+
+class MyItems < EvaluationSystemBase
+
+  menu_elements
+
+end
+
+class MyScales < EvaluationSystemBase
+
+  menu_elements
+
+end
+
+class MyEmailTemplates < EvaluationSystemBase
+
+  menu_elements
 
 end
 
@@ -144,10 +181,6 @@ class TakeEvaluation < BasePage
 
   frame_element
 
-  def submit_evaluation
-    frm.button(:value=>"Submit Evaluation").click
-    EvaluationSystem.new(@browser)
-  end
-
+  action(:submit_evaluation) { |b| b.frm.button(:value=>"Submit Evaluation").click }
 
 end

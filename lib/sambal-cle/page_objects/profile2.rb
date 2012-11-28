@@ -6,11 +6,11 @@ class Profile2Base <  BasePage
 
     def profile2_elements
       action(:preferences) { |b| b.frm.link(:class=>"icon preferences").click }
-      action(:privacy) { |b| b.frm.link(:text=>"Privacy").click }
-      action(:my_profile) { |b| b.frm.link(:text=>"My profile").click }
+      link "Privacy"
+      link "My profile"
       action(:connections) { |b| b.frm.link(:class=>"icon connections").click }
-      action(:pictures) { |b| b.frm.link(:text=>"Pictures").click }
-      action(:messages) { |b| b.frm.link(:text=>"Messages").click }
+      link "Pictures"
+      link "Messages"
       action(:search_for_connections) { |b| b.frm.link(:class=>"icon search").click }
     end
 
@@ -64,12 +64,11 @@ class Profile2 < Profile2Base
   # Note that the file should be inside the data/sakai-cle-test-api folder.
   # The file or folder name used for the filename variable
   # should not include a preceding slash ("/") character.
-  # TODO: This needs to be updated to use the filename plus filepath pattern.
-  def image_file=(filename)
-    frm.file_field(:name=>"picture").set(File.expand_path(File.dirname(__FILE__)) + "/../../data/sakai-cle-test-api/" + filename)
+  def image_file=(filename, filepath="")
+    frm.file_field(:name=>"picture").set(File.expand_path(filepath + filename))
   end
 
-  action(:upload) { |b| b.frm.button(:value=>"Upload").click }
+  button "Upload"
 
   def personal_summary=(text)
     frm.frame(:id=>"id1a_ifr").send_keys([:command, 'a'], :backspace)
@@ -84,7 +83,7 @@ class Profile2 < Profile2Base
     frm.link(:text=>day.to_s).click
   end
 
-  action(:save_changes) { |b| b.frm.button(:value=>"Save changes").click }
+  button "Save changes"
 
   # Returns the number (as a string) displayed next to
   # the "Connections" link in the menu. If there are no
@@ -98,7 +97,7 @@ class Profile2 < Profile2Base
   end
 
   element(:say_something) { |b| b.frm.text_field(:id=>"id1") }
-  action(:say_it) { |b| b.frm.button(:value=>"Say it").click }
+  button "Say it"
     # Basic Information
   element(:nickname) { |b| b.frm.text_field(:name=>"nicknameContainer:nickname") }
     # Contact Information
@@ -147,7 +146,7 @@ class Profile2Privacy < Profile2Base
   element(:send_messages) { |b| b.frm.select(:name=>"messagesContainer:messages") }
   element(:see_kudos_rating) { |b| b.frm.select(:name=>"myKudosContainer:myKudos") }
   element(:show_birth_year) { |b| b.frm.checkbox(:name=>"birthYearContainer:birthYear") }
-  action(:save_settings) { |b| b.frm.button(:value=>"Save settings").click }
+  button "Save settings"
 
 end
 
@@ -155,8 +154,8 @@ class Profile2Search < Profile2Base
 
   profile2_elements
 
-  action(:search_by_name_or_email) { |b| b.frm.button(:value=>"Search by name or email").click }
-  action(:search_by_common_interest) { |b| b.frm.button(:value=>"Search by common interest").click }
+  button "Search by name or email"
+  button "Search by common interest"
 
   def add_as_connection(name)
     frm.div(:class=>"search-result", :text=>/#{Regexp.escape(name)}/).link(:class=>"icon connection-add").click
@@ -179,7 +178,7 @@ class Profile2Search < Profile2Base
     return results
   end
 
-  action(:clear_results) { |b| b.frm.button(:value=>"Clear results").click }
+  button "Clear results"
   element(:persons_name_or_email) { |b| b.frm.text_field(:name=>"searchName") }
   element(:common_interest) { |b| b.frm.text_field(:name=>"searchInterest") }
 

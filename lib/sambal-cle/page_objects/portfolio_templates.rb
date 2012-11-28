@@ -9,7 +9,7 @@ class PortfolioTemplates < BasePage
 
   # Clicks the Add link and instantiates the
   # AddPortfolioTemplate class.
-  action(:add) { |b| b.frm.link(:text=>"Add").click }
+  link "Add"
 
   # Clicks the "Publish" link for the specified Template.
   action(:publish) { |templatename, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(templatename)}/).link(:text=>"Publish").click }
@@ -34,7 +34,7 @@ class AddPortfolioTemplate < BasePage
   frame_element
 
   # Clicks the Continue button and instantiates the BuildTemplate Class.
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+  button "Continue"
 
   element(:name) { |b| b.frm.text_field(:id=>"name-id") }
   element(:description) { |b| b.frm.text_field(:id=>"description") }
@@ -46,9 +46,8 @@ class BuildTemplate < BasePage
 
   frame_element
 
-  action(:select_file) { |b| b.frm.link(:text=>"Select File").click }
-
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+  link "Select File"
+  button "Continue"
 
   element(:outline_options_form_type) { |b| b.frm.select(:id=>"propertyFormType-id") }
 
@@ -80,7 +79,7 @@ class PortfoliosUploadFiles < BasePage # TODO - This class can probably be remov
   end
 
   # Clicks the Add Another File link.
-  action(:add_another_file) { |b| b.frm.link(:text=>"Add Another File").click }
+  link "Add Another File"
 
 end
 
@@ -89,12 +88,12 @@ class PortfolioContent < BasePage
 
   frame_element
 
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+  button "Continue"
   element(:type) { |b| b.frm.select(:id=>"item.type") }
   element(:name) { |b| b.frm.text_field(:id=>"item.name-id") }
   element(:title) { |b| b.frm.text_field(:id=>"item.title-id") }
   element(:description) { |b| b.frm.text_field(:id=>"item.description-id") }
-  action(:add_to_list) { |b| b.frm.button(:value=>"Add To List").click }
+  button "Add To List"
   element(:image) { |b| b.frm.checkbox(:id=>"image-id") }
 
 end
@@ -104,9 +103,9 @@ class SupportingFilesPortfolio < BasePage
 
   frame_element
 
-  action(:finish) { |b| b.frm.button(:value=>"Finish").click }
-  action(:select_file) { |b| b.frm.link(:text=>"Select File").click }
-  action(:add_to_list) { |b| b.frm.button(:value=>"Add To List").click }
+  button "Finish"
+  link "Select File"
+  button "Add To List"
   element(:name) { |b| b.frm.text_field(:id=>"fileRef.usage-id") }
 
 end

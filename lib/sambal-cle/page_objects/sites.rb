@@ -22,7 +22,7 @@ class Sites < BasePage
     frm.link(:text, id).click
   end
 
-  action(:new_site) { |b| b.frm.link(:text, "New Site").click }
+  link "New Site"
 
   element(:search_field) { |b| b.frm.text_field(:id=>"search") }
   action(:search_button) { |b| b.frm.link(text=>"Search").click }
@@ -46,17 +46,9 @@ class EditSiteInfo < BasePage
   include FCKEditor
   frame_element
 
-  # Clicks the Remove Site button, then instantiates
-  # the RemoveSite page class.
-  action(:remove_site) { |b| b.frm.link(:text, "Remove Site").click }
-
-  # Clicks the Save button, then instantiates the Sites
-  # page class.
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
-
-  # Clicks the Save As link, then instantiates
-  # the SiteSaveAs page class.
-  action(:save_as) { |b| b.frm.link(:text, "Save As").click }
+  link("Remove Site")
+  button("Save")
+  link("Save As")
 
   # Gets the Site ID from the page.
   action(:site_id_read_only) { |b| b.frm.table(:class=>"itemSummary").td(:class=>"shorttext", :index=>0).text }
@@ -70,14 +62,8 @@ class EditSiteInfo < BasePage
   # The FCKEditor object
   element(:editor) { |b| b.frm.frame(:id, "description___Frame").td(:id, "xEditingArea") }
 
-  # Clicks the Properties button on the page,
-  # then instantiates the AddEditSiteProperties
-  # page class.
-  action(:properties) { |b| b.frm.button(:value=>"Properties").click }
-
-  # Clicks the Pages button, then instantiates
-  # the AddEditPages page class.
-  action(:pages) { |b| b.frm.button(:value=>"Pages").click }
+  button("Properties")
+  button("Pages")
 
   # Non-navigating, interactive page objects go here
   element(:site_id) { |b| b.frm.text_field(:id=>"id") }
@@ -95,9 +81,7 @@ class AddEditPages < BasePage
 
   frame_element
 
-  # Clicks the link for New Page, then
-  # instantiates the NewPage page class.
-  action(:new_page) { |b| b.frm.link(:text=>"New Page").click }
+  link("New Page")
 
 end
 
@@ -106,9 +90,7 @@ class NewPage < BasePage
 
   frame_element
 
-  # Clicks the Tools button, then instantiates
-  # the AddEditTools class.
-  action(:tools) { |b| b.frm.button(:value=>"Tools").click }
+  button("Tools")
 
   # Interactive page objects that do no navigation
   # or page refreshes go here.
@@ -123,13 +105,8 @@ class AddEditTools < BasePage
 
   frame_element
 
-  # Clicks the New Tool link, then instantiates
-  # the NewTool class.
-  action(:new_tool) { |b| b.frm.link(:text=>"New Tool").click }
-
-  # Clicks the Save button, then
-  # instantiates the AddEditPages class.
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
+  link("New Tool")
+  button("Save")
 
 end
 
@@ -138,9 +115,7 @@ class NewTool < BasePage
 
   frame_element
 
-  # Clicks the Done button, the instantiates
-  # The AddEditTools class.
-  action(:done) { |b| b.frm.button(:value=>"Done").click }
+  button("Done")
 
   # Interactive page objects that do no navigation
   # or page refreshes go here.
@@ -155,9 +130,7 @@ class RemoveSite < BasePage
 
   frame_element
 
-  # Clicks the Remove button, then
-  # instantiates the Sites class.
-  action(:remove) { |b| b.frm.button(:value=>"Remove").click }
+  button("Remove")
 
 end
 
@@ -166,9 +139,7 @@ class SiteSaveAs < BasePage
 
     frame_element
 
-    # Clicks the Save button, then
-    # instantiates the Sites class.
-    action(:save) { |b| b.frm.button(:value, "Save").click }
+    button("Save")
 
     element(:site_id) { |b| b.frm.text_field(:id=>"id") }
 
@@ -178,16 +149,9 @@ class AddEditSiteProperties < BasePage
 
   frame_element
 
-  # Clicks the New Property button
-  action(:new_property) { |b| b.frm.button(:value=>"New Property").click }
-
-  # Clicks the Done button, then instantiates
-  # the EditSiteInfo class.
-  action(:done) { |b| b.frm.button(:value=>"Done").click }
-
-  # Clicks the Save button, then instantiates
-  # the Sites page class.
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
+  button("New Property")
+  button("Done")
+  button("Save")
 
   element(:name) { |b| b.frm.text_field(:id=>"new_name") }
   element(:value) { |b| b.frm.text_field(:id=>"new_value") }

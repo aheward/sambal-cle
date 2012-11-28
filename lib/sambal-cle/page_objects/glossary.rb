@@ -6,8 +6,8 @@ class Glossary < BasePage
 
   frame_element
 
-  action(:add) { |b| b.frm.link(:text=>"Add").click }
-  action(:import) { |b| b.frm.link(:text=>"Import").click }
+  link("Add")
+  link("Import")
 
   action(:edit) { |term, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(term)}/).link(:text=>"Edit").click }
   action(:delete) { |term, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(term)}/).link(:text=>"Delete").click }
@@ -37,9 +37,8 @@ class AddEditTerm < BasePage
 
   expected_element :editor
 
-  action(:add_term) { |b| b.frm.button(:value=>"Add Term").click }
-
-  action(:save_changes) { |b| b.frm.button(:value=>"Save Changes").click }
+  button("Add Term")
+  button("Save Changes")
 
   def long_description=(text)
     editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
@@ -56,8 +55,7 @@ class GlossaryImport < BasePage
 
   frame_element
 
-  action(:select_file) { |b| b.frm.link(:text=>"Select file...").click }
-
-  action(:import) { |b| b.frm.button(:value=>"Import").click }
+  link("Select file...")
+  link("Import")
 
 end

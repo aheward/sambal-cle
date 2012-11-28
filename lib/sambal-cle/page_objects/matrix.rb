@@ -9,11 +9,11 @@ class Matrices < BasePage
 
   # Clicks the Add link and instantiates
   # the AddEditMatrix Class.
-  action(:add) { |b| b.frm.link(:text=>"Add").click }
-  action(:import) { |b| b.frm.link(:text=>"Import").click }
-  action(:manage_site_associations) { |b| b.frm.link(:text=>"Manage Site Associations").click }
-  action(:permissions) { |b| b.frm.link(:text=>"Permissions").click }
-  action(:my_preferences) { |b| b.frm.link(:text=>"My Preferences").click }
+  link "Add"
+  link "Import"
+  link "Manage Site Associations"
+  link "Permissions"
+  link "My Preferences"
 
   # Clicks the "Edit" link for the specified
   # Matrix item, then instantiates the EditMatrixCells.
@@ -58,19 +58,19 @@ class AddEditMatrix < BasePage
   element(:editor) { |b| b.frm.frame(:id=>"descriptionTextArea___Frame") }
 
   # Clicks the "Create Matrix" button
-  action(:create_matrix) { |b| b.frm.button(:value=>"Create Matrix").click }
+  button "Create Matrix"
 
   # Clicks the "Save Changes" button
-  action(:save_changes) { |b| b.frm.button(:value=>"Save Changes").click }
+  button "Save Changes"
 
   # Clicks the "Select Style" link
-  action(:select_style) { |b| b.frm.link(:text=>"Select Style").click }
+  link "Select Style"
 
   # Clicks the "Add Column" link
-  action(:add_column) { |b| b.frm.link(:text=>"Add Column").click }
+  link "Add Column"
 
   # Clicks the "Add Row" link
-  action(:add_row) { |b| b.frm.link(:text=>"Add Row").click }
+  link "Add Row"
 
   element(:title) { |b| b.frm.text_field(:id=>"title-id") }
 
@@ -81,9 +81,7 @@ class SelectMatrixStyle < BasePage
 
   frame_element
 
-  # Clicks the "Go Back" button and
-  # instantiates the AddEditMatrix Class.
-  action(:go_back) { |b| b.frm.button(:value=>"Go Back").click }
+  button "Go Back"
 
   # Clicks the "Select" link for the specified
   # Style, then instantiates the AddEditMatrix Class.
@@ -96,7 +94,7 @@ class RowColumnCommon < BasePage
   frame_element
   class << self
     def table_elements
-      action(:update) { |b| b.frm.button(:value=>"Update").click }
+      button "Update"
       element(:name) { |b| b.frm.text_field(:name=>"description") }
       element(:background_color) { |b| b.frm.text_field(:id=>"color-id") }
       element(:font_color) { |b| b.frm.text_field(:id=>"textColor-id") }

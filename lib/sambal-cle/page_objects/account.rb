@@ -7,7 +7,7 @@ class EditAccount < BasePage
 
   frame_element
 
-  action(:update_details) {|b| b.frm.button(:value=>"Update Details").click }
+  button("Update Details")
 
   element(:first_name) { |b| b.frm.text_field(:id=>"first-name") }
   element(:last_name) { |b| b.frm.text_field(:id=>"last-name") }

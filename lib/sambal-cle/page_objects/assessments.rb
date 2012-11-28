@@ -9,11 +9,11 @@ class AssessmentsBase <BasePage
   frame_element
   class << self
     def menu_bar_elements
-      action(:assessments) { |b| b.frm.link(:text=>"Assessments").click }
-      action(:assessment_types) { |b| b.frm.link(:text=>"Assessment Types").click }
+      link("Assessments")
+      link("Assessment Types")
       # Clicks the Question Pools link, goes to
       # the QuestionPoolsList class.
-      action(:question_pools) { |b| b.frm.link(:text=>"Question Pools").click }
+      link("Question Pools")
       action(:questions) { |b| b.frm.link(:text=>/Questions:/).click }
     end
 
@@ -22,9 +22,9 @@ class AssessmentsBase <BasePage
       element(:assign_to_part) { |b| b.frm.select(:id=>"itemForm:assignToPart") }
       element(:assign_to_pool) { |b| b.frm.select(:id=>"itemForm:assignToPool") }
       element(:question_text) { |b| b.frm.text_field(:class=>"simple_text_area", :index=>0) }
-      action(:save) { |b| b.frm.button(:value=>"Save").click }
+      button("Save")
       action(:cancel) { |b| b.frm.button(:id=>"itemForm:_id63").click }
-      action(:add_attachments) { |b| b.frm.button(:value=>"Add Attachments").click }
+      button("Add Attachments")
     end
 
     def pool_page_elements
@@ -49,7 +49,7 @@ class AssessmentsList < AssessmentsBase
 
   # If the assessment is going to be made in the builder, then
   # use EditAssessment. There's no page class for markup text, yet.
-  action(:create) { |b| b.frm.button(:value=>"Create").click }
+  button("Create")
 
   # Collects the titles of the Assessments listed as "Pending"
   # then returns them as an Array.
@@ -279,9 +279,8 @@ class AssessmentSettings < AssessmentsBase
     #text_field(:objectives, :=>"") }
     #text_field(:rubrics, :=>"") }
     #checkbox(:record_metadata_for_questions, :=>"") }
-  action(:save) { |b| b.frm.button(:value=>"Save Settings").click }
-  element(:cancel_button) { |b| b.frm.button(:value=>"Cancel") }
-  action(:cancel) { |p| p.cancel_button.click }
+  button("Save Settings")
+  button("Cancel")
 
 end
 
@@ -330,13 +329,9 @@ class AssessmentTotalScores < BasePage
     frm.text_field(:name=>"editTotalResults:totalScoreTable:0:_id345").value=comment
   end
 
-  # Clicks the Update button, then instantiates
-  # the AssessmentTotalScores class.
-  action(:update) { |b| b.frm.button(:value=>"Update").click }
+  button("Update")
 
-  # Clicks the Assessments link on the page
-  # then instantiates the AssessmentsList class.
-  action(:assessments) { |b| b.frm.link(:text=>"Assessments").click }
+  link("Assessments")
 
 end
 
@@ -385,25 +380,17 @@ class EditAssessment < AssessmentsBase
   # @param part_num [String] the part number of the assessment you want
   action(:remove_part) { |part_num, b| b.frm.link(:xpath, "//a[contains(@onclick, 'assesssmentForm:parts:#{part_num.to_i-1}:copyToPool')]").click }
 
-  # Clicks the Add Part button, then
-  # instantiates the AddEditAssessmentPart page class.
-  action(:add_part) { |b| b.frm.link(:text=>"Add Part").click }
+  link("Add Part")
 
   # Selects the desired question type from the
   # drop down list at the top of the page.
   action(:question_type) { |qtype, b| b.frm.select(:id=>"assesssmentForm:changeQType").select(qtype) }
 
-  # Clicks the Preview button,
-  # then instantiates the PreviewOverview page class.
-  action(:preview) { |b| b.frm.link(:text=>"Preview").click }
+  link("Preview")
 
-  # Clicks the Settings link, then
-  # instantiates the AssessmentSettings page class.
-  action(:settings) { |b| b.frm.link(:text=>"Settings").click }
+  link("Settings")
 
-  # Clicks the Publish button, then
-  # instantiates the PublishAssessment page class.
-  action(:publish) { |b| b.frm.link(:text=>"Publish").click }
+  link("Publish")
 
   # Allows retrieval of a specified question's
   # text, by part and question number.
@@ -429,7 +416,6 @@ class AddEditAssessmentPart < BasePage
   # Clicks the Save button
   def save
     frm.button(:name=>"modifyPartForm:_id89").click
-
   end
 
   element(:title) { |b| b.frm.text_field(:id=>"modifyPartForm:title") }
@@ -459,9 +445,7 @@ class PublishAssessment < BasePage
   frame_element
   basic_page_elements
 
-  # Clicks the Publish button, then
-  # instantiates the AssessmentsList page class.
-  action(:publish) { |b| b.frm.button(:value=>"Publish").click }
+  button("Publish")
 
   action(:edit) { |b| b.frm.button(:name=>"publishAssessmentForm:_id23").click }
   element(:notification) { |b| b.frm.select(:id=>"publishAssessmentForm:number") }
@@ -474,7 +458,7 @@ class MultipleChoice < AssessmentsBase
   menu_bar_elements
   question_page_elements
 
-  action(:whats_this) { |b| b.frm.link(:text=>"(What's This?)").click }
+  link("(What's This?)")
   element(:single_correct) { |b| b.frm.radio(:name=>"itemForm:chooseAnswerTypeForMC", :index=>0) }
   element(:enable_negative_marking) { |b| b.frm.radio(:name=>"itemForm:partialCreadit_NegativeMarking", :index=>0) }
 
@@ -493,7 +477,7 @@ class MultipleChoice < AssessmentsBase
   element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id186_textinput") }
   element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>"itemForm:_id190_textinput") }
 
-  action(:reset_score_values) { |b| b.frm.link(:text=>"Reset Score Values").click }
+  link("Reset Score Values")
 
   action(:remove_last_answer) { |b| b.frm.link(:text=>"Remove", :index=>-1).click }
 
@@ -764,7 +748,7 @@ class BeginAssessment < BasePage
 
   frame_element
 
-  action(:begin_assessment) { |b| b.frm.button(:value=>"Begin Assessment").click }
+  button("Begin Assessment")
 
   value(:assessment_introduction) { |b| b.frm.div(:class=>"assessmentIntroduction").text }
 
@@ -809,8 +793,7 @@ class TakeAssessment < AssessmentsBase
   # Clicks the Next button and instantiates the BeginAssessment Class.
   action(:next) { |b| b.frm.button(:value=>"Next").click }
 
-  # Clicks the Submit for Grading button and instantiates the ConfirmSubmission Class.
-  action(:submit_for_grading){ |b| b.frm.button(:value=>"Submit for Grading").click }
+  button("Submit for Grading")
 
 end
 
@@ -820,10 +803,7 @@ class ConfirmSubmission < AssessmentsBase
 
   # Clicks the Submit for Grading button and instantiates
   # the SubmissionSummary Class.
-  def submit_for_grading
-    frm.button(:value=>"Submit for Grading").click
-    SubmissionSummary.new(@browser)
-  end
+  button("Submit for Grading")
   
   value(:validation) { |b| b.frm.span(:class=>"validation").text }
 
@@ -832,12 +812,7 @@ end
 # The summary page that appears when an Assessment has been submitted.
 class SubmissionSummary < AssessmentsBase
 
-  # Clicks the Continue button and instantiates
-  # the TakeAssessmentList Class.
-  def continue
-    frm.button(:value=>"Continue").click
-    TakeAssessmentList.new(@browser)
-  end
+  button("Continue")
 
   value(:summary_info) { |b| b.frm.div(:class=>"tier1").text }
 

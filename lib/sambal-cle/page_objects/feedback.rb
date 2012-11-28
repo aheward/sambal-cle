@@ -7,7 +7,7 @@ class Feedback < BasePage
 
   frame_element
 
-  action(:add) { |b| b.frm.link(:text=>"Add").click }
+  link "Add"
 
   # Returns an array containing the titles
   # of the Feedback items listed on the page.

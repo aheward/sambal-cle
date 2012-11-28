@@ -147,26 +147,13 @@ class NewTopic < JForumsBase
   end
 
   # Clicks the Preview button and instantiates the PreviewDiscussionTopic Class.
-  action(:preview){ |b| b.frm.button(:value=>"Preview").click }
+  button "Preview"
 
-  # Enters the specified filename in the file field. The path to the file can be entered as an optional second parameter
-  def filename1(filename, filepath="")
-    frm.file_field(:name=>"file_0").set(filepath + filename)
-  end
-
-  # Enters the specified filename in the file field.
-  #
-  # Note that the file should be inside the data/sakai-cle-test-api folder.
-  # The file or folder name used for the filename variable
-  # should not include a preceding / character.
-  def filename2(filename)
-    frm.file_field(:name=>"file_1").set(File.expand_path(File.dirname(__FILE__)) + "/../../data/sakai-cle-test-api/" + filename)
-  end
-
+  #TODO: redefine the file fields
 
   element(:subject) { |b| b.frm.text_field(:id=>"subject") }
-  action(:attach_files) { |b| b.frm.button(:value=>"Attach Files").click }
-  action(:add_another_file) { |b| b.frm.button(:value=>"Add another file").click }
+  button "Attach Files"
+  button "Add another file"
 
 end
 

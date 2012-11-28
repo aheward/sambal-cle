@@ -50,7 +50,7 @@ class Announcements < BasePage
   end
 
   # Clicks the Merge link and goes to the AnnouncementsMerge class.
-  action(:merge) { |b| b.frm.link(:text=>"Merge").click }
+  link("Merge")
 
 end
 
@@ -65,7 +65,7 @@ class AnnouncementsMerge < BasePage
   action(:check) { |site_name, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(site_name)}/).checkbox(:id=>/site/).set }
 
   # Clicks the Save button and goes to the Announcements class.
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
+  button("Save")
 
 end
 
@@ -76,13 +76,13 @@ class ViewAnnouncement < BasePage
   frame_element
 
   # Clicks the Return to list button and goes to the Announcements class.
-  action(:return_to_list) { |b| b.frm.button(:value=>"Return to List").click }
+  button("Return to List")
 
   # Clicks the Save changes button and goes to the Announcements class.
-  action(:save_changes) { |b| b.frm.button(:value=>"Save Changes").click }
+  button("Save Changes")
 
   # Clicks the Edit button and goes to the AddEditAnnouncements class.
-  action(:edit) { |b| b.frm.button(:value=>"Edit").click }
+  button("Edit")
 
   value(:subject) { |b| b.frm.table(class: "itemSummary")[0][1].text }
   value(:saved_by) { |b| b.frm.table(class: "itemSummary")[1][1].text }
@@ -105,13 +105,13 @@ class AddEditAnnouncements < BasePage
 
   # Clicks the Add Announcement button. The next class is either
   # AddEditAnnouncements or Announcements.
-  action(:add_announcement) { |b| b.frm.button(:value=>"Add Announcement").click }
+  button("Add Announcement")
 
   # Clicks the Save changes button. Next is the Announcements class.
-  action(:save_changes) { |b| b.frm.button(:value=>"Save Changes").click }
+  button("Save Changes")
 
   # Clicks the Preview button. Next is the PreviewAnnouncements class.
-  action(:preview){ |b| b.frm.button(:value=>"Preview").click }
+  button("Preview")
 
   # Sends the specified text block to the rich text editor
   # @param text [String] the text that you want to add to the editor.
@@ -120,7 +120,7 @@ class AddEditAnnouncements < BasePage
   end
 
   # Clicks the Add attachments button. Next is the Announcments Attach class.
-  action(:add_attachments) { |b| b.frm.button(:value=>"Add Attachments").click }
+  button("Add Attachments")
 
   # Clicks the checkbox for the specified group name
   # when you've set the announcement access to display

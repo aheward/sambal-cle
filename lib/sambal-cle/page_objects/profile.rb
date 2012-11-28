@@ -7,9 +7,8 @@ class Profile < BasePage
 
   frame_element
 
-  action(:edit_my_profile) { |b| b.frm.link(:text=>"Edit my Profile").click }
-
-  action(:show_my_profile) { |b| b.frm.link(:text=>"Show my Profile").click }
+  link "Edit my Profile"
+  link "Show my Profile"
 
   def photo
     source = frm.image(:id=>"profileForm:image1").src
@@ -25,7 +24,7 @@ class EditProfile < BasePage
 
   frame_element
 
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
+  button "Save"
 
   def picture_file(filename, filepath="")
     frm.file_field(:name=>"editProfileForm:uploadFile.uploadId").set(filepath + filename)

@@ -9,10 +9,10 @@ class EditUser < BasePage
 
   def update_details
     frm.button(:name=>"eventSubmit_doSave").click
-    sleep 1 # FIXME - Need to set this to wait for a page element instead.
+    frm.link(:text=>"Search").wait_until_present
   end
 
-  action(:remove_user) { |b| b.frm.link(text=>"Remove User").click }
+  link "Remove User"
   element(:first_name) { |b| b.frm.text_field(:id=>"first-name") }
   element(:last_name) { |b| b.frm.text_field(:id=>"last-name") }
   element(:email) { |b| b.frm.text_field(:id=>"email") }
@@ -27,7 +27,7 @@ class Users < BasePage
 
   frame_element
 
-  action(:new_user) { |b| b.frm.link(:text=>"New User").click }
+  link "New User"
 
   # Returns the contents of the Name cell
   # based on the specified user ID value.
@@ -43,7 +43,7 @@ class Users < BasePage
 
   action(:search_button) { |b| b.frm.link(:text=>"Search").click; b.frm.table(:class=>"listHier lines").wait_until_present }
 
-  action(:clear_search) { |b| b.frm.link(text=>"Clear Search").click }
+  link "Clear Search"
   element(:search_field) { |b| b.frm.text_field(:id=>"search") }
   element(:select_page_size) { |b| b.frm.select_list(:name=>"selectPageSize") }
   action(:next) { |b| b.frm.button(:name=>"eventSubmit_doList_next").click }

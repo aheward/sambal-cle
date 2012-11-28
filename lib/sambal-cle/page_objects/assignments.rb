@@ -526,7 +526,7 @@ class AssignmentSubmission < BasePage
 
   # Clicks the Return to List button, then instantiates the
   # AssignmentSubmissionList Class.
-  action(:return_to_list) { |b| b.frm.button(:value=>"Return to List").click }
+  button("Return to List")
 
   element(:grade) { |b| b.frm.select(:name=>"grade_submission_grade") }
   element(:allow_resubmission) { |b| b.frm.checkbox(:id=>"allowResToggle") }

@@ -7,14 +7,13 @@ class Forms < BasePage
 
   frame_element
 
-  action(:add) { |b| b.frm.link(:text=>"Add").click }
+  link "Add"
 
   # Clicks the Publish buton for the specified
   # Form
   action(:publish) { |form_name, b| b.frm.table(:class=>"listHier lines nolines").tr(:text, /#{Regexp.escape(form_name)}/).link(:text=>/Publish/).click }
 
-  # Clicks the Import button
-  action(:import) { |b| b.frm.link(:text=>"Import").click }
+  link "Import"
 
 end
 
@@ -22,9 +21,9 @@ class ImportForms < BasePage
 
   frame_element
 
-  action(:import) { |b| b.frm.button(:value=>"Import").click }
+  button "Import"
 
-  action(:select_file) { |b| b.frm.link(:text=>"Select File...").click }
+  link "Select File..."
 
 end
 
@@ -33,13 +32,13 @@ class AddForm < BasePage
   include FCKEditor
   frame_element
 
-  action(:select_schema_file) { |b| b.frm.link(:text=>"Select Schema File").click }
+  link "Select Schema File"
 
   def instruction=(text)
     frm.frame(:id, "instruction___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
-  action(:add_form) { |b| b.frm.button(:value=>"Add Form").click }
+  button "Add Form"
 
   element(:name) { |b| b.frm.text_field(:id=>"description-id") }
 
@@ -67,7 +66,7 @@ class SelectSchemaFile < BasePage
     return names
   end
 
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+  button "Continue"
 
 end
 
@@ -75,6 +74,6 @@ class PublishForm < BasePage
 
   frame_element
 
-  action(:yes) { |b| b.frm.button(:value=>"Yes").click }
+  button "Yes"
 
 end

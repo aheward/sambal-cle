@@ -7,7 +7,7 @@ class Podcasts < BasePage
 
   frame_element
 
-  action(:add) { |b| b.frm.link(:text=>"Add").click }
+  link "Add"
 
   def podcast_titles
     titles = []
