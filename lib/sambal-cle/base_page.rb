@@ -17,16 +17,16 @@ class BasePage < PageFactory
     end
 
     def link(link_text)
-      element(snakify(link_text+"_link")) { |b| b.frm.link(:text=>link_text) }
-      action(snakify(link_text)) { |b| b.frm.link(:text=>link_text).click }
+      element(damballa(link_text+"_link")) { |b| b.frm.link(:text=>link_text) }
+      action(damballa(link_text)) { |b| b.frm.link(:text=>link_text).click }
     end
 
     def button(button_text)
-      element(snakify(button_text+"_button")) { |b| b.frm.button(:value=>button_text) }
-      action(snakify(button_text)) { |b| b.frm.button(:value=>button_text).click }
+      element(damballa(button_text+"_button")) { |b| b.frm.button(:value=>button_text) }
+      action(damballa(button_text)) { |b| b.frm.button(:value=>button_text).click }
     end
 
-    def snakify(text)
+    def damballa(text)
       text.gsub(/([+=|\\\.~@#'"\?`!\{\}\[\]\$%\^&\*\(\)])/, "").
           gsub(/([-\/\ ])/,"_").
           downcase.

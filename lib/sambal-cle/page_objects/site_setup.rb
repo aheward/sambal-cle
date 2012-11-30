@@ -536,7 +536,6 @@ class CourseSiteInfo < BasePage
   element(:special_instructions) { |b| b.frm.text_field(:id=>"additional") }
   element(:site_contact_name) { |b| b.frm.text_field(:id=>"siteContactName") }
   element(:site_contact_email) { |b| b.frm.text_field(:id=>"siteContactEmail") }
-  button "Back"
 
 end
   

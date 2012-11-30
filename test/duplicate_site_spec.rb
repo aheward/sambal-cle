@@ -4,7 +4,7 @@ require 'yaml'
 
 describe "Duplicate Site" do
 
-  include Utilities
+  include StringFactory
   include Workflows
   include Foundry
 
@@ -48,7 +48,7 @@ describe "Duplicate Site" do
     @file = make FileObject, :site=>@site1.name, :name=>"flower02.jpg", :source_path=>@file_path+"images/"
     @file.create
 
-    @source_site_string << "<br />\nUploaded file: <a href=\"#{@file.href}\">#{@file.name}</a><br />\n"
+    @source_site_string << %|<br />\nUploaded file: <a href="#{@file.href}">#{@file.name}</a><br />\n<img width="203" height="196" src="https://#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" /><br /><br />|
 
     @htmlpage = make HTMLPageObject, :site=>@site1.name, :folder=>"#{@site1.name} Resources", :html=>@source_site_string
     @htmlpage.create
@@ -146,6 +146,7 @@ describe "Duplicate Site" do
   def check_this_stuff(thing)
     thing.should match /Site ID: #{@site2.id}/
     thing.should match /\(y\) <a href..#{@new_assignment.direct_url}/
+    thing.should match /<img.+#{@site2.id}\/#{@file.name}/
     thing.should_not match /Announcement link:.+#{@announcement.id}.+#{@announcement.title}/
     thing.should match /Uploaded file:.+#{@site2.id}.+#{@file.name}/
     thing.should match /#{@site2.id}\/#{@htmlpage.name}/

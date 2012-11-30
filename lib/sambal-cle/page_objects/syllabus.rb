@@ -132,7 +132,6 @@ class SyllabusRedirect < SyllabusBase
 
   menu_elements
 
-  button("Save")
   element(:url) { |b| b.frm.text_field(:id=>"redirectForm:urlValue") }
 
 end

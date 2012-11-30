@@ -80,6 +80,60 @@ describe "Assignment Due Date on Calendar" do
     end
   end
 
-  # TODO: Add tests for student and other instructor being able to see the assignment in the calendar
+  it "Students see expected assignments on the calendar" do
+    @student.log_in
+    calendar
+    on Calendar do |calendar|
+      calendar.view.select "List of Events"
+      calendar.show_events.select "Custom date range"
+      calendar.start_month.select @assignment1.due[:MON]
+      calendar.start_day.select @assignment1.due[:day_of_month]
+      calendar.start_year.select @assignment1.due[:year]
+      calendar.end_month.select @assignment1.due[:MON]
+      calendar.end_day.select @assignment1.due[:day_of_month]
+      calendar.end_year.select @assignment1.due[:year]
+      calendar.filter_events
+
+      calendar.events_list.should_not include "Due #{@assignment1.title}"
+
+      calendar.start_month.select @assignment2.due[:MON]
+      calendar.start_day.select @assignment2.due[:day_of_month]
+      calendar.start_year.select @assignment2.due[:year]
+      calendar.end_month.select @assignment2.due[:MON]
+      calendar.end_day.select @assignment2.due[:day_of_month]
+      calendar.end_year.select @assignment2.due[:year]
+      calendar.filter_events
+
+      calendar.events_list.should include "Due #{@assignment2.title}"
+    end
+  end
+
+  it "Other instructors see expected assignments on the calendar" do
+    @instructor2.log_in
+    calendar
+    on Calendar do |calendar|
+      calendar.view.select "List of Events"
+      calendar.show_events.select "Custom date range"
+      calendar.start_month.select @assignment1.due[:MON]
+      calendar.start_day.select @assignment1.due[:day_of_month]
+      calendar.start_year.select @assignment1.due[:year]
+      calendar.end_month.select @assignment1.due[:MON]
+      calendar.end_day.select @assignment1.due[:day_of_month]
+      calendar.end_year.select @assignment1.due[:year]
+      calendar.filter_events
+
+      calendar.events_list.should_not include "Due #{@assignment1.title}"
+
+      calendar.start_month.select @assignment2.due[:MON]
+      calendar.start_day.select @assignment2.due[:day_of_month]
+      calendar.start_year.select @assignment2.due[:year]
+      calendar.end_month.select @assignment2.due[:MON]
+      calendar.end_day.select @assignment2.due[:day_of_month]
+      calendar.end_year.select @assignment2.due[:year]
+      calendar.filter_events
+
+      calendar.events_list.should include "Due #{@assignment2.title}"
+    end
+  end
 
 end

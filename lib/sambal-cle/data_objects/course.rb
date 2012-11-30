@@ -6,7 +6,7 @@ class CourseSiteObject
   include DateFactory
   include Workflows
 
-  attr_accessor :name, :id, :subject, :course, :section, :term, :authorizer,
+  attr_accessor :name, :id, :subject, :course, :section, :term, :term_value, :authorizer,
     :web_content_source, :email, :joiner_role, :creation_date, :web_content_title,
     :description, :short_description, :site_contact_name, :site_contact_email, :participants
 
@@ -42,7 +42,8 @@ class CourseSiteObject
       page.course_site.set
       # Store the selected term value for use later
       # TODO: Add logic here in case we want to actually SET the term value instead.
-      @term = page.academic_term.value
+      @term_value = page.academic_term.value
+      @term = page.academic_term.selected_options[0].text
 
       page.continue
     end
@@ -55,7 +56,7 @@ class CourseSiteObject
       page.section.set @section
 
       # Store site name for ease of coding and readability later
-      @name = "#{@subject} #{@course} #{@section} #{@term}"
+      @name = "#{@subject} #{@course} #{@section} #{@term_value}"
       # Add a valid instructor id
       page.authorizers_username.set @authorizer
 
@@ -131,7 +132,7 @@ class CourseSiteObject
       course_section.section.set @section
 
       # Store site name for ease of coding and readability later
-      @name = "#{@subject} #{@course} #{@section} #{@term}"
+      @name = "#{@subject} #{@course} #{@section} #{@term_value}"
 
       # Add a valid instructor id
       course_section.authorizers_username.set @authorizer

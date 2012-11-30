@@ -10,6 +10,7 @@ class JobScheduler < BasePage
   # Clicks the Jobs link, then instantiates
   # the JobList Class.
   link "Jobs"
+  link "Filter Events"
 
 end
 
@@ -18,13 +19,12 @@ class JobList < BasePage
 
   frame_element
 
-  # Clicks the New Job link, then
-  # instantiates the CreateNewJob Class.
   link "New Job"
+  link "Delete"
+  link "Event Log"
 
   action(:triggers) { |job_name, b| b.frm.div(:class=>"portletBody").table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(job_name)}/).link(:text=>/Triggers/).click }
-
-  link "Event Log"
+  element(:check) { |job_name, b| b.frm.div(:class=>"portletBody").table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(job_name)}/).checkbox }
 
 end
 

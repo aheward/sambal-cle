@@ -4,7 +4,7 @@ require 'yaml'
 
 describe "Import Site" do
   
-  include Utilities
+  include StringFactory
   include Workflows
   include Foundry
 
