@@ -19,7 +19,6 @@ describe "Import Site" do
     @instructor = make UserObject, :id=>@directory['person3']['id'], :password=>@directory['person3']['password'],
                                      :first_name=>@directory['person3']['firstname'], :last_name=>@directory['person3']['lastname'],
                                      :type=>"Instructor"
-
     @file_path = @config['data_directory']
     @source_site_string = "Links to various items in this site:"
 
@@ -49,7 +48,7 @@ describe "Import Site" do
     @file = make FileObject, :site=>@site1.name, :name=>"flower02.jpg", :source_path=>@file_path+"images/"
     @file.create
 
-    @source_site_string << "<br />\nUploaded file: <a href=\"#{@file.href}\">#{@file.name}</a><br />\n"
+    @source_site_string << %|<br />\nUploaded file: <a href="#{@file.href}">#{@file.name}</a><br />\n<img width="203" height="196" src="#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" /><br /><br />|
 
     @htmlpage = make HTMLPageObject, :site=>@site1.name, :folder=>"#{@site1.name} Resources", :html=>@source_site_string
     @htmlpage.create
@@ -132,6 +131,11 @@ describe "Import Site" do
 
     @section1.edit :editor_content=>@source_site_string
 
+    @assessment = make AssessmentObject, :site=>@site1.name
+    @assessment.create
+    @assessment.add_question :type=>"Short Answer/Essay", :rich_text=>true, :text=>%|<img width="203" height="196" src="#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" />|
+    @assessment.publish
+
     @site2 = make CourseSiteObject
     @site2.create_and_reuse_site @site1.name
 
@@ -169,7 +173,6 @@ describe "Import Site" do
   end
 
   it "imports Assignments correctly" do
-
     check_this_stuff(@new_assignment.instructions)
   end
 
@@ -244,6 +247,22 @@ describe "Import Site" do
     @new_event.view
 
     check_this_stuff @new_event.message_html
+  end
+
+  it "imports Assessments correctly" do
+    @new_assessment = make AssessmentObject, :title=>@assessment.title, :site=>@site2.name
+    @new_assessment.questions=@assessment.questions
+    assessments
+    on AssessmentsList do |list|
+      list.pending_assessment_titles.should include @new_assessment.title
+      list.edit @new_assessment.title
+    end
+    on EditAssessment do |edit|
+      edit.edit_question(1,1)
+    end
+    on ShortAnswer do |q|
+      q.get_source_text(q.question_editor).should==%|<img width="203" height="196" alt="" src="#{$base_url}/access/content/group/#{@site2.id}/#{@file.name}" />|
+    end
   end
 
 end
