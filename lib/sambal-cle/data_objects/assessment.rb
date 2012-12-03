@@ -122,7 +122,7 @@ class AssessmentObject
       # Metadata
 
 
-      settings.save
+      settings.save_settings
     end
   end
 

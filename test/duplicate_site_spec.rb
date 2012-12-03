@@ -25,7 +25,7 @@ describe "Duplicate Site" do
     # Log in to Sakai
     @instructor.login
 
-    @site1 = make CourseSiteObject, :description=>"Original Site"
+    @site1 = make CourseSiteObject
     @site1.create
 
     @source_site_string << "<br />\n<br />\nSite ID: #{@site1.id}<br />\n<br />\n"
@@ -48,7 +48,7 @@ describe "Duplicate Site" do
     @file = make FileObject, :site=>@site1.name, :name=>"flower02.jpg", :source_path=>@file_path+"images/"
     @file.create
 
-    @source_site_string << %|<br />\nUploaded file: <a href="#{@file.href}">#{@file.name}</a><br />\n<img width="203" height="196" src="https://#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" /><br /><br />|
+    @source_site_string << %|<br />\nUploaded file: <a href="#{@file.href}">#{@file.name}</a><br />\n<img width="203" height="196" src="#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" /><br /><br />|
 
     @htmlpage = make HTMLPageObject, :site=>@site1.name, :folder=>"#{@site1.name} Resources", :html=>@source_site_string
     @htmlpage.create
@@ -131,8 +131,10 @@ describe "Duplicate Site" do
 
     @section1.edit :editor_content=>@source_site_string
 
-    @assessment = make AssessmentObject :site=>@site.name
-    @assessment.add_question :type=>"Short Answer/Essay", :rich_text=>true, :text=>%|<img width="203" height="196" src="https://#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" />|
+    @assessment = make AssessmentObject, :site=>@site1.name
+    @assessment.create
+    @assessment.add_question :type=>"Short Answer/Essay", :rich_text=>true, :text=>%|<img width="203" height="196" src="#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" />|
+    @assessment.publish
 
     @site2 = @site1.duplicate
 
@@ -257,7 +259,9 @@ describe "Duplicate Site" do
     end
     on EditAssessment do |edit|
       edit.edit_question(1,1)
-      sleep 120
+    end
+    on ShortAnswer do |q|
+      q.get_source_text(q.question_editor).should==%|<img width="203" height="196" alt="" src="#{$base_url}/access/content/group/#{@site2.id}/#{@file.name}" />|
     end
   end
 

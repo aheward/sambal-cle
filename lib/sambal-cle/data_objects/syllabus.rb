@@ -55,6 +55,7 @@ class SyllabusObject
   def get_properties
     open_my_site_by_name @site
     syllabus
+    sleep 2 #FIXME
     on Syllabus do |syllabus|
       reset
       syllabus.create_edit
