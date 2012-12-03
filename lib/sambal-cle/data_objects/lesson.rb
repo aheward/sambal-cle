@@ -2,6 +2,7 @@ class ModuleObject
 
   include Foundry
   include DataFactory
+  include StringFactory
   include Workflows
 
   attr_accessor :title, :description, :keywords, :start_date, :end_date, :site, :href
@@ -49,6 +50,7 @@ class ContentSectionObject
 
   include Foundry
   include DataFactory
+  include StringFactory
   include Workflows
 
   attr_accessor :site, :module, :title, :instructions, :modality, :content_type,
@@ -116,7 +118,7 @@ class ContentSectionObject
           page.url_description.set @url_description
         when "Upload or link to a file in Resources"
           page.select_or_upload_file
-          on_page ResourcesBase do |add|
+          on_page Resources do |add|
             add.open_folder @file_folder unless @file_folder == nil
             add.select_file @file_name
             add.continue

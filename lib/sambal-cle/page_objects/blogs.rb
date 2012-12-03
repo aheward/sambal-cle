@@ -5,7 +5,7 @@ class BlogsBase < BasePage
   class << self
     def menu_elements
       # AddBlogEntry
-      action(:add_blog_entry) { |b| b.frm.link(:text=>"Add blog entry").click }
+      link "Add blog entry"
     end
   end
 end
@@ -41,10 +41,8 @@ class AddBlogEntry < BlogsBase
     editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
-  # BlogsList
-  action(:publish_entry) { |b| b.frm.button(:value=>"Publish entry").click }
-  # BlogsList
-  action(:save_draft){ |b| b.frm.button(:value=>"Save Draft").click }
+  button "Publish entry"
+  button "Save Draft"
 
   element(:title) { |b| b.frm.text_field(:name=>"title-input") }
   element(:only_site_admins) { |b| b.frm.radio(:id=>"instructors-only-radio") }

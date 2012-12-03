@@ -7,7 +7,7 @@ class Polls < BasePage
 
   frame_element
 
-  action(:add) { |b| b.frm.link(:text=>"Add").click }
+  link "Add"
 
   def questions
     questions = []
@@ -43,8 +43,8 @@ class AddEditPoll < BasePage
     editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
-  action(:save_and_add_options) { |b| b.frm.button(:value=>"Save and add options").click }
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
+  button "Save and add options"
+  button "Save"
   element(:question) { |b| b.frm.text_field(:id=>"new-poll-text") }
 
 end
@@ -63,7 +63,7 @@ class AddAnOption < BasePage
     editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
-  action(:save_and_add_options) { |b| b.frm.button(:value=>"Save and add options").click }
+  button "Save and add options"
+  button "Save"
 
 end

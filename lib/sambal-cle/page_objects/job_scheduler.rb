@@ -9,10 +9,8 @@ class JobScheduler < BasePage
 
   # Clicks the Jobs link, then instantiates
   # the JobList Class.
-  def jobs
-    frm.link(:text=>"Jobs").click
-    JobList.new(@browser)
-  end
+  link "Jobs"
+  link "Filter Events"
 
 end
 
@@ -21,26 +19,12 @@ class JobList < BasePage
 
   frame_element
 
-  # Clicks the New Job link, then
-  # instantiates the CreateNewJob Class.
-  def new_job
-    frm.link(:text=>"New Job").click
-    CreateNewJob.new(@browser)
-  end
+  link "New Job"
+  link "Delete"
+  link "Event Log"
 
-  # Clicks the link with the text "Triggers" associated with the
-  # specified job name, 
-  # then instantiates the EditTriggers Class.
-  def triggers(job_name)
-    frm.div(:class=>"portletBody").table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(job_name)}/).link(:text=>/Triggers/).click
-    sleep 1
-    EditTriggers.new(@browser)
-  end
-
-  def event_log
-    frm.link(:text=>"Event Log").click
-    EventLog.new(@browser)
-  end
+  action(:triggers) { |job_name, b| b.frm.div(:class=>"portletBody").table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(job_name)}/).link(:text=>/Triggers/).click }
+  element(:check) { |job_name, b| b.frm.div(:class=>"portletBody").table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(job_name)}/).checkbox }
 
 end
 
@@ -51,13 +35,11 @@ class CreateNewJob < BasePage
 
   # Clicks the Post button, then
   # instantiates the JobList Class.
-  def post
-    frm.button(:value=>"Post").click
-    JobList.new(@browser)
-  end
+  button "Post"
 
   element(:job_name) { |b| b.frm.text_field(:id=>"_id2:job_name") }
   element(:type) { |b| b.frm.select_list(:name=>"_id2:_id10") }
+
 end
 
 # The page for Editing Triggers
@@ -67,20 +49,10 @@ class EditTriggers < BasePage
 
   # Clicks the "Run Job Now" link, then
   # instantiates the RunJobConfirmation Class.
-  def run_job_now
-    frm.div(:class=>"portletBody").link(:text=>"Run Job Now").click
-    RunJobConfirmation.new(@browser)
-  end
+  action(:run_job_now) { |b| b.frm.div(:class=>"portletBody").link(:text=>"Run Job Now").click }
 
-  def return_to_jobs
-    frm.link(:text=>"Return_to_Jobs").click
-    JobList.new(@browser)
-  end
-
-  def new_trigger
-    frm.link(:text=>"New Trigger").click
-    CreateTrigger.new(@browser)
-  end
+  link "Return_to_Jobs"
+  link "New Trigger"
 
 end
 
@@ -89,13 +61,11 @@ class CreateTrigger < BasePage
 
   frame_element
 
-  def post
-    frm.button(:value=>"Post").click
-    EditTriggers.new(@browser)
-  end
+  button "Post"
 
   element(:name) { |b| b.frm.text_field(:id=>"_id2:trigger_name") }
   element(:cron_expression) { |b| b.frm.text_field(:id=>"_id2:trigger_expression") }
+
 end
 
 
@@ -106,10 +76,7 @@ class RunJobConfirmation < BasePage
 
   # Clicks the "Run Now" button, then
   # instantiates the JobList Class.
-  def run_now
-    frm.button(:value=>"Run Now").click
-    JobList.new(@browser)
-  end
+  button "Run Now"
 
 end
 

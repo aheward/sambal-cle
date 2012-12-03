@@ -7,10 +7,7 @@ class Portfolios < BasePage
 
   frame_element
 
-  def create_new_portfolio
-    frm.link(:text=>"Create New Portfolio").click
-    AddPortfolio.new(@browser)
-  end
+  link "Create New Portfolio"
 
   def list
     list = []
@@ -21,9 +18,7 @@ class Portfolios < BasePage
     return list
   end
 
-  def shared(portfolio_name)
-    frm.table(:class=>"listHier ospTable").row(:text=>/#{Regexp.escape(portfolio_name)}/)[5].text
-  end
+  action(:shared) { |portfolio_name, b| b.frm.table(:class=>"listHier ospTable").row(:text=>/#{Regexp.escape(portfolio_name)}/)[5].text }
 
 end
 
@@ -32,12 +27,7 @@ class AddPortfolio < BasePage
 
   frame_element
 
-  def create
-    frm.button(:value=>"Create").click
-    EditPortfolio.new(@browser)
-  end
-
-
+  button "Create"
   element(:name) { |b| b.frm.text_field(:name=>"presentationName") }
   element(:design_your_own_portfolio) { |b| b.frm.radio(:id=>"templateId-freeForm") }
 
@@ -48,14 +38,9 @@ class EditPortfolio < BasePage
 
   frame_element
 
-  def add_edit_content
-    frm.link(:text=>"Add/Edit Content").click
-    AddEditPortfolioContent.new @browser
-  end
-
-
-  action(:edit_title) { |b| b.frm.link(:text=>"Edit Title").click }
-  action(:save_changes) { |b| b.frm.link(:text=>"Save Changes").click }
+  link("Add/Edit Content")
+  link("Edit Title")
+  link("Save Changes")
   element(:active) { |b| b.frm.radio(:id=>"btnActive") }
   element(:inactive) { |b| b.frm.radio(:id=>"btnInactive") }
 
@@ -66,40 +51,21 @@ class AddEditPortfolioContent < BasePage
 
   frame_element
 
-  def add_page
-    frm.link(:text=>"Add Page").click
-    AddEditPortfolioPage.new(@browser)
-  end
-
-  def share_with_others
-    frm.link(:text=>"Share with Others").click
-    SharePortfolio.new @browser
-  end
-
-
-  action(:save_changes) { |b| b.frm.button(:value=>"Save Changes").click }
+  link "Add Page"
+  link "Share with Others"
+  button "Save Changes"
 
 end
 
 #
 class AddEditPortfolioPage < BasePage
 
+  include FCKEditor
   frame_element
 
-  def add_page
-    frm.button(:value=>"Add Page").click
-    AddEditPortfolioContent.new(@browser)
-  end
-
-  def select_layout
-    frm.link(:text=>"Select Layout").click
-    ManagePortfolioLayouts.new @browser
-  end
-
-  def select_style
-    frm.link(:text=>"Select Style").click
-    SelectPortfolioStyle.new @browser
-  end
+  link "Add Page"
+  link "Select Layout"
+  link "Select Style"
 
   def simple_html_content=(text)
     frm.frame(:id, "_id1:arrange:_id49_inputRichText___Frame").div(:title=>"Select All").fire_event("onclick")
@@ -107,11 +73,9 @@ class AddEditPortfolioPage < BasePage
     frm.frame(:id, "_id1:arrange:_id49_inputRichText___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
-
   element(:title) { |b| b.frm.text_field(:id=>"_id1:title") }
   element(:description) { |b| b.frm.text_field(:id=>"_id1:description") }
   element(:keywords) { |b| b.frm.text_field(:id=>"_id1:keywords") }
-
 
 end
 
@@ -120,15 +84,9 @@ class ManagePortfolioLayouts < BasePage
 
   frame_element
 
-  def select(layout_name)
-    frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(layout_name)}/).link(:text=>"Select").click
-    AddEditPortfolioPage.new @browser
-  end
+  action(:select) { |layout_name, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(layout_name)}/).link(:text=>"Select").click }
 
-  def go_back
-    frm.button(:value=>"Go Back").click
-    AddEditPortfolioPage.new @browser
-  end
+  button "Go Back"
 
 end
 
@@ -137,16 +95,8 @@ class SharePortfolio < BasePage
 
   frame_element
 
-  def click_here_to_share_with_others
-    frm.link(:text=>"Click here to share with others").click
-    AddPeopleToShare.new(@browser)
-  end
-
-  def summary
-    frm.link(:text=>"Summary").click
-    EditPortfolio.new @browser
-  end
-
+  link "Click here to share with others"
+  link "Summary"
 
   element(:everyone_on_the_internet) { |b| b.frm.checkbox(:id=>"public_checkbox") }
 

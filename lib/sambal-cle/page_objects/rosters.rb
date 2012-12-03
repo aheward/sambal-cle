@@ -7,10 +7,7 @@ class Roster < BasePage
 
   frame_element
 
-  def find
-    frm.button(:value=>"Find").click
-    Roster.new @browser
-  end
+  button("Find")
 
   def names
     list = []
@@ -25,11 +22,7 @@ class Roster < BasePage
   # Then instantiates the RosterProfileView class.
   # Note that it expects an exact match for the name string, otherwise
   # the script will error out.
-  def view(name)
-    frm.link(:text=>name).click
-    RosterProfileView.new @browser
-  end
-
+  action(:view) { |name, b| b.frm.link(:text=>name).click }
 
   element(:name_or_id) { |b| b.frm.text_field(:id=>"roster_form:search") }
 
@@ -40,10 +33,7 @@ class RosterProfileView < BasePage
 
   frame_element
 
-  def back
-    frm.button(:value=>"Back").click
-    Roster.new(@browser)
-  end
+  button("Back")
 
   # Returns a hash containing the contents of the Public Information
   # table on the page, with the keys being the row headers and the values

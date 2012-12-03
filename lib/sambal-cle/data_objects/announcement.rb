@@ -25,7 +25,7 @@ class AnnouncementObject
   alias :name :title
 
   def create
-    open_my_site_by_name
+    open_my_site_by_name @site
     announcements
     on_page Announcements do |page|
       page.add

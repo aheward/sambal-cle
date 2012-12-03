@@ -17,25 +17,13 @@ class UserMembership < BasePage
     return names
   end
 
-  # Returns the user id of the specified user (assuming that person
-  # appears in the search results list, otherwise this method will
-  # throw an error.)
-  def user_id(name)
-    frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(name)}/)[0].text
-  end
+  action(:user_id) { |name, b| b.frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(name)}/)[0].text }
 
-  # Returns the user type of the specified user (assuming that person
-  # appears in the search results list, otherwise this method will
-  # throw an error.)
-  def type(name)
-    frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(name)}/)[4].text
-  end
+  action(:type) { |name, b| b.frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(name)}/)[4].text }
 
   # Returns the text contents of the "instruction" paragraph that
   # appears when there are no search results.
-  def alert_text
-    frm.p(:class=>"instruction").text
-  end
+  value(:alert_text) { |b| b.frm.p(:class=>"instruction").text }
 
   element(:user_type) { |b| b.frm.select_list(:id=>"userlistForm:selectType") }
   element(:user_authority) { |b| b.frm.select_list(:id=>"userlistForm:selectAuthority") }

@@ -24,7 +24,7 @@ class ForumObject
   alias :name :title
 
   def create
-    open_my_site_by_name
+    open_my_site_by_name @site
     forums
     on Forums do |forums|
       forums.new_forum
@@ -98,7 +98,8 @@ end
 class TopicObject
 
   include Foundry
-  include Utilities
+  include DataFactory
+  include StringFactory
   include Workflows
   
   attr_accessor :title, :short_description, :description, :site, :forum,

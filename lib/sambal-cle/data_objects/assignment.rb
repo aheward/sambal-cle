@@ -115,8 +115,9 @@ class AssignmentObject
         edit.enter_source_text edit.editor, opts[:instructions]
       end
       edit.grade_scale.fit opts[:grade_scale]
-      edit.max_points.fit opts[:max_points]
-
+      #if edit.max_points.enabled?
+        edit.max_points.fit opts[:max_points]
+      #end
       #TODO: All the rest goes here
 
       # This should be one of the last items edited...

@@ -15,13 +15,13 @@ class EventObject
 
     defaults = {
         :title=>random_alphanums,
-        :month=>in_15_minutes[:month_str],
-        :day=>in_15_minutes[:day],
-        :year=>in_15_minutes[:year],
-        :start_hour=>in_15_minutes[:hour],
-        :start_minute=>in_15_minutes[:minute],
-        :start_meridian=>in_15_minutes[:meridian],
-        :message=>random_multiline(400,20, :alpha)
+        :month=>minutes_from_now(15)[:MON],
+        :day=>minutes_from_now(15)[:day_of_month],
+        :year=>minutes_from_now(15)[:year],
+        :start_hour=>minutes_from_now(15)[:hour],
+        :start_minute=>minutes_from_now(15)[:minute_rounded],
+        :start_meridian=>minutes_from_now(15)[:meridian],
+        :message=>random_multiline(400, 20, :lorem)
     }
     options = defaults.merge(opts)
 

@@ -2,6 +2,7 @@ class PortfolioSiteObject
 
   include Foundry
   include DataFactory
+  include DateFactory
   include StringFactory
   include Workflows
   
@@ -63,6 +64,16 @@ class PortfolioSiteObject
       end
     end
     # TODO: Add definition of @participants variable here
+    # Create a string that will match the new Site's "creation date" string
+    @creation_date = right_now[:sakai]
+
+    on SiteSetup do |site_setup|
+      site_setup.search(Regexp.escape(@title))
+
+      # Get the site id for storage
+      @browser.frame(:class=>"portletMainIframe").link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
+      @id = $~.to_s
+    end
   end
     
   def edit opts={}

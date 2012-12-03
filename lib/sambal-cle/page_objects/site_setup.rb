@@ -13,17 +13,18 @@ class SiteSetupBase < BasePage
     def menu_elements
       # Clicks the Edit Tools link, then
       # instantiates the EditSiteTools class.
-      action(:edit_tools) {|b| b.frm.link(:text=>"Edit Tools").click }
-
+      #action(:edit_tools) {|b| b.frm.link(:text=>"Edit Tools").click }
+      link("Edit Tools")
       # Clicks the Manage Groups link and
       # instantiates the Groups Class.
-      action(:manage_groups) {|b| b.frm.link(:text=>"Manage Groups").click }
-
+      #action(:manage_groups) {|b| b.frm.link(:text=>"Manage Groups").click }
+      link("Manage Groups")
       # Clicks the Duplicate Site link and instantiates
       # the DuplicateSite class.
-      action(:duplicate_site) {|b| b.frm.link(:text=>"Duplicate Site").click }
-
-      action(:add_participants) {|b| b.frm.link(:text=>"Add Participants").click }
+      #action(:duplicate_site) {|b| b.frm.link(:text=>"Duplicate Site").click }
+      link("Duplicate Site")
+      #action(:add_participants) {|b| b.frm.link(:text=>"Add Participants").click }
+      link("Add Participants")
 
     end
   end
@@ -82,7 +83,7 @@ class SiteSetup < SiteSetupBase
   end
   
   element(:view) { |b| b.frm.select(:id=>"view").click }
-  action(:clear_search) { |b| b.frm.button(:value=>"Clear Search").click }
+  button "Clear Search"
   element(:select_page_size) { |b| b.frm.select(:id=>"selectPageSize").click }
   action(:sort_by_title) { |b| b.frm.link(:text=>"Worksite Title").click }
   action(:sort_by_type) { |b| b.frm.link(:text=>"Type").click }
@@ -112,14 +113,16 @@ class SiteEditor < SiteSetupBase
     frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(participant)}/).select(:id=>/role/).select(role)
   end
   
-  action(:update_participants) { |b| b.frm.button(:value=>"Update Participants").click }
+  #action(:update_participants) { |b| b.frm.button(:value=>"Update Participants").click }
+  button("Update Participants")
 
   element(:return_button) { |b| b.frm.button(:name=>"back") }
 
   action(:return_to_sites_list) { |p| p.return_button.click }
 
   action(:previous) { |b| b.frm.button(:name=>"previous").click }
-  action(:printable_version) { |b| b.frm.link(:text=>"Printable Version").click }
+  #action(:printable_version) { |b| b.frm.link(:text=>"Printable Version").click }
+  link("Printable Version")
 
 end
 
@@ -131,10 +134,9 @@ class Groups < SiteSetupBase
 
   expected_element :create_new_group_link
 
-  element(:create_new_group_link) { |b| b.frm.link(:text=>"Create New Group") }
-  
-  action(:create_new_group) { |p| p.create_new_group_link.click }
-  action(:auto_groups) { |b| b.frm.link(:text=>"Auto Groups").click }
+  link("Create New Group")
+  link("Auto Groups")
+
   action(:remove_checked) { |b| b.frm.button(:id=>"delete-groups").click }
 
   end
@@ -169,20 +171,18 @@ class DuplicateSite < SiteSetupBase
   end
 
   # Returns the site name in the header, for verification.
-  def site_name
-    frm.div(:class=>"portletBody").h3.span(:class=>"highlight").text
-  end
+  value(:site_name) { |b| b.frm.div(:class=>"portletBody").h3.span(:class=>"highlight").text }
+  element(:site_title) { |b| b.frm.text_field(:id=>"title") }
+  element(:academic_term) { |b| b.frm.select(:id=>"selectTerm") }
 
-    element(:site_title) { |b| b.frm.text_field(:id=>"title") }
-    element(:academic_term) { |b| b.frm.select(:id=>"selectTerm") }
 end
 
 # Page for Adding Participants to a Site in Site Setup
 class SiteSetupAddParticipants < SiteSetupBase
 
   menu_elements
-  
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+
+  button("Continue")
   
   element(:official_participants) { |b| b.frm.text_field(:id=>"content::officialAccountParticipant") }
   element(:non_official_participants) { |b| b.frm.text_field(:id=>"content::nonOfficialAccountParticipant") }
@@ -194,13 +194,12 @@ class SiteSetupAddParticipants < SiteSetupBase
     
 end
 
-
 # Page for selecting Participant roles individually
 class SiteSetupChooseRolesIndiv < SiteSetupBase
 
   menu_elements
 
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+  button("Continue")
   
   action(:back) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Aback&Fast%20track%20action=siteAddParticipantHandler.processDifferentRoleBack").click }
   #action(:cancel) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Acancel&Fast%20track%20action=siteAddParticipantHandler.processCancel").click }
@@ -208,21 +207,18 @@ class SiteSetupChooseRolesIndiv < SiteSetupBase
 
 end
 
-
 # Page for selecting the same role for All. This class is used for
 # both Course and Portfolio sites.
 class SiteSetupChooseRole < BasePage
 
   frame_element
 
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+  button("Continue")
 
   # Use this method for radio buttons that aren't
   # included in the default list below. Enter the
   # radio button's label in the UI.
-  def radio_button(label)
-    frm.radio(:value=>label)
-  end
+  action(:radio_button) { |label, b| b.frm.radio(:value=>label) }
 
   action(:back) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Aback&Fast%20track%20action=siteAddParticipantHandler.processSameRoleBack").click }
   action(:cancel) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Acancel&Fast%20track%20action=siteAddParticipantHandler.processCancel").click }
@@ -243,8 +239,8 @@ end
 class SiteSetupParticipantEmail < SiteSetupBase
 
   menu_elements
-  
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+
+  button("Continue")
   action(:back) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Acontinue&Fast%20track%20action=siteAddParticipantHandler.processEmailNotiBack").click }
   #action(:cancel) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Acontinue&Fast%20track%20action=siteAddParticipantHandler.processEmailNotiCancel").click }
   element(:send_now) { |b| b.frm.radio(:id=>"content::noti-row:0:noti-select") }
@@ -258,7 +254,7 @@ class SiteSetupParticipantConfirm < SiteSetupBase
 
   menu_elements
   
-  action(:finish) { |b| b.frm.button(:value=>"Finish").click }
+  button("Finish")
   
   # Returns the value of the id field for the specified name.
   def id(name)
@@ -271,7 +267,6 @@ class SiteSetupParticipantConfirm < SiteSetupBase
   end
   
   action(:back) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Aback&Fast%20track%20action=siteAddParticipantHandler.processConfirmBack").click }
-  #action(:cancel) { |b| b.frm.button(:name=>"command link parameters&Submitting%20control=content%3A%3Aback&Fast%20track%20action=siteAddParticipantHandler.processConfirmCancel").click }
 
 end
 
@@ -282,9 +277,8 @@ class EditSiteTools < SiteSetupBase
   menu_elements
 
   expected_element :all_tools
-  
-  # Clicks the Continue button.
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+
+  button("Continue")
   
   # This is a comprehensive list of all checkboxes and
   # radio buttons for this page,
@@ -349,23 +343,23 @@ class ReUseMaterial < SiteSetupBase
 
   menu_elements
 
-  thing(:announcements_checkbox) { |b| b.frm.checkbox(name: "sakai.announcements") }
-  thing(:calendar_checkbox) { |b| b.frm.checkbox(name: "sakai.schedule") }
-  thing(:discussion_forums_checkbox) { |b| b.frm.checkbox(name: "sakai.jforum.tool") }
-  thing(:forums_checkbox) { |b| b.frm.checkbox(name: "sakai.forums") }
-  thing(:chat_room_checkbox) { |b| b.frm.checkbox(name: "sakai.chat") }
-  thing(:polls_checkbox) { |b| b.frm.checkbox(name: "sakai.poll") }
-  thing(:syllabus_checkbox) { |b| b.frm.checkbox(name: "sakai.syllabus") }
-  thing(:lessons_checkbox) { |b| b.frm.checkbox(name: "sakai.melete") }
-  thing(:resources_checkbox) { |b| b.frm.checkbox(name: "sakai.resources") }
-  thing(:assignments_checkbox) { |b| b.frm.checkbox(name: "sakai.assignment.grades") }
-  thing(:tests_and_quizzes_checkbox) { |b| b.frm.checkbox(name: "sakai.samigo") }
-  thing(:gradebook_checkbox) { |b| b.frm.checkbox(name: "sakai.gradebook.tool") }
-  thing(:gradebook2_checkbox) { |b| b.frm.checkbox(name: "sakai.gradebook.gwt.rpc") }
-  thing(:wiki_checkbox) { |b| b.frm.checkbox(name: "sakai.rwiki") }
-  thing(:news_checkbox) { |b| b.frm.checkbox(name: "sakai.news") }
-  thing(:web_content_checkbox) { |b| b.frm.checkbox(name: "sakai.iframe") }
-  thing(:site_statistics_checkbox) { |b| b.frm.checkbox(name: "sakai.sitestats") }
+  element(:announcements_checkbox) { |b| b.frm.checkbox(name: "sakai.announcements") }
+  element(:calendar_checkbox) { |b| b.frm.checkbox(name: "sakai.schedule") }
+  element(:discussion_forums_checkbox) { |b| b.frm.checkbox(name: "sakai.jforum.tool") }
+  element(:forums_checkbox) { |b| b.frm.checkbox(name: "sakai.forums") }
+  element(:chat_room_checkbox) { |b| b.frm.checkbox(name: "sakai.chat") }
+  element(:polls_checkbox) { |b| b.frm.checkbox(name: "sakai.poll") }
+  element(:syllabus_checkbox) { |b| b.frm.checkbox(name: "sakai.syllabus") }
+  element(:lessons_checkbox) { |b| b.frm.checkbox(name: "sakai.melete") }
+  element(:resources_checkbox) { |b| b.frm.checkbox(name: "sakai.resources") }
+  element(:assignments_checkbox) { |b| b.frm.checkbox(name: "sakai.assignment.grades") }
+  element(:tests_and_quizzes_checkbox) { |b| b.frm.checkbox(name: "sakai.samigo") }
+  element(:gradebook_checkbox) { |b| b.frm.checkbox(name: "sakai.gradebook.tool") }
+  element(:gradebook2_checkbox) { |b| b.frm.checkbox(name: "sakai.gradebook.gwt.rpc") }
+  element(:wiki_checkbox) { |b| b.frm.checkbox(name: "sakai.rwiki") }
+  element(:news_checkbox) { |b| b.frm.checkbox(name: "sakai.news") }
+  element(:web_content_checkbox) { |b| b.frm.checkbox(name: "sakai.iframe") }
+  element(:site_statistics_checkbox) { |b| b.frm.checkbox(name: "sakai.sitestats") }
   action(:continue) { |b| b.frm.button(name: "eventSubmit_doContinue").click }
 
 end
@@ -377,11 +371,7 @@ class ConfirmSiteToolsEdits < SiteSetupBase
 
   expected_element :finish_button
 
-  element(:finish_button) { |b| b.frm.button(value: "Finish") }
-
-  # Clicks the Finish button, next is
-  # the SiteSetupEdit class.
-  action(:finish) { |b| b.finish_button.click }
+  button("Finish")
   
 end
 
@@ -390,9 +380,8 @@ end
 class DeleteSite < SiteSetupBase
 
   menu_elements
-  
-  # Clicks the Remove button
-  action(:remove) { |b| b.frm.button(:value=>"Remove").click }
+
+  button("Remove")
 
 end
 
@@ -419,9 +408,9 @@ class SiteType < SiteSetupBase
   element(:academic_term) { |b| b.frm.select(:id=>"selectTerm") }
   element(:select_template) { |b| b.frm.select(:id=>"templateSiteId") }
   element(:select_term) { |b| b.frm.select(:id=>"selectTermTemplate") }
-  #action(:cancel) { |b| b.frm.button(:id=>"cancelCreate").click }
   element(:copy_users) { |b| b.frm.checkbox(:id=>"copyUsers") }
   element(:copy_content) { |b| b.frm.checkbox(:id=>"copyContent") }
+
 end
   
 
@@ -430,9 +419,8 @@ end
 class AddMultipleTools < SiteSetupBase
 
   menu_elements
-  
-  # Clicks the Continue button.
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+
+  button("Continue")
 
     # Note that the text field definitions included here
     # for the Tools definitions are ONLY for the first
@@ -452,8 +440,7 @@ class AddMultipleTools < SiteSetupBase
   element(:web_content_title) { |b| b.frm.text_field(:id=>"title_sakai.iframe") }
   element(:web_content_source) { |b| b.frm.text_field(:id=>"source_sakai.iframe") }
   element(:more_web_content_tools) { |b| b.frm.select(:id=>"num_sakai.iframe")  }
-  action(:back) { |b| b.frm.button(:name=>"Back").click }
-    
+
 end
   
 
@@ -463,9 +450,7 @@ class CourseSectionInfo < SiteSetupBase
   menu_elements
   expected_element :subject
 
-  # Clicks the Continue button, then instantiates
-  # the CourseSiteInfo Class.
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+  button("Continue")
   
   # Clicks the Done button (or the
   # "Done - go to Site" button if it
@@ -506,10 +491,8 @@ class SiteAccess < SiteSetupBase
   #
   # Example: page.joiner_role_div.visible?
   element(:joiner_role_div) { |b| b.frm.div(:id=>"joinerrole") }
-  
-  # Clicks the Continue button, then
-  # instantiates the ConfirmCourseSiteSetup class.
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+
+  button("Continue")
   
   element(:publish_site) { |b| b.frm.radio(:id=>"publish") }
   element(:leave_as_draft) { |b| b.frm.radio(:id=>"unpublish") }
@@ -526,16 +509,8 @@ class ConfirmSiteSetup < BasePage
 
   frame_element
 
-  element(:request_button) { |b| b.frm.button(:value=>"Request Site") }
-
-  # Clicks the Request Site button, then
-  # instantiates the SiteSetup Class.
-  action(:request_site){ |p| p.request_button.click }
-
-  # For portfolio sites...
-  # Clicks the "Create Site" button and
-  # instantiates the SiteSetup class.
-  action(:create_site) { |b| b.frm.button(:value=>"Create Site").click }
+  button("Request Site")
+  button("Create Site")
   
 end
 
@@ -555,15 +530,12 @@ class CourseSiteInfo < BasePage
     editor.td(:id, "xEditingArea").frame(:index=>0).send_keys text
   end
 
-  # Clicks the Continue button, next is the
-  # EditSiteTools Class.
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
-  
+  button("Continue")
+
   element(:short_description) { |b| b.frm.text_field(:id=>"short_description") }
   element(:special_instructions) { |b| b.frm.text_field(:id=>"additional") }
   element(:site_contact_name) { |b| b.frm.text_field(:id=>"siteContactName") }
   element(:site_contact_email) { |b| b.frm.text_field(:id=>"siteContactEmail") }
-  action(:back) { |b| b.frm.button(:name=>"Back").click }
 
 end
   
@@ -582,7 +554,7 @@ class PortfolioSiteInfo < BasePage
     editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
 
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+  button("Continue")
 
   element(:title) { |b| b.frm.text_field(:id=>"title") }
   element(:url_alias) { |b| b.frm.text_field(:id=>"alias_0") }
@@ -598,7 +570,7 @@ class PortfolioSiteTools < BasePage
 
   frame_element
 
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+  button("Continue")
 
   element(:all_tools) { |b| b.frm.checkbox(:id=>"all") }
   #TODO Add support for individual tool selection
@@ -610,7 +582,7 @@ class PortfolioConfigureToolOptions < BasePage
 
   frame_element
 
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+  button("Continue")
 
   element(:email) { |b| b.frm.text_field(:id=>"emailId") }
 

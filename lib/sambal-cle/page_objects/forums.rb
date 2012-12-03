@@ -18,10 +18,10 @@ class Forums < BasePage
   end
 
   # OrganizeForums
-  action(:organize) { |b| b.frm.link(:text=>"Organize").click }
+  link "Organize"
 
   # ForumTemplateSettings
-  action(:template_settings) { |b| b.frm.link(:text=>"Template Settings").click }
+  link "Template Settings"
 
   element(:forums_table) { |b| b.frm.div(:class=>"portletBody").table(:id=>"msgForum:forums") }
 
@@ -76,7 +76,7 @@ class TopicPage < BasePage
   frame_element
 
   # ComposeForumMessage
-  action(:post_new_thread) { |b| b.frm.link(:text=>"Post New Thread").click }
+  link "Post New Thread"
 
   def thread_titles
     titles = []
@@ -93,7 +93,7 @@ class TopicPage < BasePage
   end
 
   # TopicPage
-  action(:display_entire_message){ |b| b.frm.link(:text=>"Display Entire Message").click }
+  link "Display Entire Message"
 
 end
 
@@ -102,7 +102,7 @@ class ViewForumThread < BasePage
   frame_element
 
   # ComposeForumMessage
-  action(:reply_to_thread) { |b| b.frm.link(:text=>"Reply to Thread").click }
+  link "Reply to Thread"
 
   # ComposeForumMessage
   # TODO: Figure out a better way to do this...
@@ -119,7 +119,7 @@ class ComposeForumMessage < BasePage
   expected_element :editor
 
   # TopicPage, probably
-  action(:post_message) { |b| b.frm.button(:text=>"Post Message").click }
+  button "Post Message"
 
   element(:editor) { |b| b.frm.frame(:id, "dfCompose:df_compose_body_inputRichText___Frame") }
 
@@ -129,7 +129,7 @@ class ComposeForumMessage < BasePage
 
   value(:reply_text) { |b| b.frame(:index=>1).div(:class=>"singleMessageReply").text }
 
-  action(:cancel) { |b| b.frm.button(:value=>"Cancel").click }
+  button "Cancel"
 
   element(:title) { |b| b.frm.text_field(:id=>"dfCompose:df_compose_title") }
 
@@ -138,23 +138,16 @@ end
 class ForumTemplateSettings < BasePage
 
   frame_element
+  basic_page_elements
 
   value(:page_title) { |b| b.frm.div(:class=>"portletBody").h3(:index=>0).text }
-
-  # Forums
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
-
-  # Forums
-  action(:cancel) { |b| b.frm.button(:value=>"Cancel").click }
 
 end
 
 class OrganizeForums < BasePage
 
   frame_element
-
-  # Forums
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
+  basic_page_elements
 
   # These are set to so that the user
   # does not have to start the list at zero...
@@ -172,10 +165,7 @@ class EditForum < BasePage
 
   include FCKEditor
   frame_element
-
-  # Forums
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
-  action(:cancel) { |b| b.frm.button(:value=>"Cancel").click }
+  basic_page_elements
 
   # AddEditTopic
   action(:save_and_add) { |b| b.frm.button(:value=>"Save Settings & Add Topic").click }
@@ -198,6 +188,7 @@ class AddEditTopic < BasePage
 
   include FCKEditor
   frame_element
+  basic_page_elements
 
   @@table_index=0 # TODO: Seriously think about a better way to do this
 
@@ -208,10 +199,6 @@ class AddEditTopic < BasePage
   def description=(text)
     editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
   end
-
-  # Forums
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
-  action(:cancel) { |b| b.frm.button(:value=>"Cancel").click }
 
   action(:add_attachments) { |b| b.frm.button(:value=>/Add.+ttachment/).click }
 

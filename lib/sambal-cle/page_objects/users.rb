@@ -9,10 +9,10 @@ class EditUser < BasePage
 
   def update_details
     frm.button(:name=>"eventSubmit_doSave").click
-    sleep 1
+    frm.link(:text=>"Search").wait_until_present
   end
 
-  action(:remove_user) { |b| b.frm.link(text=>"Remove User").click }
+  link "Remove User"
   element(:first_name) { |b| b.frm.text_field(:id=>"first-name") }
   element(:last_name) { |b| b.frm.text_field(:id=>"last-name") }
   element(:email) { |b| b.frm.text_field(:id=>"email") }
@@ -27,36 +27,23 @@ class Users < BasePage
 
   frame_element
 
-  def new_user
-    frm.link(:text=>"New User").click
-    CreateNewUser.new @browser
-  end
+  link "New User"
 
   # Returns the contents of the Name cell
   # based on the specified user ID value.
-  def name(user_id)
-    frm.table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(user_id)}/i)[1].text
-  end
+  action(:name) { |user_id, b| b.frm.table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(user_id)}/i)[1].text }
 
   # Returns the contents of the Email cell
   # based on the specified user ID value.
-  def email(user_id)
-    frm.table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(user_id)}/i)[2].text
-  end
+  action(:email) { |user_id, b| b.frm.table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(user_id)}/i)[2].text }
 
   # Returns the contents of the Type cell
   # based on the specified user ID value.
-  def type(user_id)
-    frm.table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(user_id)}/i)[3].text
-  end
+  action(:type) { |user_id, b| b.frm.table(:class=>"listHier lines").row(:text=>/#{Regexp.escape(user_id)}/i)[3].text }
 
-  def search_button
-    frm.link(:text=>"Search").click
-    frm.table(:class=>"listHier lines").wait_until_present
-    Users.new @browser
-  end
+  action(:search_button) { |b| b.frm.link(:text=>"Search").click; b.frm.table(:class=>"listHier lines").wait_until_present }
 
-  action(:clear_search) { |b| b.frm.link(text=>"Clear Search").click }
+  link "Clear Search"
   element(:search_field) { |b| b.frm.text_field(:id=>"search") }
   element(:select_page_size) { |b| b.frm.select_list(:name=>"selectPageSize") }
   action(:next) { |b| b.frm.button(:name=>"eventSubmit_doList_next").click }
@@ -72,10 +59,7 @@ class CreateNewUser < BasePage
 
   frame_element
 
-  def save_details
-    frm.button(:name=>"eventSubmit_doSave").click
-    Users.new(@browser)
-  end
+  action(:save_details) { |b| b.frm.button(:name=>"eventSubmit_doSave").click }
 
   element(:user_id) { |b| b.frm.text_field(:id=>"eid") }
   element(:first_name) { |b| b.frm.text_field(:id=>"first-name") }

@@ -10,10 +10,10 @@ class SyllabusBase < BasePage
   class << self
 
     def menu_elements
-      action(:create_edit) { |b| b.frm.link(:text=>"Create/Edit").click }
-      action(:add) { |b| b.frm.link(:text=>"Add").click }
-      action(:redirect) { |b| b.frm.link(:text=>"Redirect").click }
-      action(:preview) { |b| b.frm.link(text: "Preview").click }
+      link("Create/Edit")
+      link("Add")
+      link("Redirect")
+      link("Preview")
     end
 
   end
@@ -59,12 +59,10 @@ class SyllabusEdit < SyllabusBase
     #FIXME
   end
 
-  action(:update) { |b| b.frm.button(:value=>"Update").click }
+  button("Update")
 
   # Opens the specified item
-  def open_item(title)
-    frm.link(:text=>title).click
-  end
+  action(:open_item) { | title, b| b.frm.link(:text=>title).click }
 
   # Returns an array containing the titles of the syllabus items
   # displayed on the page.
@@ -87,24 +85,18 @@ class AddEditSyllabusItem < SyllabusBase
 
   expected_element :editor
 
-  # Clicks the "Post" button and instantiates
-  # the Syllabus Class.
-  action(:post) { |b| b.frm.button(:value=>"Post").click }
+  button("Post")
 
   # Defines the text area of the FCKEditor that appears on the page for
   # the Syllabus content.
-  def editor
-    frm.frame(:id=>/_textarea___Frame/)
-  end
+  element(:editor) { |b| b.frm.frame(:id=>/_textarea___Frame/) }
 
   # Sends the specified string to the FCKEditor text area on the page.
   def content=(text)
     editor.send_keys(text)
   end
 
-  # Clicks the Add attachments button and instantiates the
-  # SyllabusAttach class.
-  action(:add_attachments) { |b| frm.button(:value=>"Add attachments").click }
+  button("Add attachments")
 
   # Returns an array of the filenames in the attachments
   # table
@@ -118,12 +110,7 @@ class AddEditSyllabusItem < SyllabusBase
     return names
   end
 
-  # Clicks the preview button and
-  # instantiates the SyllabusPreview class
-  def preview
-    frm.button(:value=>"Preview").click
-    SyllabusPreview.new(@browser)
-  end
+  button("Preview")
 
   element(:title) { |b| b.frm.text_field(:id=>"_id4:title") }
   element(:only_members_of_this_site) { |b| b.frm.radio_button(:name=>/_id\d+:_id\d+/, :value=>"no") }
@@ -136,7 +123,7 @@ class SyllabusPreview < SyllabusBase
 
   menu_elements
 
-  action(:edit) { |b| b.frm.button(:value=>"Edit").click }
+  button("Edit")
 
 end
 
@@ -145,7 +132,6 @@ class SyllabusRedirect < SyllabusBase
 
   menu_elements
 
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
   element(:url) { |b| b.frm.text_field(:id=>"redirectForm:urlValue") }
 
 end
@@ -155,7 +141,7 @@ class DeleteSyllabusItems < SyllabusBase
 
   menu_elements
 
-  action(:delete) { |b| b.frm.button(:value=>"Delete").click }
+  button("Delete")
 
 end
 

@@ -9,12 +9,14 @@ class CalendarBase < BasePage
       action(:add_event) { |b| b.frm.link(:text=>"Add").click }
 
       # AddEditFields
-      action(:fields) { |b| b.frm.link(:text=>"Fields").click }
+      link "Fields"
 
       # ImportStepOne
-      action(:import) { |b| b.frm.link(:text=>"Import").click }
+      link "Import"
 
-      #TODO: Finish adding menu buttons here
+      link "Merge"
+      link "Subscriptions (import)"
+      link "Permissions"
     end
   end
 
@@ -74,9 +76,7 @@ class Calendar < CalendarBase
   # ObsoleteElement error.
   action(:filter_events) { |b| b.frm.button(:name=>"eventSubmit_doCustomdate").click }
 
-  # Clicks the Go to Today button, then reinstantiates
-  # the Calendar class.
-  action(:go_to_today) { |b| b.frm.button(:value=>"Go to Today").click }
+  button "Go to Today"
 
   # Returns an array for the listed events.
   # This array contains more than simply strings of the event titles, because
@@ -117,15 +117,10 @@ class Calendar < CalendarBase
   # errors.
   action(:next) { |b| b.frm.button(:name=>"eventSubmit_doNext").click }
 
-  # Clicks the "Today" button and reinstantiates the class.
-  action(:today) { |b| b.frm.button(:value=>"Today").click }
-
-  action(:earlier) { |b| b.frm.link(:text=>"Earlier").click }
-
-  action(:later) { |b| b.frm.link(:text=>"Later").click }
-
-  # Clicks the "Set as Default View" button
-  action(:set_as_default_view) { |b| b.frm.link(:text=>"Set as Default View").click }
+  button "Today"
+  button "Earlier"
+  button "Later"
+  button "Set as Default View"
 
 end
 
@@ -133,11 +128,8 @@ end
 class EventDetail < CalendarBase
 
   menu_elements
-  # Clicks the Go to Today button, then instantiates
-  # the Calendar class.
-  action(:go_to_today) { |b| b.frm.button(:value=>"Go to Today").click }
-
-  action(:back_to_calendar) { |b| b.frm.button(:value=>"Back to Calendar").click }
+  button "Go to Today"
+  button "Back to Calendar"
 
   action(:last_event) { |b| b.frm().button(:value=>"< Last Event").click }
 
@@ -145,9 +137,8 @@ class EventDetail < CalendarBase
 
   value(:event_title) { |b| b.frm.div(:class=>"portletBody").h3.text }
 
-  action(:edit) { |b| b.frm.button(:value=>"Edit").click }
-
-  action(:remove_event) { |b| b.frm.button(:value=>"Remove event").click }
+  button "Edit"
+  button "Remove event"
 
   # Returns a hash object containing the contents of the event details
   # table on the page, with each of the header column items as a Key
@@ -186,9 +177,8 @@ class AddEditEvent < CalendarBase
 
   action(:frequency) { |b| b.frm.button(:name=>"eventSubmit_doEditfrequency").click }
 
-  action(:add_attachments) { |b| b.frm.button(:value=>"Add Attachments").click }
-
-  action(:add_remove_attachments) { |b| b.frm.button(:value=>"Add/remove attachments").click }
+  button "Add Attachments"
+  button "Add/remove attachments"
 
   # Returns true if the page has a link with the
   # specified file name. Use for test case asserts.
@@ -200,9 +190,7 @@ class AddEditEvent < CalendarBase
   # on the page. The "field" variable is the name of the
   # field, while the "text" is the string you want to put into
   # it.
-  def custom_field_text(field, text)
-    frm.text_field(:name=>field).set(text)
-  end
+  action(:custom_field) { |field, b| b.frm.text_field(:name=>field) }
 
   element(:title) { |b| b.frm.text_field(:id=>"activitytitle") }
   element(:month) { |b| b.frm.select(:id=>"month") }
@@ -250,9 +238,7 @@ class AddEditFields < CalendarBase
   action(:create_field) { |b| b.frm.button(:value=>"Create Field").click }
 
   # Checks the checkbox for the specified field
-  def check_remove(field_name)
-    frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(field_name)}/).checkbox.set
-  end
+  action(:check_remove) { |field_name, b| b.frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(field_name)}/).checkbox.set }
 
   element(:field_name) { |b| b.frm.text_field(:id=>"textfield") }
 
@@ -274,7 +260,7 @@ class ImportStepTwo < BasePage
   frame_element
 
   # Goes to ImportStepThree
-  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
+  button "Continue"
 
   # Enters the specified filename in the file field.
   #
@@ -293,7 +279,7 @@ class ImportStepThree < BasePage
   expected_element :import_events_for_site
 
   # Goes to Calendar
-  action(:import_events) { |b| b.frm.button(:value=>"Import Events").click }
+  button "Import Events"
 
   # Returns an array containing the list of Activity names on the page.
   def events
@@ -313,14 +299,10 @@ class ImportStepThree < BasePage
   end
 
   # Returns the date of the specified event
-  def event_date(event_name)
-    frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(event_name)}/)[0].text
-  end
+  action(:event_date) { |event_name, b| b.frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(event_name)}/)[0].text }
 
   # Unchecks the checkbox for the specified event
-  def uncheck_event(event_name)
-    frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(event_name)}/)
-  end
+  action(:uncheck_event) { |event_name, b| b.frm.table(:class=>/listHier lines/).row(:text=>/#{Regexp.escape(event_name)}/).checkbox.clear }
 
   element(:import_events_for_site) { |b| b.frm.radio(:id=>"site") }
   element(:import_events_for_selected_groups) { |b| b.frm.radio(:id=>"groups") }

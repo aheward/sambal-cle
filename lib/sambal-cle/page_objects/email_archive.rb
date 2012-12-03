@@ -3,8 +3,7 @@ class EmailArchive < BasePage
 
   frame_element
 
-  # EmailArchiveOptions
-  action(:options){ |b| b.frm.link(:text=>"Options").click }
+  link "Options"
 
   # Returns an array containing the
   def email_list

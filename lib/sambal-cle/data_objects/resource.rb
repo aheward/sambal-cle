@@ -22,7 +22,7 @@ class FileObject
     open_my_site_by_name @site
     resources
     on Resources do |file|
-      file.upload_file_to_folder @target_folder
+      file.upload_files_to_folder @target_folder
     end
     on ResourcesUploadFiles do |upload|
       upload.file_to_upload @name, @source_path
@@ -39,6 +39,7 @@ class FolderObject
   include Foundry
   include DataFactory
   include Workflows
+  include StringFactory
 
   attr_accessor :name, :parent_folder, :site
 
@@ -94,6 +95,7 @@ class HTMLPageObject
 
   include Foundry
   include DataFactory
+  include StringFactory
   include Workflows
 
   attr_accessor :name, :description, :site, :folder, :html, :url

@@ -11,11 +11,29 @@ class BasePage < PageFactory
       value(:alert_box) { |b| b.frm.div(:class=>"alertMessage").text }
       # Returns the text of the header.
       value(:header) { |b| b.frm.div(:class=>"portletBody").h3.text }
-      element(:cancel_button) { |b| b.frm.button(:value=>"Cancel") }
-      action(:cancel) { |p| p.cancel_button.click }
+      button("Cancel")
+      button("Save")
+      button("Back")
     end
 
-    # More element group defs go here...
+    def link(link_text)
+      element(damballa(link_text+"_link")) { |b| b.frm.link(:text=>link_text) }
+      action(damballa(link_text)) { |b| b.frm.link(:text=>link_text).click }
+    end
+
+    def button(button_text)
+      element(damballa(button_text+"_button")) { |b| b.frm.button(:value=>button_text) }
+      action(damballa(button_text)) { |b| b.frm.button(:value=>button_text).click }
+    end
+
+    def damballa(text)
+      text.gsub(/([+=|\\\.~@#'"\?`!\{\}\[\]\$%\^&\*\(\)])/, "").
+          gsub(/([-\/\ ])/,"_").
+          downcase.
+          to_sym
+    end
+
+    # Any additional needed element group defs go here...
 
   end
 
