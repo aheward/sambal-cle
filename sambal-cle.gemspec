@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s|
   s.name = 'sambal-cle'
-  s.version = '0.1.9.1'
+  s.version = '0.2.0'
   s.summary = %q{rSmart's test framework for testing Sakai-CLE}
   s.description = %q{This gem is used for creating test scripts for the Sakai Collaborative Learning Environment.}
   s.files = Dir.glob("**/**/**")
