@@ -151,7 +151,8 @@ class ShortAnswerQuestion
   include Workflows
   include StringFactory
 
-  attr_accessor :assessment, :part, :text, :point_value, :model_answer, :feedback, :pool
+  attr_accessor :assessment, :part, :text, :point_value, :model_answer, :feedback,
+                :pool, :rich_text
 
   def initialize(browser, opts={})
     @browser = browser
@@ -160,6 +161,7 @@ class ShortAnswerQuestion
         :text=>random_alphanums,
         :point_value=>(rand(100)+1).to_s,
         :model_answer=>random_alphanums,
+        :rich_text=>false
     }
     options = defaults.merge(opts)
 
@@ -175,7 +177,12 @@ class ShortAnswerQuestion
       edit.question_type "Short Answer/Essay"
     end
     on ShortAnswer do |add|
-      add.question_text.set @text
+      if @rich_text
+        add.toggle_question_editor
+        add.enter_source_text(add.question_editor, @text)
+      else
+        add.question_text.set @text
+      end
       add.answer_point_value.set @point_value
       add.model_short_answer.set @model_answer
       add.feedback.fit @feedback

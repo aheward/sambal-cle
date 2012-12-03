@@ -131,6 +131,9 @@ describe "Duplicate Site" do
 
     @section1.edit :editor_content=>@source_site_string
 
+    @assessment = make AssessmentObject :site=>@site.name
+    @assessment.add_question :type=>"Short Answer/Essay", :rich_text=>true, :text=>%|<img width="203" height="196" src="https://#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" />|
+
     @site2 = @site1.duplicate
 
     @new_assignment = make AssignmentObject, :site=>@site2.name, :status=>"Draft", :title=>@assignment.title
@@ -242,6 +245,20 @@ describe "Duplicate Site" do
     @new_event.view
 
     check_this_stuff @new_event.message_html
+  end
+
+  it "duplicates Assessments correctly" do
+    @new_assessment = make AssessmentObject, :title=>@assessment.title, :site=>@site2.name
+    @new_assessment.questions=@assessment.questions
+    assessments
+    on AssessmentsList do |list|
+      list.pending_assessment_titles.should include @new_assessment.title
+      list.edit @new_assessment.title
+    end
+    on EditAssessment do |edit|
+      edit.edit_question(1,1)
+      sleep 120
+    end
   end
 
 end
