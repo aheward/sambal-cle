@@ -17,9 +17,10 @@ class AssignmentObject
                 :retract_time, :time_due, :time_modified, :url, :portal_url,
                 :description, :time_created, :direct_url
 
+
+
   def initialize(browser, opts={})
     @browser = browser
-
     defaults = {
         :title=>random_alphanums,
         :instructions=>random_multiline(250, 10, :string),
@@ -28,9 +29,7 @@ class AssignmentObject
         :due=>{},
         :accept_until=>{}
     }
-    options = defaults.merge(opts)
-
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @site
     raise "You must specify max points if your grade scale is 'points'" if @max_points==nil && @grade_scale=="Points"
   end
@@ -120,8 +119,10 @@ class AssignmentObject
       #end
       #TODO: All the rest goes here
 
+      sleep 20
       # This should be one of the last items edited...
-      edit.add_to_gradebook.send(opts[:add_to_gradebook]) unless opts[:add_to_gradebook]==nil
+      edit.add_to_gradebook.fit opts[:add_to_gradebook] #.send(opts[:add_to_gradebook]) unless opts[:add_to_gradebook]==nil
+      sleep 5
 
       if (@status=="Draft" && opts[:status]==nil) || opts[:status]=="Draft"
         edit.save_draft
@@ -131,7 +132,7 @@ class AssignmentObject
         edit.post
       end
     end
-    set_options(opts)
+    update_options(opts)
 
     unless opts[:status]=="Editing"
       on AssignmentsList do |list|

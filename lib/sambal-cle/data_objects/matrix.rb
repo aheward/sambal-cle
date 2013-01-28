@@ -25,8 +25,7 @@ class MatrixObject
       ],
       :cells=>[]
     }
-    options = defaults.merge(opts)
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @portfolio
 
   end
@@ -114,9 +113,8 @@ class CellObject
       :rationale=>random_alphanums,
       :examples=>random_alphanums
     }
-    options = defaults.merge(opts)
     
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @matrix, @row, @column
   end
     

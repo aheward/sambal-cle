@@ -18,9 +18,7 @@ class PortfolioSiteObject
       :site_email=>random_nicelink(32),
       :participants=>{}
     }
-    options = defaults.merge(opts)
-    
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @title
   end
     

@@ -14,9 +14,8 @@ class MessageObject
       :subject=>random_alphanums,
       :recipients=>["All Participants"]
     }
-    options = defaults.merge(opts)
 
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @site
   end
 

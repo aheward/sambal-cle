@@ -15,9 +15,8 @@ class PollObject
       :question=>random_alphanums,
       :options=>[random_alphanums, random_alphanums]
     }
-    options = defaults.merge(opts)
     
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @site
   end
     

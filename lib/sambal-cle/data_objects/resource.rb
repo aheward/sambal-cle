@@ -11,9 +11,8 @@ class FileObject
 
     defaults = {
     }
-    options = defaults.merge(opts)
 
-    set_options(options)
+    set_options(defaults.merge(opts))
     @target_folder=@site if options[:target_folder]==nil
     requires @site
   end
@@ -49,9 +48,8 @@ class FolderObject
     defaults = {
         :name=>random_alphanums
     }
-    options = defaults.merge(opts)
 
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @site
   end
 

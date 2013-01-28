@@ -20,9 +20,7 @@ class UserObject
         :type=>"Student",
         :password=>random_alphanums,
     }
-    options = defaults.merge(opts)
-
-    set_options(options)
+    set_options(defaults.merge(opts))
     @full_name="#{@first_name} #{last_name}"
     @long_name="#{@first_name} #{last_name} (#{@id})"
     @ln_fn_id="#{@last_name}, #{@first_name} (#{@id})"

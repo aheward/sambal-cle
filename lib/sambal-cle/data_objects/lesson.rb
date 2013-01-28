@@ -13,9 +13,7 @@ class ModuleObject
     defaults = {
       :title=>random_alphanums
     }
-    options = defaults.merge(opts)
-
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @site
   end
 
@@ -65,9 +63,8 @@ class ContentSectionObject
       :copyright_status=>"Public Domain",
       :modality=>[:check_textual]
     }
-    options = defaults.merge(opts)
 
-    set_options(options)
+    set_options(defaults.merge(opts))
     raise "Your modality variable must be an Array containing one or more keys\nthat match the checkbox methods, like this:\n[:uncheck_textual, :check_visual, :check_auditory]" unless @modality.class==Array
     raise "You must specify a Site for your Section" if @site==nil
     raise "You must specify a Module for your Section" if @module==nil

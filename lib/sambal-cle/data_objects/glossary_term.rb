@@ -15,9 +15,7 @@ class GlossaryTermObject
       :short_description=>random_alphanums,
       :long_description=>random_alphanums
     }
-    options = defaults.merge(opts)
-    
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @portfolio
   end
     

@@ -25,8 +25,7 @@ class MultipleChoiceQuestion
         :answers=>[random_alphanums, random_alphanums, random_alphanums, random_alphanums],
     }
     defaults[:correct_answer]=(rand(defaults[:answers].length)+65).chr.to_s
-    options = defaults.merge(opts)
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @assessment, @part
   end
 
