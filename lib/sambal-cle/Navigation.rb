@@ -1,5 +1,5 @@
-# Workflows is a module containing helper navigation methods
-module Workflows
+# Navigation is a module containing helper navigation methods
+module Navigation
 
   def self.menu_link name, title, opts={}
     define_method name.to_s do

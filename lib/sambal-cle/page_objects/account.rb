@@ -3,27 +3,18 @@
 #================
 
 # The Page for editing User Account details
-class EditAccount < BasePage
+class EditAccount < UsersBase
 
-  frame_element
+  user_fields
 
-  button("Update Details")
-
-  element(:first_name) { |b| b.frm.text_field(:id=>"first-name") }
-  element(:last_name) { |b| b.frm.text_field(:id=>"last-name") }
-  element(:email) { |b| b.frm.text_field(:id=>"email") }
   element(:current_password) { |b| b.frm.text_field(:id=>"pwcur") }
-  element(:create_new_password) { |b| b.frm.text_field(:id=>"pw") }
-  element(:verify_new_password) { |b| b.frm.text_field(:id=>"pw0") }
 
 end
 
 # A Non-Admin User's Account page
 class UserAccount < BasePage
 
-  def frm
-    self.frame(:index=>0) #TODO: Test that this really is needed instead of the frame_element
-  end
+  frame_element
 
   # Clicks the Modify Details button. Instantiates the EditAccount class.
   action(:modify_details) {|b| b.frm.button(:name=>"eventSubmit_doModify").click }
