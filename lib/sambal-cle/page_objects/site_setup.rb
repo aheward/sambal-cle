@@ -10,86 +10,42 @@ class SiteSetupBase < BasePage
   basic_page_elements
 
   class << self
-    def menu_elements
-      # Clicks the Edit Tools link, then
-      # instantiates the EditSiteTools class.
-      #action(:edit_tools) {|b| b.frm.link(:text=>"Edit Tools").click }
-      link("Edit Tools")
-      # Clicks the Manage Groups link and
-      # instantiates the Groups Class.
-      #action(:manage_groups) {|b| b.frm.link(:text=>"Manage Groups").click }
-      link("Manage Groups")
-      # Clicks the Duplicate Site link and instantiates
-      # the DuplicateSite class.
-      #action(:duplicate_site) {|b| b.frm.link(:text=>"Duplicate Site").click }
-      link("Duplicate Site")
-      #action(:add_participants) {|b| b.frm.link(:text=>"Add Participants").click }
-      link("Add Participants")
 
-    end
   end
 end
 
 # The Site Setup page - a.k.a., link class=>"icon-sakai-sitesetup"
-class SiteSetup < SiteSetupBase
+class SiteSetupList < SiteSetupBase
 
   menu_elements
 
   expected_element :search_field
 
   element(:search_field) { |b| b.frm.text_field(:id, "search") }
+  button 'Search'
+  link 'Edit'
+  link 'New'
+  element(:view) { |b| b.frm.select(:id=>"view") }
+  button 'Clear Search'
 
-  # Clicks the "New" link on the Site Setup page.
-  # next is the SiteType class.
-  action(:new) { |b| b.frm.div(:class=>"portletBody").link(:text=>"New").click }
-  
-  # Searches for the specified site, then
-  # selects the specified Site's checkbox.
-  # Then clicks the Edit button
-  def edit(site_name)
-    search_field.value=Regexp.escape(site_name)
-    frm.button(:value=>"Search").click
-    frm.div(:class=>"portletBody").checkbox(:name=>"selectedMembers").set
-    frm.div(:class=>"portletBody").link(:text, "Edit").click
-  end
-
-  # Enters the specified site name string in the search
-  # field, clicks the Search button, then reinstantiates
-  # the Class due to the page refresh.
-  def search(site_name)
-    search_field.set site_name
-    frm.button(:value, "Search").click
-  end
-
-  # Searches for the specified site, then
-  # checks the site, clicks the delete button,
-  # and instantiates the DeleteSite class.
-  def delete(site_name)
-    search_field.value=site_name
-    frm.button(:value=>"Search").click
-    frm.checkbox(:name=>"selectedMembers").set
-    frm.div(:class=>"portletBody").link(:text, "Delete").click
-  end
-  
   # Returns an Array object containing strings of
   # all Site titles displayed on the web page.
-  def site_titles
-    titles = []
-    sites_table = frm.table(:id=>"siteList")
-    1.upto(sites_table.rows.size-1) do |x|
-      titles << sites_table[x][1].text
-    end
-    return titles
-  end
-  
-  element(:view) { |b| b.frm.select(:id=>"view").click }
-  button "Clear Search"
+  action(:site_titles) { |b| titles = []; 1.upto(b.sites_table.rows.size-1) { |x| titles << b.sites_table[x][1].text }; titles }
+
+  action(:check_site) { |site_name, b| b.sites_table }
+
   element(:select_page_size) { |b| b.frm.select(:id=>"selectPageSize").click }
   action(:sort_by_title) { |b| b.frm.link(:text=>"Worksite Title").click }
   action(:sort_by_type) { |b| b.frm.link(:text=>"Type").click }
   action(:sort_by_creator) { |b| b.frm.link(:text=>"Creator").click }
   action(:sort_by_status) { |b| b.frm.link(:text=>"Status").click }
   action(:sort_by_creation_date) { |b| b.frm.link(:text=>"Creation Date").click }
+
+  # =========
+  private
+  # =========
+
+  element(:sites_table) { |b| b.frm.table(:id=>"siteList") }
 
 end
 
