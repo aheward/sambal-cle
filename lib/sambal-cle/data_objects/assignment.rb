@@ -57,11 +57,11 @@ class AssignmentObject
         @resubmission[:minute_rounded]=get_or_select(@resubmission[:minute_rounded], add.resub_until_minute)
         @resubmission[:MERIDIAN]=get_or_select(@resubmission[:MERIDIAN], add.resub_until_meridian)
       end
-      add.title.set @title
-      add.instructions=@instructions
-      @student_submissions=get_or_select(@student_submissions, add.student_submissions)
-      @grade_scale=get_or_select(@grade_scale, add.grade_scale)
-      @open[:MON]=get_or_select(@open[:MON], add.open_month)
+      #add.title.set @title
+      #add.instructions=@instructions
+      get_or_select! :@student_submissions, add.student_submissions
+      get_or_select! :@grade_scale, add.grade_scale
+      @open[:MON]=get_or_select @open[:MON], add.open_month
       add.max_points.set(@max_points) unless @max_points==nil
       @open[:year]=get_or_select(@open[:year], add.open_year)
       @open[:day_of_month]=get_or_select(@open[:day_of_month], add.open_day)
