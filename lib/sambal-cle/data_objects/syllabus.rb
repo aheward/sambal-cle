@@ -14,8 +14,7 @@ class SyllabusObject
         :title=>random_alphanums,
         :content=>random_multiline(50, 5, :alpha)
     }
-    options = defaults.merge(opts)
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @site
   end
 

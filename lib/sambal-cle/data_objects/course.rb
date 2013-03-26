@@ -27,8 +27,7 @@ class CourseSiteObject
       :site_contact_name => random_alphanums(5)+" "+random_alphanums(8),
       :participants=>{}
     }
-    options = defaults.merge(opts)
-    set_options(options)
+    set_options(defaults.merge(opts))
   end
 
   def create
@@ -220,22 +219,7 @@ class CourseSiteObject
 
     new_site = make CourseSiteObject, options
 
-    new_site.name=options[:name]
-    new_site.subject=options[:subject]
-    new_site.course=options[:course]
-    new_site.section=options[:section]
-    new_site.authorizer=options[:authorizer]
-    new_site.web_content_source=options[:web_content_source]
-    new_site.email=options[:email]
-    new_site.joiner_role=options[:joiner_role]
-    new_site.web_content_title=options[:web_content_title]
-    new_site.description=options[:description]
-    new_site.short_description=options[:short_description]
-    new_site.site_contact_name=options[:site_contact_name]
-    new_site.site_contact_email=options[:site_contact_email]
-    new_site.term=options[:term]
-
-    open_my_site_by_name @site
+    open_my_site_by_name @name
     site_editor
     on SiteEditor do |edit|
       edit.duplicate_site
@@ -260,7 +244,7 @@ class CourseSiteObject
 
   def add_official_participants(role, *participants)
     list_of_ids=participants.join("\n")
-    open_my_site_by_name @title
+    open_my_site_by_name @name
     site_editor
     on SiteEditor do |site|
       site.add_participants

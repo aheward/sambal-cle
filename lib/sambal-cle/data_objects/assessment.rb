@@ -28,35 +28,34 @@ class AssessmentObject
                 :late_handling, :submission_message, :final_page_url, :student_ids,
                 :gradebook_options, :recorded_score, :allowed_ips
 
+
+
   def initialize(browser, opts={})
     @browser = browser
-
     defaults = {
-      :title=>random_alphanums,
-      :authors=>random_alphanums,
-      :description=>random_alphanums,
-      :parts=>[],
-      :questions=>[],
-      :available_date=>right_now,
-      :due_date=>tomorrow,
-      :retract_date=>next_week,
-      :feedback_authoring=>:question_level_feedback,
-      :feedback_delivery=>:no_feedback,
-      :release=>:release_questions_and,
-      :release_options=>[],
-      :released_to=>:released_to_site,
-      :navigation=>:linear_access,
-      :submissions=>:unlimited_submissions,
-      :late_handling=>:late_submissions_not_accepted,
-      :submission_message=>random_alphanums,
-      :final_page_url=>"http://www.rsmart.com",
-      :student_ids=>:student_ids_seen
-      # TODO: More to add
+        :title=>random_alphanums,
+        :authors=>random_alphanums,
+        :description=>random_alphanums,
+        :parts=>[],
+        :questions=>[],
+        :available_date=>right_now,
+        :due_date=>tomorrow,
+        :retract_date=>next_week,
+        :feedback_authoring=>:question_level_feedback,
+        :feedback_delivery=>:no_feedback,
+        :release=>:release_questions_and,
+        :release_options=>[],
+        :released_to=>:released_to_site,
+        :navigation=>:linear_access,
+        :submissions=>:unlimited_submissions,
+        :late_handling=>:late_submissions_not_accepted,
+        :submission_message=>random_alphanums,
+        :final_page_url=>"http://www.rsmart.com",
+        :student_ids=>:student_ids_seen
+        # TODO: More to add
     }
-    options = defaults.merge(opts)
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @site
-
     default_part = make PartObject, :title=>"Default", :assessment=>@title, :part_number=>1, :information=>""
     @parts << default_part
   end

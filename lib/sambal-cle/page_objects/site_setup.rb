@@ -2,7 +2,7 @@
 # Site Setup/Site Editor Pages
 #================
 
-# This module contains the methods referring to the menu items
+# This superclass contains the methods referring to the menu items
 # across the top of all the Site Editor pages.
 class SiteSetupBase < BasePage
 
@@ -91,8 +91,7 @@ class SiteSetup < SiteSetupBase
   action(:sort_by_status) { |b| b.frm.link(:text=>"Status").click }
   action(:sort_by_creation_date) { |b| b.frm.link(:text=>"Creation Date").click }
 
-  end
-
+end
 
 # The topmost "Site Editor" page,
 # found in SITE MANAGEMENT

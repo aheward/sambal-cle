@@ -23,9 +23,8 @@ class EventObject
         :start_meridian=>minutes_from_now(15)[:meridian],
         :message=>random_multiline(400, 20, :lorem)
     }
-    options = defaults.merge(opts)
 
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @site
   end
 

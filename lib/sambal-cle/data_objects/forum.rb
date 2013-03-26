@@ -15,9 +15,7 @@ class ForumObject
     defaults = {
       :title=>random_alphanums
     }
-    options = defaults.merge(opts)
-    
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @site
   end
 
@@ -115,9 +113,7 @@ class TopicObject
       :description=>random_alphanums,
 
     }
-    options = defaults.merge(opts)
-    
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @site, @forum
   end
 

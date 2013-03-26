@@ -14,9 +14,7 @@ class WikiObject
       :title=>random_alphanums,
       :content=>"{worksiteinfo}\n{sakai-sections}"
     }
-    options = defaults.merge(opts)
-
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @site
   end
 

@@ -17,12 +17,11 @@ class AnnouncementObject
         :title=>random_alphanums,
         :body=>random_multiline(500, 10, :alpha)
     }
-    options = defaults.merge(opts)
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @site
   end
 
-  alias :name :title
+  alias_method :name, :title
 
   def create
     open_my_site_by_name @site

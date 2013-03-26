@@ -28,14 +28,13 @@ describe "Assignments" do
                         :type=>"Instructor"
     @instructor1.log_in
 
-    @site = make CourseSiteObject
-    @site.create
-    @site.add_official_participants @student.type, @student.id
-    @site.add_official_participants @instructor2.type, @instructor2.id
+    #@site = create CourseSiteObject
 
-    @assignment = make AssignmentObject, :site=>@site.name, :title=>random_string(25), :open=>next_monday, :grade_scale=>"Pass", :instructions=>random_multiline(300, 15, :string)
+    #@site.add_official_participants @student.type, @student.id
+    #@site.add_official_participants @instructor2.type, @instructor2.id
 
-    @assignment.create
+    @assignment = create AssignmentObject, :site=>"TWhe0TXq Y3QgNJhR xGrVjH9J fall_2012",#@site.name,
+                         :title=>random_string(25), :open=>next_monday, :grade_scale=>"Pass", :instructions=>random_multiline(300, 15, :string)
 
   end
 

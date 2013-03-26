@@ -14,9 +14,7 @@ class WebContentObject
       :title=>random_alphanums,
       :source=>"www.rsmart.com"
     }
-    options = defaults.merge(opts)
-
-    set_options(options)
+    set_options(defaults.merge(opts))
     requires @site
   end
 

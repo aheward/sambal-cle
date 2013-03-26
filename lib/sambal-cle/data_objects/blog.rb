@@ -14,9 +14,7 @@ class BlogEntryObject
       :content=>random_alphanums,
       :permissions=>:publicly_viewable
     }
-    options = defaults.merge(opts)
-    
-    set_options(options)
+    set_options(defaults.merge(opts))
     requirements @site
   end
     
