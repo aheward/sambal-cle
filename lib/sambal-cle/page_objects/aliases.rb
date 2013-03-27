@@ -10,7 +10,7 @@ class Aliases < BasePage
   element(:search_field) { |b| b.frm.text_field(:id=>"search") }
   action(:next) { |b| b.frm.button(:name=>"eventSubmit_doList_next").click }
   action(:last) { |b| b.frm.button(:name=>"eventSubmit_doList_last").click }
-  action(:previous) { |b| b.frm.button(name=>"eventSubmit_doList_prev").click }
+  action(:previous) { |b| b.frm.button(:name=>"eventSubmit_doList_prev").click }
   action(:first) { |b| b.frm.button(:name=>"eventSubmit_doList_first").click }
   link("New Alias")
   action(:search_button) { |b| b.frm.button(:text=>"Search").click }
