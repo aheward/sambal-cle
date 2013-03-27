@@ -29,19 +29,18 @@ end
 
 class AddForm < BasePage
 
-  include FCKEditor
   frame_element
+  cke_elements
 
   link "Select Schema File"
 
   def instruction=(text)
-    frm.frame(:id, "instruction___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
   button "Add Form"
 
   element(:name) { |b| b.frm.text_field(:id=>"description-id") }
-
 
 end
 

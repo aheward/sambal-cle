@@ -60,17 +60,17 @@ end
 #
 class AddEditPortfolioPage < BasePage
 
-  include FCKEditor
   frame_element
+  cke_elements
 
-  link "Add Page"
-  link "Select Layout"
-  link "Select Style"
+  link 'Add Page'
+  link 'Select Layout'
+  link 'Select Style'
 
   def simple_html_content=(text)
-    frm.frame(:id, "_id1:arrange:_id49_inputRichText___Frame").div(:title=>"Select All").fire_event("onclick")
-    frm.frame(:id, "_id1:arrange:_id49_inputRichText___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys :backspace
-    frm.frame(:id, "_id1:arrange:_id49_inputRichText___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    select_all
+    rich_text_field.send_keys :backspace
+    rich_text_field.send_keys(text)
   end
 
   element(:title) { |b| b.frm.text_field(:id=>"_id1:title") }

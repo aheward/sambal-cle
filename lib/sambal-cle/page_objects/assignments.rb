@@ -32,7 +32,7 @@ end
 # The page where you create a new assignment
 class AssignmentAdd < AssignmentsBase
 
-  include FCKEditor
+  cke_elements
   menu_elements
 
   expected_element :editor
@@ -52,16 +52,7 @@ class AssignmentAdd < AssignmentsBase
   # Grabs the text contained in the alert box when
   # it is present on the page (will throw an error if
   # called when the box is not present).
-  value(:alert_text) { |b| b.frm.div(:class=>"portletBody").div(:class=>"alertMessage").text }
-
-  element(:editor) { |b| b.frm.frame(:id, "new_assignment_instructions___Frame") }
-
-  # Sends the specified text to the text box in the FCKEditor
-  # on the page.
-  def instructions=(instructions)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys([:command, 'a'], :backspace)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(instructions)
-  end
+  value(:alert_box) { |b| b.frm.div(:class=>"portletBody").div(:class=>"alertMessage").text }
 
   # Clicks the Preview button, next is
   # the AssignmentsPreview page class.
@@ -351,7 +342,7 @@ end
 # A Student user's page for editing/submitting/view an assignment.
 class AssignmentStudentView < BasePage
 
-  include FCKEditor
+  cke_elements
   frame_element
   basic_page_elements
 
@@ -497,29 +488,13 @@ end
 # The page that shows a student's submitted assignment to an instructor user.
 class AssignmentSubmission < BasePage
 
-  include FCKEditor
   frame_element
+  cke_elements
 
   expected_element :assignment_submission
 
   element(:assignment_submission) { |b| b.frm.frame(:id, "grade_submission_feedback_text___Frame") }
   element(:instructor_comments) { |b| b.frm.frame(:id, "grade_submission_feedback_comment___Frame") }
-
-  # Enters the specified text string in the FCKEditor box for the assignment text.
-  def assignment_text=(text)
-    assignment_submission.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
-  end
-
-  # Removes all the contents of the FCKEditor Assignment Text box.
-  def remove_assignment_text
-    assignment_submission.div(:title=>"Select All").fire_event("onclick")
-    assignment_submission.td(:id, "xEditingArea").frame(:index=>0).send_keys :backspace
-  end
-
-  # Enters the specified string into the Instructor Comments FCKEditor box.
-  def instructor_comments=(text)
-    instructor_comments.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
-  end
 
   # Clicks the Add Attachments button, then instantiates the AssignmentAttachments Class.
   action(:add_attachments) { |b| b.frm.button(:name=>"attach").click }

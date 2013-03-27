@@ -137,13 +137,13 @@ end
 # The page for adding a new discussion topic.
 class NewTopic < JForumsBase
 
-  include FCKEditor
   forums_page_elements
+  cke_elements
 
   # Enters the specified string into the FCKEditor for the Message.
   def message_text=(text)
-    frm.frame(:id, "message___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(:home)
-    frm.frame(:id, "message___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(:home)
+    rich_text_field.send_keys(text)
   end
 
   # Clicks the Preview button and instantiates the PreviewDiscussionTopic Class.
@@ -264,12 +264,13 @@ end
 class NewPrivateMessage < JForumsBase
 
   forums_page_elements
+  cke_elements
 
   # Enters text into the FCKEditor text area, after
   # going to the beginning of any existing text in the field.
   def message_body=(text)
-    frm.frame(:id, "message___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(:home)
-    frm.frame(:id, "message___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(:home)
+    rich_text_field.send_keys(text)
   end
 
   # Enters the specified filename in the file field.
@@ -290,7 +291,6 @@ class NewPrivateMessage < JForumsBase
   element(:subject) { |b| b.frm.text_field(:id=>"subject") }
   action(:attach_files) { |b| b.frm.button(:value=>"Attach Files").click }
   action(:add_another_file) { |b| b.frm.button(:value=>"Add another file").click }
-
 
 end
 

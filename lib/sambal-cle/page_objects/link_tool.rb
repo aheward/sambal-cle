@@ -1,4 +1,4 @@
-class EntityPicker < BasePage
+class LinkTool < BasePage
 
   def view_assignment_details(title)
     unless self.div(:class=>"title", :text=>title).present?
@@ -17,7 +17,7 @@ class EntityPicker < BasePage
     self.frame(:index=>2).button(:id=>"btnOk").click
   end
 
-  def close_picker
+  def close_rool
     self.window.close
     self.window(:index=>0).use
     self.frame(:index=>2).button(:id=>"btnCancel").click

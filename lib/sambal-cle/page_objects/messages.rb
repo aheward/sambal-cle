@@ -112,15 +112,13 @@ end
 
 class ComposeMessage < BasePage
 
-  include FCKEditor
   frame_element
   expected_element :editor
 
-  element(:editor) { |b| b.frm.frame(:id, "compose:pvt_message_body_inputRichText___Frame") }
   action(:send) { |b| b.frm.button(:value=>"Send ").click }
 
   def message_text=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
   button "Add attachments"
@@ -133,8 +131,9 @@ class ComposeMessage < BasePage
 end
 
 class ReplyToMessage < BasePage
-  include FCKEditor
+
   frame_element
+  cke_elements
 
   expected_element :editor
 
@@ -142,8 +141,8 @@ class ReplyToMessage < BasePage
   action(:send) { |b| b.frm.button(:value=>"Send ").click }
 
   def message_text=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(:home)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(:home)
+    rich_text_field.send_keys(text)
   end
 
   button "Add attachments"
@@ -157,17 +156,17 @@ end
 
 # The page for composing a message
 class ForwardMessage < BasePage
-  include FCKEditor
+
   frame_element
+  cke_elements
 
   expected_element :editor
 
-  element(:editor) { |b| b.frm.frame(:id, "pvtMsgForward:df_compose_body_inputRichText___Frame") }
   action(:send) { |b| b.frm.button(:value=>"Send ").click }
 
   def message_text=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(:home)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(:home)
+    rich_text_field.send_keys(text)
   end
 
   button "Add attachments"

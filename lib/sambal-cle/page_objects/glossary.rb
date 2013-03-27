@@ -32,8 +32,8 @@ end
 
 class AddEditTerm < BasePage
 
-  include FCKEditor
   frame_element
+  cke_editor
 
   expected_element :editor
 
@@ -41,10 +41,9 @@ class AddEditTerm < BasePage
   button("Save Changes")
 
   def long_description=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
-  element(:editor) { |b| b.frm.frame(:id, "longDescription___Frame") }
   element(:term) { |b| b.frm.text_field(:id=>"term-id") }
   element(:short_description) { |b| b.frm.text_field(:id=>"description-id") }
 

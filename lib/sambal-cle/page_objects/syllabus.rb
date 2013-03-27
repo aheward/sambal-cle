@@ -10,10 +10,10 @@ class SyllabusBase < BasePage
   class << self
 
     def menu_elements
-      link("Create/Edit")
-      link("Add")
-      link("Redirect")
-      link("Preview")
+      link('Create/Edit')
+      link('Add')
+      link('Redirect')
+      link('Preview')
     end
 
   end
@@ -30,7 +30,7 @@ class Syllabus < SyllabusBase
   def attachments_list
     list = []
     frm.div(:class=>"portletBody").links.each { |link| list << link.text }
-    return list
+    list
   end
 
 end
@@ -62,7 +62,7 @@ class SyllabusEdit < SyllabusBase
   button("Update")
 
   # Opens the specified item
-  action(:open_item) { | title, b| b.frm.link(:text=>title).click }
+  action(:open_item) { |title, b| b.frm.link(:text=>title).click }
 
   # Returns an array containing the titles of the syllabus items
   # displayed on the page.
@@ -72,8 +72,14 @@ class SyllabusEdit < SyllabusBase
     1.upto(s_table.rows.size-1) do |x|
       titles << s_table[x][0].text
     end
-    return titles
+    titles
   end
+
+  # ==========
+  private
+  # ==========
+
+
 
 end
 
@@ -81,19 +87,15 @@ end
 class AddEditSyllabusItem < SyllabusBase
 
   menu_elements
-  include FCKEditor
+  cke_elements
 
   expected_element :editor
 
   button("Post")
 
-  # Defines the text area of the FCKEditor that appears on the page for
-  # the Syllabus content.
-  element(:editor) { |b| b.frm.frame(:id=>/_textarea___Frame/) }
-
   # Sends the specified string to the FCKEditor text area on the page.
   def content=(text)
-    editor.send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
   button("Add attachments")
@@ -123,7 +125,7 @@ class SyllabusPreview < SyllabusBase
 
   menu_elements
 
-  button("Edit")
+  button 'Edit'
 
 end
 
@@ -141,7 +143,7 @@ class DeleteSyllabusItems < SyllabusBase
 
   menu_elements
 
-  button("Delete")
+  button 'Delete'
 
 end
 

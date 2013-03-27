@@ -241,7 +241,7 @@ end
 class AddEditContentSection < LessonsBase
 
   menu_elements
-  include FCKEditor
+  cke_elements
 
   #expected_element :instructions
 
@@ -249,17 +249,13 @@ class AddEditContentSection < LessonsBase
   # next is the ConfirmSectionAdd class.
   action(:add) { |b| b.frm.link(:id=>/SectionForm:submitsave/).click }
 
-  # Pointer to the frame of the FCKEditor
-  # on the page.
-  element(:content_editor) { |b| b.frm.frame(:id, /SectionForm:fckEditorView:otherMeletecontentEditor_inputRichText___Frame/) }
-
   def add_content=(text)
-    content_editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
   def clear_content  # FIXME - This is an extra method now that we have the FCKEditor module
-    content_editor.div(:title=>"Select All").fire_event("onclick")
-    content_editor.send_keys :backspace
+    select_all
+    editor.send_keys :backspace
   end
 
   # SelectingContent

@@ -158,22 +158,15 @@ end
 #
 class AddEditEvent < CalendarBase
 
-  include FCKEditor
-
   menu_elements
+  cke_elements
 
   expected_element :editor
 
   # Calendar class
   action(:save_event) { |b| b.frm.button(:value=>"Save Event").click }
 
-  def message=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
-  end
-
-  # The FCKEditor object. Use this method to set up a "wait_until_present"
-  # step, since sometimes it takes a long time for this object to load.
-  element(:editor) { |b| b.frm.frame(:id, "description___Frame") }
+  action(:message=) { |text, b| b.rich_text_field.send_keys(text) }
 
   action(:frequency) { |b| b.frm.button(:name=>"eventSubmit_doEditfrequency").click }
 
