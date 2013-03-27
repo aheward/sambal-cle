@@ -64,18 +64,14 @@ end
 #
 class EditTemplate < BasePage
 
-  include FCKEditor
   frame_element
-
-  def item_text=(text)
-    frm.frame(:id, "item-text___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
-  end
+  cke_elements
 
   link("New evaluation")
 
   def add
     frm.button(:value=>"Add").click
-    frm.frame(:id, "item-text___Frame").td(:id, "xEditingArea").wait_until_present
+    rich_text_field.wait_until_present
   end
 
   def save_item
@@ -91,17 +87,15 @@ end
 #
 class NewEvaluation < BasePage
 
-  include FCKEditor
   frame_element
+  cke_elements
 
   expected_element :editor
-
-  element(:editor) { |b| b.frm.frame(:id, "instructions:1:input___Frame") }
 
   button("Continue to Settings")
 
   def instructions=(text)
-    frm.frame(:id, "instructions:1:input___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
   element(:title) { |b| b.frm.text_field(:id=>"title") }

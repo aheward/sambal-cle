@@ -43,8 +43,8 @@ end
 # Sites section of the Administration Workspace.
 class EditSiteInfo < BasePage
 
-  include FCKEditor
   frame_element
+  cke_elements
 
   link("Remove Site")
   button("Save")
@@ -56,11 +56,8 @@ class EditSiteInfo < BasePage
   # Enters the specified text string in the text area of
   # the FCKEditor.
   def description=(text)
-    editor.frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
-
-  # The FCKEditor object
-  element(:editor) { |b| b.frm.frame(:id, "description___Frame").td(:id, "xEditingArea") }
 
   button("Properties")
   button("Pages")

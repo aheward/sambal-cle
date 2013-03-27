@@ -113,8 +113,8 @@ end
 
 class ComposeForumMessage < BasePage
 
-  include FCKEditor
   frame_element
+  cke_elements
 
   expected_element :editor
 
@@ -163,17 +163,15 @@ end
 
 class EditForum < BasePage
 
-  include FCKEditor
   frame_element
   basic_page_elements
+  cke_elements
 
   # AddEditTopic
   action(:save_and_add) { |b| b.frm.button(:value=>"Save Settings & Add Topic").click }
 
-  element(:editor) { |b| b.frm.div(:class=>"portletBody").frame(:id, "revise:df_compose_description_inputRichText___Frame") }
-
   def description=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
   #ForumsAddAttachments (or not, actually, now that I think of it)
@@ -186,18 +184,14 @@ end
 
 class AddEditTopic < BasePage
 
-  include FCKEditor
   frame_element
   basic_page_elements
+  cke_editor
 
   @@table_index=0 # TODO: Seriously think about a better way to do this
 
-  def editor
-    frm.div(:class=>"portletBody").frame(:id, "revise:topic_description_inputRichText___Frame")
-  end
-
   def description=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
   action(:add_attachments) { |b| b.frm.button(:value=>/Add.+ttachment/).click }

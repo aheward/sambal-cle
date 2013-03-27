@@ -510,16 +510,14 @@ end
 #  The page for setting up a Short Answer/Essay question
 class ShortAnswer < AssessmentsBase
 
-  include FCKEditor
+  cke_editor_elements
   menu_bar_elements
   question_page_elements
 
   element(:model_short_answer) { |b| b.frm.text_field(:id=>"itemForm:_id129_textinput") }
   element(:feedback) { |b| b.frm.text_field(:id=>"itemForm:_id133_textinput") }
 
-  action(:toggle_question_editor) { |b| b.frm.link(:id=>"itemForm:_id69_toggle").click; b.question_editor.wait_until_present }
-
-  element(:question_editor) { |b| b.frm.frame(:id, "itemForm:_id69_textinput___Frame") }
+  action(:toggle_question_editor) { |b| b.frm.link(:id=>"itemForm:_id69_toggle").click; b.editor.wait_until_present }
 
 end
 

@@ -281,9 +281,8 @@ end
 class EditHTMLPageContent < BasePage
 
   frame_element
-  include FCKEditor
+  cke_elements
 
-  element(:editor) { |b| b.frm.frame(:id=>"content___Frame") }
   action(:continue) { |b| b.frm.button(id: "saveChanges").click }
   element(:email_notification) { |b| b.frm.select(:id=>"notify") }
 

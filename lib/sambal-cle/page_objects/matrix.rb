@@ -50,12 +50,10 @@ end
 #
 class AddEditMatrix < BasePage
 
-  include FCKEditor
   frame_element
+  cke_elements
 
   expected_element :editor
-
-  element(:editor) { |b| b.frm.frame(:id=>"descriptionTextArea___Frame") }
 
   # Clicks the "Create Matrix" button
   button "Create Matrix"

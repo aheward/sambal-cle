@@ -57,18 +57,8 @@ end
 # The page where users create a Post for their Blogger blog.
 class CreateBloggerPost < BasePage
 
-  include FCKEditor
   frame_element
-
-  # Enters the specified string into the FCKEditor for the Abstract.
-  def abstract=(text)
-    frm.frame(:id, "PostForm:shortTextBox_inputRichText___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
-  end
-
-  # Enters the specified string into the FCKEditor for the Text of the Blog.
-  def text=(text)
-    frm().frame(:id, "PostForm:tab0:main_text_inputRichText___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
-  end
+  cke_elements
 
   # Clicks the Add to document button in the text
   # tab.
@@ -100,20 +90,20 @@ class CreateBloggerPost < BasePage
     frm().file_field(:name=>"PostForm:tab3:_id51").set(filepath + filename)
   end
 
-  button "Preview"
-  button "Save"
+  button 'Preview'
+  button 'Save'
 
-  element(:title) { |b| b.frm.text_field(:id=>"PostForm:idTitle") }
-  element(:keywords) { |b| b.frm.text_field(:id=>"PostForm:keyWords") }
-  element(:access) { |b| b.frm.select(:id=>"PostForm:selectVisibility") }
-  element(:read_only) { |b| b.frm.checkbox(:id=>"PostForm:readOnlyCheckBox") }
-  element(:allow_comments) { |b| b.frm.checkbox(:id=>"PostForm:allowCommentsCheckBox") }
-  button "Text"
-  button "Images"
-  button "Links"
-  element(:description) { |b| b.frm.text_field(:id=>"PostForm:tab2:idLinkDescription") }
-  element(:url) { |b| b.frm.text_field(:id=>"PostForm:tab2:idLinkExpression") }
-  button "Files"
+  element(:title) { |b| b.frm.text_field(:id=>'PostForm:idTitle') }
+  element(:keywords) { |b| b.frm.text_field(:id=>'PostForm:keyWords') }
+  element(:access) { |b| b.frm.select(:id=>'PostForm:selectVisibility') }
+  element(:read_only) { |b| b.frm.checkbox(:id=>'PostForm:readOnlyCheckBox') }
+  element(:allow_comments) { |b| b.frm.checkbox(:id=>'PostForm:allowCommentsCheckBox') }
+  button 'Text'
+  button 'Images'
+  button 'Links'
+  element(:description) { |b| b.frm.text_field(:id=>'PostForm:tab2:idLinkDescription') }
+  element(:url) { |b| b.frm.text_field(:id=>'PostForm:tab2:idLinkExpression') }
+  button 'Files'
 
 end
 
@@ -130,20 +120,15 @@ class ViewBloggerPost < BasePage
 
   frame_element
 
-  button "Add comment"
+  button 'Add comment'
 
 end
 
 # The page for adding a comment to a Blog post.
 class AddBloggerComment < BasePage
 
-  include FCKEditor
   frame_element
   basic_page_elements
-
-  # Enters the specified string into the FCKEditor box for the Comment.
-  def your_comment=(text)
-    frm.frame(:id, "_id1:_id11_inputRichText___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
-  end
+  cke_elements
 
 end
