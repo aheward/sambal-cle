@@ -18,7 +18,7 @@ class AnnouncementObject
         :body=>random_multiline(500, 10, :alpha)
     }
     set_options(defaults.merge(opts))
-    requires @site
+    requires :site
   end
 
   alias_method :name, :title

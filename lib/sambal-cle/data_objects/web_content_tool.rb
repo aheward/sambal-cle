@@ -15,7 +15,7 @@ class WebContentObject
       :source=>"www.rsmart.com"
     }
     set_options(defaults.merge(opts))
-    requires @site
+    requires :site
   end
 
   def create

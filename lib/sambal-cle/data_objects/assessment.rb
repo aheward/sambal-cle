@@ -55,7 +55,7 @@ class AssessmentObject
         # TODO: More to add
     }
     set_options(defaults.merge(opts))
-    requires @site
+    requires :site
     default_part = make PartObject, :title=>"Default", :assessment=>@title, :part_number=>1, :information=>""
     @parts << default_part
   end

@@ -14,7 +14,7 @@ class FileObject
 
     set_options(defaults.merge(opts))
     @target_folder=@site if options[:target_folder]==nil
-    requires @site
+    requires :site
   end
 
   def create

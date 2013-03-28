@@ -17,7 +17,7 @@ class BloggerPostObject
     options = defaults.merge(opts)
     
     set(options)
-    requires @site
+    requires :site
   end
     
   def create

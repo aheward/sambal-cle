@@ -15,7 +15,7 @@ class WikiObject
       :content=>"{worksiteinfo}\n{sakai-sections}"
     }
     set_options(defaults.merge(opts))
-    requires @site
+    requires :site
   end
 
   alias :name :title

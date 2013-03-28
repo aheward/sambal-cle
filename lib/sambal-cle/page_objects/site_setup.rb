@@ -406,8 +406,9 @@ class CourseSectionInfo < SiteSetupBase
   element(:subject) { |b| b.frm.text_field(:name=>/Subject:/) }
   element(:course) { |b| b.frm.text_field(:name=>/Course:/) }
   element(:section) { |b| b.frm.text_field(:name=>/Section:/) }
-  element(:authorizers_username) { |b| b.frm.text_field(:id=>'uniqname') }
-  element(:special_instructions) { |b| b.frm.text_field(:id=>'additional') }
+  # These two elements appear to have been removed in version 2.9...
+  #element(:authorizers_username) { |b| b.frm.text_field(:id=>'uniqname') }
+  #element(:special_instructions) { |b| b.frm.text_field(:id=>'additional') }
   element(:add_more_rosters) { |b| b.frm.select(:id=>'number')  }
 
 end

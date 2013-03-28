@@ -26,7 +26,7 @@ class MultipleChoiceQuestion
     }
     defaults[:correct_answer]=(rand(defaults[:answers].length)+65).chr.to_s
     set_options(defaults.merge(opts))
-    requires @assessment, @part
+    requires :assessment, :part
   end
 
   def create

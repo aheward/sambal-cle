@@ -19,7 +19,7 @@ class PortfolioSiteObject
       :participants=>{}
     }
     set_options(defaults.merge(opts))
-    requires @title
+    requires :title
   end
     
   def create

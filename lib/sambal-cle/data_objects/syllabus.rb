@@ -15,7 +15,7 @@ class SyllabusObject
         :content=>random_multiline(50, 5, :alpha)
     }
     set_options(defaults.merge(opts))
-    requires @site
+    requires :site
   end
 
   alias :name :title

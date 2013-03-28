@@ -30,7 +30,7 @@ class AssignmentObject
         :accept_until=>{}
     }
     set_options(defaults.merge(opts))
-    requires @site
+    requires :site
     raise "You must specify max points if your grade scale is 'points'" if @max_points==nil && @grade_scale=="Points"
   end
 
