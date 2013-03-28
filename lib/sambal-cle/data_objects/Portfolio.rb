@@ -4,7 +4,7 @@ class PortfolioSiteObject
   include DataFactory
   include DateFactory
   include StringFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :title, :description, :short_description, :contact_email, :site_email,
                 :site_contact_name, :access, :default_role, :creator, :status,

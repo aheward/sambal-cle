@@ -3,7 +3,7 @@ class WikiObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :title, :content, :site, :href
 

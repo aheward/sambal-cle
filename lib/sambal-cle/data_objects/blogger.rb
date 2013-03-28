@@ -2,7 +2,7 @@ class BloggerPostObject
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :title, :abstract, :site, :text, :read_only, :access, :allow_comments
   

@@ -4,7 +4,7 @@ class AssessmentSubmissionObject
   include DataFactory
   include StringFactory
   include DateFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :assessment
 

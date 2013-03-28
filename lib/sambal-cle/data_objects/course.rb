@@ -4,7 +4,7 @@ class CourseSiteObject
   include DataFactory
   include StringFactory
   include DateFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :name, :id, :subject, :course, :section, :term, :term_value, :authorizer,
     :web_content_source, :email, :joiner_role, :creation_date, :web_content_title,

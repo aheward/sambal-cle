@@ -2,7 +2,7 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :site, :group, :guest, :instructor, :student, :teaching_assistant
   

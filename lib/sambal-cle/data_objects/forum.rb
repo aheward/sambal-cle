@@ -4,7 +4,7 @@ class ForumObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :site, :title, :short_description, :description, :direct_link,
                 :description_html
@@ -98,7 +98,7 @@ class TopicObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :title, :short_description, :description, :site, :forum,
                 :author, :moderated, :modified_by, :date_modified,

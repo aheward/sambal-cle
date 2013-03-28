@@ -2,7 +2,7 @@ class BlogEntryObject
 
   include Foundry
   include StringFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :title, :content, :site, :permissions
   

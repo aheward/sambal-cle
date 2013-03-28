@@ -4,7 +4,7 @@ class AssignmentSubmissionObject
   include DataFactory
   include StringFactory
   include DateFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :site, :title, :text, :status, :submission_date,
       :student, :allow_resubmission, :resubmission, :num_resubmissions,

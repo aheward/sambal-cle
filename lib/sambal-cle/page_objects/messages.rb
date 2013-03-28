@@ -113,6 +113,7 @@ end
 class ComposeMessage < BasePage
 
   frame_element
+  cke_elements
   expected_element :editor
 
   action(:send) { |b| b.frm.button(:value=>"Send ").click }
@@ -137,7 +138,6 @@ class ReplyToMessage < BasePage
 
   expected_element :editor
 
-  element(:editor) { |b| b.frm.frame(:id, "pvtMsgReply:df_compose_body_inputRichText___Frame") }
   action(:send) { |b| b.frm.button(:value=>"Send ").click }
 
   def message_text=(text)

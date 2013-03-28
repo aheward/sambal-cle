@@ -33,11 +33,9 @@ class AddBlogEntry < BlogsBase
 
   expected_element :editor
 
-  element(:editor) { |b| b.frm.frame(:id, 'blog-text-input:1:input___Frame') }
-
   def blog_text=(text)
-    editor.td(:id, 'xEditingArea').frame(:index=>0).wait_until_present
-    editor.td(:id, 'xEditingArea').frame(:index=>0).send_keys(text)
+    rich_text_field.wait_until_present
+    rich_text_field.send_keys(text)
   end
 
   button 'Publish entry'
