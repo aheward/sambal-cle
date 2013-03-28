@@ -1,62 +1,24 @@
 class LinkTool < BasePage
 
-  def view_assignment_details(title)
-    unless self.div(:class=>"title", :text=>title).present?
-      self.link(:text=>"Assignments").wait_until_present(5)
-      self.link(:text=>"Assignments").click
-      self.link(:text=>title).wait_until_present(15)
-      self.link(:text=>title).click
-    end
-    self.div(:class=>"title", :text=>title).wait_until_present(5)
-  end
+  action(:open_site) { |name, b| b.use_linktool; b.sites_frame.link(text: name).click }
+  action(:get_assignment_link) { |name, b| b.use_linktool; b.toggle_assignments; b.click_link(name) }
+  action(:get_forum_link) { |name, b| b.use_linktool; b.toggle_forums; b.click_link(name) }
+  alias_method :get_topic_link, :get_forum_link
+  action(:get_resource_link) { |name, b| b.use_linktool; b.toggle_resources; b.click_link(name) }
+  action(:get_assessment_link) { |name, b| b.use_linktool; b.toggle_assessments; b.click_link(name) }
 
-  def select_assignment(title)
-    view_assignment_details(title)
-    self.link(:text=>"Select this item").click
-    self.window(:index=>0).use
-    self.frame(:index=>2).button(:id=>"btnOk").click
-  end
+  # ========
+  private
+  # ========
 
-  def close_rool
-    self.window.close
-    self.window(:index=>0).use
-    self.frame(:index=>2).button(:id=>"btnCancel").click
-  end
-
-  def view_forum_details(title)
-    unless self.span(:class=>"entity-item-label icon-sakai-entity-forum", :text=>title).present?
-      self.link(:class=>/entity-item-label icon-sakai-entity-forum/).wait_until_present(10)
-      self.link(:class=>/entity-item-label icon-sakai-entity-forum/).click
-      self.link(:text=>title).wait_until_present(10)
-      self.link(:text=>title).click
-    end
-    self.div(:class=>"title", :text=>title).wait_until_present
-  end
-
-  def view_topic_details(forum, topic)
-    unless self.span(:class=>"entity-item-label icon-sakai-entity-forum", :text=>title).present?
-      self.link(:class=>/entity-item-label icon-sakai-entity-forum/).wait_until_present(10)
-      self.link(:class=>/entity-item-label icon-sakai-entity-forum/).click
-      self.link(:text=>forum).wait_until_present(10)
-      self.link(:text=>forum).click
-      self.link(:text=>topic).wait_until_present(10)
-      self.link(:text=>topic).click
-    end
-    self.div(:class=>"title", :text=>topic).wait_until_present(10)
-  end
-
-  value(:url) { |b| b.td(text: "url").parent.td(class: "attrValue").text }
-  value(:portal_url) { |b| b.td(text: "portalURL").parent.td(class: "attrValue").text }
-  value(:direct_link) { |b| b.link(text: "Select this item").href }
-  value(:retract_time) { |b| b.td(text: "Retract Time").parent.td(class: "attrValue").text }
-  value(:time_due) { |b| b.td(text: "Time Due").parent.td(class: "attrValue").text }
-  value(:time_modified) { |b| b.td(text: "Time Modified").parent.td(class: "attrValue").text }
-  value(:description) { |b| b.td(text: "Description").parent.td(class: "attrValue").text }
-  value(:time_created) { |b| b.td(text: "Time Created").parent.td(class: "attrValue").text }
-  value(:date_created) { |b| b.td(text: "Date Created").parent.td(class: "attrValue").text }
-  value(:author) { |b| b.td(text: "Author").parent.td(class: "attrValue").text }
-  value(:moderated) { |b| b.td(text: "Moderated").parent.td(class: "attrValue").text }
-  value(:modified_by) { |b| b.td(text: "Modified By").parent.td(class: "attrValue").text }
-  value(:date_modified) { |b| b.td(text: "Date Modified").parent.td(class: "attrValue").text }
+  element(:sites_frame) { |b| b.frame(name: 'frmFolders') }
+  element(:links_frame) { |b| b.frame(name: 'frmResourcesList') }
+  action(:use_linktool) { |b| b.windows.last.use }
+  action(:switch_back) { |b| b.windows.first.use }
+  action(:toggle_assignments) { |b| b.links_frame.image(id: 'imgAssignments').click }
+  action(:toggle_forums) { |b| b.links_frame.image(id: 'imgForums').click }
+  action(:toggle_resources) { |b| b.links_frame.image(id: 'imgResources').click }
+  action(:toggle_assessments) { |b| b.links_frame.image(id: 'imgAssessments').click }
+  action(:click_link) { |name, b| b.links_frame.link(text: name).click; b.switch_back }
 
 end
