@@ -204,7 +204,7 @@ module Navigation
   menu_link :user_membership, "User Membership", :class=>"icon-sakai-usermembership"
 
   # Users
-  menu_link :users, "Users", :class=>"icon-sakai-users"
+  menu_link :users, 'Users', text: 'Users'
 
   # WebContent
   menu_link :web_content, "Web Content", :class=>"icon-sakai-iframe"

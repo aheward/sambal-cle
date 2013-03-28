@@ -3,7 +3,7 @@ class GlossaryTermObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :term, :short_description, :long_description, :portfolio
   

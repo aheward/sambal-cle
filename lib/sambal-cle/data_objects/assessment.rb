@@ -4,7 +4,7 @@ class AssessmentObject
   include DataFactory
   include StringFactory
   include DateFactory
-  include Workflows
+  include Navigation
 
   def question_types
     {
@@ -186,7 +186,7 @@ class PartObject
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
   include StringFactory
 
   attr_accessor :assessment, :title, :information, :type, :number_of_questions, :pool_name, :part_number, :question_ordering

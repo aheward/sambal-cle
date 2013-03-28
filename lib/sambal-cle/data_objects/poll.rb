@@ -3,7 +3,7 @@ class PollObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :question, :instructions, :options, :opening_date, :closing_date,
                 :access, :visibility, :site

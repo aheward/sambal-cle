@@ -121,10 +121,8 @@ class ComposeForumMessage < BasePage
   # TopicPage, probably
   button "Post Message"
 
-  element(:editor) { |b| b.frm.frame(:id, "dfCompose:df_compose_body_inputRichText___Frame") }
-
   def message=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
   value(:reply_text) { |b| b.frame(:index=>1).div(:class=>"singleMessageReply").text }
@@ -186,7 +184,7 @@ class AddEditTopic < BasePage
 
   frame_element
   basic_page_elements
-  cke_editor
+  cke_elements
 
   @@table_index=0 # TODO: Seriously think about a better way to do this
 

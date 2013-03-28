@@ -3,7 +3,7 @@ class ModuleObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :title, :description, :keywords, :start_date, :end_date, :site, :href
 
@@ -49,7 +49,7 @@ class ContentSectionObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :site, :module, :title, :instructions, :modality, :content_type,
                 :copyright_status, :editor_content, :file_folder, :file_name, :file_path,

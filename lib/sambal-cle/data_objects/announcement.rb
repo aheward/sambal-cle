@@ -4,7 +4,7 @@ class AnnouncementObject
   include DataFactory
   include StringFactory
   include DateFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :title, :body, :site, :link, :access, :availability,
                 :subject, :saved_by, :date, :creation_date, :groups,

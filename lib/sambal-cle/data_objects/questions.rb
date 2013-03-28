@@ -2,7 +2,7 @@ class MultipleChoiceQuestion
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
   include StringFactory
 
   attr_accessor :assessment, :text, :point_value, :part, :correct_type, :answer_credit,
@@ -89,7 +89,7 @@ class SurveyQuestion
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
   include StringFactory
 
   attr_accessor :assessment, :text, :part, :answer, :feedback, :pool
@@ -147,7 +147,7 @@ class ShortAnswerQuestion
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
   include StringFactory
 
   attr_accessor :assessment, :part, :text, :point_value, :model_answer, :feedback,
@@ -202,7 +202,7 @@ class FillInBlankQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :assessment, :part, :text, :point_value, :case_sensitive, :mutually_exclusive, :pool,
                 :correct_answer_feedback, :incorrect_answer_feedback,
@@ -258,7 +258,7 @@ class NumericResponseQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :text, :point_value, :answers, :correct_answer_feedback, :part, :pool, :incorrect_answer_feedback
 
@@ -319,7 +319,7 @@ class MatchingQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :text, :point_value, :pairs, :correct_answer_feedback, :incorrect_answer_feedback
 
@@ -398,7 +398,7 @@ class TrueFalseQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :point_value, :text, :negative_point_value, :answer, :assessment, :part, :pool,
                 :correct_answer_feedback, :incorrect_answer_feedback, :required_rationale
@@ -460,7 +460,7 @@ class AudioRecordingQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :text, :point_value, :time_allowed, :number_of_attempts, :part, :pool, :feedback
 
@@ -518,7 +518,7 @@ class FileUploadQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :text, :point_value, :part, :pool, :feedback
 
@@ -572,7 +572,7 @@ class CalculatedQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :text, :point_value, :variables, :formulas, :part, :pool
 
@@ -657,7 +657,7 @@ class PoolObject #TODO: Someday add support for sub pools
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :site, :name, :questions, :creator, :department, :description,
                 :objectives, :keywords

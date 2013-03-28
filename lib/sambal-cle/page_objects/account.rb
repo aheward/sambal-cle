@@ -2,6 +2,28 @@
 # User's Account Page - in "My Settings"
 #================
 
+class UsersBase < BasePage
+
+  frame_element
+
+  class << self
+
+    def user_fields
+      action(:save) { |b| b.frm.button(:name=>'eventSubmit_doSave').click }
+      alias_method :update, :save
+      element(:user_id) { |b| b.frm.text_field(:id=>'eid') }
+      element(:first_name) { |b| b.frm.text_field(:id=>'first-name') }
+      element(:last_name) { |b| b.frm.text_field(:id=>'last-name') }
+      element(:email) { |b| b.frm.text_field(:id=>'email') }
+      element(:create_new_password) { |b| b.frm.text_field(:id=>'pw') }
+      element(:verify_new_password) { |b| b.frm.text_field(:id=>'pw0') }
+      element(:type) { |b| b.frm.select(:name=>'type') }
+      action(:cancel) { |b| b.frm.button(:name=>'eventSubmit_doCancel').click }
+    end
+
+  end
+end
+
 # The Page for editing User Account details
 class EditAccount < UsersBase
 

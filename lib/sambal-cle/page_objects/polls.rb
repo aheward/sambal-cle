@@ -7,11 +7,11 @@ class Polls < BasePage
 
   frame_element
 
-  link 'Add'
+  link "Add"
 
   def questions
     questions = []
-    frm.table(:id=>'sortableTable').rows.each do |row|
+    frm.table(:id=>"sortableTable").rows.each do |row|
       questions << row[0].link.text
     end
     return questions
@@ -20,7 +20,7 @@ class Polls < BasePage
   # Returns an array containing the list of poll questions displayed.
   def list
     list = []
-    frm.table(:id=>'sortableTable').rows.each_with_index do |row, index|
+    frm.table(:id=>"sortableTable").rows.each_with_index do |row, index|
       next if index==0
       list << row[0].link(:href=>/voteQuestion/).text
     end
@@ -33,7 +33,7 @@ end
 class AddEditPoll < BasePage
 
   frame_element
-  cke_elememtns
+  cke_elements
 
   expected_element :editor
 
@@ -41,9 +41,9 @@ class AddEditPoll < BasePage
     rich_text_field.send_keys(text)
   end
 
-  button 'Save and add options'
-  button 'Save'
-  element(:question) { |b| b.frm.text_field(:id=>'new-poll-text') }
+  button "Save and add options"
+  button "Save"
+  element(:question) { |b| b.frm.text_field(:id=>"new-poll-text") }
 
 end
 
@@ -59,7 +59,7 @@ class AddAnOption < BasePage
     rich_text_field.send_keys(text)
   end
 
-  button 'Save and add options'
-  button 'Save'
+  button "Save and add options"
+  button "Save"
 
 end

@@ -510,7 +510,7 @@ end
 #  The page for setting up a Short Answer/Essay question
 class ShortAnswer < AssessmentsBase
 
-  cke_editor_elements
+  cke_elements
   menu_bar_elements
   question_page_elements
 
