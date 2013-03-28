@@ -4,7 +4,7 @@ class EventObject
   include DataFactory
   include DateFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :title, :month, :day, :year, :start_hour, :start_minute,
                 :start_meridian, :duration_hours, :duration_minutes, :end_hour,

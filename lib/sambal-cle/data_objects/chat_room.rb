@@ -3,7 +3,7 @@ class ChatRoomObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :title, :description, :chat_display, :allow_change, :site
   

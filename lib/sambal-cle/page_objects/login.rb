@@ -9,6 +9,6 @@ class Login < BasePage
 
   element(:user_id) { |b| b.text_field(id: 'eid') }
   element(:password) { |b| b.text_field(id: 'pw') }
-  action(:login) { |b| b.button(id: 'submit') }
+  action(:login) { |b| b.button(id: 'submit').click }
 
 end

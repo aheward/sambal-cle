@@ -3,7 +3,7 @@ class MatrixObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :portfolio, :title, :description, :columns, :rows, :status, :cells
   
@@ -100,7 +100,7 @@ class CellObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :title, :instructions, :rationale, :examples, :matrix, :row, :column, :id
   

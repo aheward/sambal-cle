@@ -202,8 +202,6 @@ end
 
 # The confirmation page showing site participants and their set roles
 class SiteSetupParticipantConfirm < SiteSetupBase
-
-  menu_elements
   
   button 'Finish'
   
@@ -469,8 +467,8 @@ end
 class PortfolioSiteInfo < SiteSetupBase
 
   site_elements
-  continue
   cke_elements
+  continue
 
   expected_element :editor
 

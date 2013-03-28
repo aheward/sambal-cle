@@ -2,7 +2,7 @@ class FileObject
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :name, :site, :source_path, :target_folder, :href
 
@@ -37,7 +37,7 @@ end
 class FolderObject
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
   include StringFactory
 
   attr_accessor :name, :parent_folder, :site
@@ -70,7 +70,7 @@ end
 class WebLinkObject
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :site
 
@@ -94,7 +94,7 @@ class HTMLPageObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :name, :description, :site, :folder, :html, :url
 
@@ -156,7 +156,7 @@ end
 class TextDocumentObject
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :site
 
@@ -179,7 +179,7 @@ end
 class CitationListObject
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :site
 

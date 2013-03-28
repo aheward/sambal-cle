@@ -5,7 +5,7 @@ require 'yaml'
 describe "Duplicate Site" do
 
   include StringFactory
-  include Workflows
+  include Navigation
   include Foundry
 
   before :all do

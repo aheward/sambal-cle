@@ -95,7 +95,7 @@ end
 class AddEditAnnouncements < BasePage
 
   frame_element
-  cke_editor_elements
+  cke_elements
 
   expected_element :editor
 

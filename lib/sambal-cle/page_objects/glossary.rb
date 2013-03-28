@@ -33,7 +33,7 @@ end
 class AddEditTerm < BasePage
 
   frame_element
-  cke_editor
+  cke_elements
 
   expected_element :editor
 

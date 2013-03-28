@@ -355,8 +355,6 @@ class AssignmentStudentView < BasePage
     hash
   end
 
-  element(:editor) { |b| b.frm.frame(:id, "Assignment.view_submission_text___Frame") }
-
   # Enters the specified text into the Assignment Text FCKEditor.
   def assignment_text=(text)
     remove_assignment_text

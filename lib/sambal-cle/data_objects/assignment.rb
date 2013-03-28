@@ -6,7 +6,7 @@ class AssignmentObject
   include DataFactory
   include StringFactory
   include DateFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :title, :site, :instructions, :id, :link, :status, :grade_scale,
                 :max_points, :allow_resubmission, :num_resubmissions, :open,
