@@ -31,7 +31,8 @@ class AnnouncementObject
     end
     on_page AddEditAnnouncements do |page|
       page.title.set @title
-      page.enter_source_text page.editor, @body
+      page.source
+      page.source_field.set @body
       page.add_announcement
       @creation_date=make_date Time.now
     end

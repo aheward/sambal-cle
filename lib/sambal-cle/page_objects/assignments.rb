@@ -189,10 +189,7 @@ class AssignmentsList < AssignmentsBase
 
   # Clicks the Edit link for the Assignment specified.
   # next is the AssignmentAdd page class.
-  action(:edit_assignment) { |assignment_name, b|
-    index = b.assignments_titles.index(assignment_name)
-    b.frm.link(:text=>"Edit", :index=>index).click
-  }
+  action(:edit_assignment) { |assignment_name, b| b.frm.link(:text=>"Edit #{assignment_name}").click }
 
   # Checks the appropriate checkbox, based on the specified assignment_name
   # Then clicks the Update button and confirms the deletion request.
@@ -206,7 +203,7 @@ class AssignmentsList < AssignmentsBase
   # Then instantiates the AssignmentsList page class.
   action(:duplicate) { |assignment_name, b|
     index = b.assignments_titles.index(assignment_name)
-    b.frm.link(:text=>"Duplicate", :index=>index).click
+    b.frm.link(:text=>'Duplicate ', :index=>index).click
   }
 
   # Gets the assignment id from the href of the specified
@@ -232,18 +229,18 @@ class AssignmentsList < AssignmentsBase
   # then instantiates the AssignmentSubmissionList page class.
   action(:grade) { |assignment_name, b| b.assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).link(:text=>"Grade").click }
 
-  action(:sort_assignment_title) { |b| b.frm.link(:text=>"Assignment title").click }
-  action(:sort_status) { |b| b.frm.link(:text=>"Status").click }
-  action(:sort_open) { |b| b.frm.link(:text=>"Open").click }
-  action(:sort_due) { |b| b.frm.link(:text=>"Due").click }
-  action(:sort_in) { |b| b.frm.link(:text=>"In").click }
-  action(:sort_new) { |b| b.frm.link(:text=>"New").click }
-  action(:sort_scale) { |b| b.frm.link(:text=>"Scale").click }
-  element(:view) { |b| b.frm.select(:id=>"view") }
-  action(:update) { |b| b.frm.button(:name=>"eventSubmit_doDelete_confirm_assignment").click }
+  action(:sort_assignment_title) { |b| b.frm.link(:text=>'Assignment title').click }
+  action(:sort_status) { |b| b.frm.link(:text=>'Status').click }
+  action(:sort_open) { |b| b.frm.link(:text=>'Open').click }
+  action(:sort_due) { |b| b.frm.link(:text=>'Due').click }
+  action(:sort_in) { |b| b.frm.link(:text=>'In').click }
+  action(:sort_new) { |b| b.frm.link(:text=>'New').click }
+  action(:sort_scale) { |b| b.frm.link(:text=>'Scale').click }
+  element(:view) { |b| b.frm.select(:id=>'view') }
+  action(:update) { |b| b.frm.button(:name=>'eventSubmit_doDelete_confirm_assignment').click }
 
-  element(:assignments_table) { |b| b.frm.table(:class=>"listHier lines nolines") }
-  element(:page_title) { |b| b.frm.div(:class=>"portletBody").h3(:text=>"Assignment List") }
+  element(:assignments_table) { |b| b.frm.table(:class=>'listHier lines nolines') }
+  element(:page_title) { |b| b.frm.div(:class=>'portletBody').h3(:text=>'Assignment List') }
 
 end
 
@@ -252,7 +249,7 @@ class AssignmentsPermissions < AssignmentsBase
 
   # Clicks the Save button, next is
   # the AssignmentsList page class.
-  action(:save) {|b| b.frm.button(:value=>"Save").click }
+  action(:save) {|b| b.frm.button(:value=>'Save').click }
 
   def self.chekbocks(*method_names)
     method_names.each do |method_name|
@@ -264,22 +261,22 @@ class AssignmentsPermissions < AssignmentsBase
 
   chekbocks :all_groups, :new, :submit, :delete, :read, :revise, :grade, :receive_notifications, :share_drafts
 
-  action(:undo_changes) { |b| b.frm.link(:text=>"Undo changes").click }
-  action(:cancel) { |b| b.frm.button(:name=>"eventSubmit_doCancel").click }
-  action(:permission) { |b| b.frm.link(:text=>"Permission").click }
-  action(:guest) { |b| b.frm.link(:text=>"Guest").click }
-  action(:instructor) { |b| b.frm.link(:text=>"Instructor").click }
-  action(:student) { |b| b.frm.link(:text=>"Student").click }
-  action(:teaching_assistant) { |b| b.frm.link(:text=>"Teaching Assistant").click }
-  action(:same_permissions_for_all_groups) { |b| b.frm.link(:text=>"Same site level permissions for all groups inside the site").click }
-  action(:create_new_assignments) { |b| b.frm.link(:text=>"Create new assignment(s)").click }
-  action(:submit_to_assignments) { |b| b.frm.link(:text=>"Submit to assignment(s)").click }
-  action(:delete_assignments) { |b| b.frm.link(:text=>"Delete assignment(s)").click }
-  action(:read_assignments) { |b| b.frm.link(:text=>"Read Assignment(s)").click }
-  action(:revise_assignments) { |b| b.frm.link(:text=>"Revise assignment(s)").click }
-  action(:grade_submissions) { |b| b.frm.link(:text=>"Grade assignment submission(s)").click }
-  action(:receive_email_notifications) { |b| b.frm.link(:text=>"Receive email notifications").click }
-  action(:view_drafts_from_others) { |b| b.frm.link(:text=>"Able to view draft assignment(s) created by other users").click }
+  action(:undo_changes) { |b| b.frm.link(:text=>'Undo changes').click }
+  action(:cancel) { |b| b.frm.button(:name=>'eventSubmit_doCancel').click }
+  action(:permission) { |b| b.frm.link(:text=>'Permission').click }
+  action(:guest) { |b| b.frm.link(:text=>'Guest').click }
+  action(:instructor) { |b| b.frm.link(:text=>'Instructor').click }
+  action(:student) { |b| b.frm.link(:text=>'Student').click }
+  action(:teaching_assistant) { |b| b.frm.link(:text=>'Teaching Assistant').click }
+  action(:same_permissions_for_all_groups) { |b| b.frm.link(:text=>'Same site level permissions for all groups inside the site').click }
+  action(:create_new_assignments) { |b| b.frm.link(:text=>'Create new assignment(s)').click }
+  action(:submit_to_assignments) { |b| b.frm.link(:text=>'Submit to assignment(s)').click }
+  action(:delete_assignments) { |b| b.frm.link(:text=>'Delete assignment(s)').click }
+  action(:read_assignments) { |b| b.frm.link(:text=>'Read Assignment(s)').click }
+  action(:revise_assignments) { |b| b.frm.link(:text=>'Revise assignment(s)').click }
+  action(:grade_submissions) { |b| b.frm.link(:text=>'Grade assignment submission(s)').click }
+  action(:receive_email_notifications) { |b| b.frm.link(:text=>'Receive email notifications').click }
+  action(:view_drafts_from_others) { |b| b.frm.link(:text=>'Able to view draft assignment(s) created by other users').click }
 
 end
 

@@ -101,7 +101,7 @@ class AddEditAnnouncements < BasePage
 
   # Clicks the Add Announcement button. The next class is either
   # AddEditAnnouncements or Announcements.
-  button 'Add Announcement'
+  button 'Post Announcement'
 
   # Clicks the Save changes button. Next is the Announcements class.
   button 'Save Changes'

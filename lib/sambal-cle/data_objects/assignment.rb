@@ -158,22 +158,8 @@ class AssignmentObject
     # TODO: Add more stuff here as needed...
 
     on AssignmentAdd do |edit|
-
-      @instructions=edit.get_source_text edit.editor
-      edit.source edit.editor
-      edit.entity_picker(edit.editor)
-    end
-    on EntityPicker do |info|
-      info.view_assignment_details @title
-      @retract_time=info.retract_time
-      @time_due=info.time_due
-      @time_modified=info.time_modified
-      @url=info.url
-      @portal_url=info.portal_url
-      @description=info.description
-      @time_created=info.time_created
-      @direct_url=info.direct_link
-      info.close_picker
+      edit.source
+      @instructions=edit.source_field.value
     end
     on AssignmentAdd do |edit|
       edit.cancel
