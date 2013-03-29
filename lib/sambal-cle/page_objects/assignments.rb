@@ -37,6 +37,8 @@ class AssignmentAdd < AssignmentsBase
 
   expected_element :editor
 
+  action(:instructions=) { |text, b| b.rich_text_field('new_assignment_instructions').send_keys text }
+
   # Clicks the Post button, then
   # next is the AssignmentsList page class.
   action(:post) { |b| b.frm.button(:value=>"Post").click }

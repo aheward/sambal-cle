@@ -82,8 +82,8 @@ module Navigation
   menu_link 'Styles'
   menu_link 'Syllabus'
   menu_link 'Tests & Quizzes'
-  alias_method :assessments, :tests___quizzes
-  alias_method :test_and_quizzes, :tests___quizzes
+  alias_method :assessments, :tests__quizzes
+  alias_method :test_and_quizzes, :tests__quizzes
   menu_link 'User Membership'
   menu_link 'Users'
   menu_link 'Web Content'
