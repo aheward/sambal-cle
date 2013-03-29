@@ -123,7 +123,8 @@ class HTMLPageObject
       page.create_html_page_in @folder
     end
     on_page EditHTMLPageContent do |page|
-      page.enter_source_text page.editor, @html
+      page.source
+      page.source_field.set @html
       page.continue
     end
     on_page EditHTMLPageProperties do |page|

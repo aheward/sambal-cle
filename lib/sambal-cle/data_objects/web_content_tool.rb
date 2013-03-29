@@ -21,7 +21,7 @@ class WebContentObject
   def create
     my_workspace
     site_setup
-    on_page SiteSetup do |page|
+    on_page SiteSetupList do |page|
       page.edit @site
     end
     on_page SiteEditor do |page|

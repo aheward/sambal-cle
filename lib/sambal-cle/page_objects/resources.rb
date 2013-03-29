@@ -196,9 +196,7 @@ class Resources < ResourcesBase
     frm.button(:value=>"Continue").click
   end
 
-  def open_add_menu(folder_name)
-    files_table.row(:text=>/#{Regexp.escape(folder_name)}/).link(:text=>"Start Add Menu").fire_event("onfocus")
-  end
+  action(:open_add_menu) { |folder_name, b| b.files_table.row(text: /#{Regexp.escape(folder_name)}/).li(class: 'menuOpen').click }
 
   def open_actions_menu(name)
     files_table.row(:text=>/#{Regexp.escape(name)}/).li(:text=>/Action/, :class=>"menuOpen").fire_event("onclick")

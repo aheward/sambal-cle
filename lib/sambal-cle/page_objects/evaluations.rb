@@ -67,8 +67,6 @@ class EditTemplate < BasePage
   frame_element
   cke_elements
 
-
-
   link("New evaluation")
 
   def add
