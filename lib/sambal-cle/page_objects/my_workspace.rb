@@ -16,12 +16,12 @@ class MyWorkspace < BasePage
   # only option because both the <id> and <name>
   # tags are unique for every site.
   # Calendar Options button
-  action(:calendar_options) { |b| b.frm.link(:text=>"Options").click }
+  action(:calendar_options) { |b| b.frame(:index=>0).link(:text=>"Options").click }
 
   # My Workspace Information Options
-  action(:my_workspace_information_options) { |b| b.frm.link(:text=>"Options").click }
+  action(:my_workspace_information_options) { |b| b.frame(:index=>1).link(:text=>"Options").click }
   # Message of the Day, Options button
-  action(:message_of_the_day_options) { |b| b.frm.link(:text=>"Options").click }
+  action(:message_of_the_day_options) { |b| b.frame(:index=>2).link(:text=>"Options").click }
 
 
   element(:select_page_size) { |b| b.frm.select_list(:id=>"selectPageSize").click }

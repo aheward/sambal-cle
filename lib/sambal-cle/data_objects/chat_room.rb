@@ -1,8 +1,9 @@
 class ChatRoomObject
 
-  include PageHelper
-  include Utilities
-  include Workflows
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include Navigation
   
   attr_accessor :title, :description, :chat_display, :allow_change, :site
   
@@ -18,12 +19,12 @@ class ChatRoomObject
     options = defaults.merge(opts)
     
     set_options(options)
-    requires @site
+    requires :site
   end
     
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    chat_room unless @browser.title=~/Chat Room$/
+    open_my_site_by_name
+    chat_room
     on ChatRoom do |chat|
       chat.options
     end

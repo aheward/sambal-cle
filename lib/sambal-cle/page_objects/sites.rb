@@ -10,11 +10,7 @@ class Sites < BasePage
   # Clicks the first site Id link
   # listed. Useful when you've run a search and
   # you're certain you've got the result you want.
-  # It then instantiates the EditSiteInfo page class.
-  def click_top_item
-    frm.link(:href, /#{Regexp.escape("&panel=Main&sakai_action=doEdit")}/).click
-    EditSiteInfo.new(@browser)
-  end
+  action(:click_top_item) { |b| b.frm.link(:href, /#{Regexp.escape("&panel=Main&sakai_action=doEdit")}/).click }
 
   # Clicks the specified Site in the list, using the
   # specified id value to determine which item to click.
@@ -24,15 +20,9 @@ class Sites < BasePage
     frm.text_field(:id=>"search_site").value=id
     frm.link(:text=>"Site ID").click
     frm.link(:text, id).click
-    EditSiteInfo.new(@browser)
   end
 
-  # Clicks the New Site button, then instantiates
-  # the EditSiteInfo page class.
-  def new_site
-    frm.link(:text, "New Site").click
-    EditSiteInfo.new(@browser)
-  end
+  link "New Site"
 
   element(:search_field) { |b| b.frm.text_field(:id=>"search") }
   action(:search_button) { |b| b.frm.link(text=>"Search").click }
@@ -54,59 +44,23 @@ end
 class EditSiteInfo < BasePage
 
   frame_element
+  cke_elements
 
-  # Clicks the Remove Site button, then instantiates
-  # the RemoveSite page class.
-  def remove_site
-    frm.link(:text, "Remove Site").click
-    RemoveSite.new(@browser)
-  end
-
-  # Clicks the Save button, then instantiates the Sites
-  # page class.
-  def save
-    frm.button(:value=>"Save").click
-    Sites.new(@browser)
-  end
-
-  # Clicks the Save As link, then instantiates
-  # the SiteSaveAs page class.
-  def save_as
-    frm.link(:text, "Save As").click
-    SiteSaveAs.new(@browser)
-  end
+  link("Remove Site")
+  button("Save")
+  link("Save As")
 
   # Gets the Site ID from the page.
-  def site_id_read_only
-    @browser.frame(:index=>0).table(:class=>"itemSummary").td(:class=>"shorttext", :index=>0).text
-  end
+  action(:site_id_read_only) { |b| b.frm.table(:class=>"itemSummary").td(:class=>"shorttext", :index=>0).text }
 
   # Enters the specified text string in the text area of
   # the FCKEditor.
   def description=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
-  # The FCKEditor object. Use this object for
-  # wait commands when the site is slow
-  def editor
-    @browser.frame(:index=>0).frame(:id, "description___Frame")
-  end
-
-  # Clicks the Properties button on the page,
-  # then instantiates the AddEditSiteProperties
-  # page class.
-  def properties
-    frm.button(:value=>"Properties").click
-    AddEditSiteProperties.new(@browser)
-  end
-
-  # Clicks the Pages button, then instantiates
-  # the AddEditPages page class.
-  def pages
-    frm.button(:value=>"Pages").click
-    AddEditPages.new(@browser)
-  end
+  button("Properties")
+  button("Pages")
 
   # Non-navigating, interactive page objects go here
   element(:site_id) { |b| b.frm.text_field(:id=>"id") }
@@ -118,20 +72,13 @@ class EditSiteInfo < BasePage
   element(:public_view_yes) { |b| b.frm.select_list(:id=>"pubViewtrue") }
 end
 
-
-
 # The page you come to when editing a Site in Sites
 # and you click on the Pages button
 class AddEditPages < BasePage
 
   frame_element
 
-  # Clicks the link for New Page, then
-  # instantiates the NewPage page class.
-  def new_page
-    frm.link(:text=>"New Page").click
-    NewPage.new(@browser)
-  end
+  link("New Page")
 
 end
 
@@ -140,12 +87,7 @@ class NewPage < BasePage
 
   frame_element
 
-  # Clicks the Tools button, then instantiates
-  # the AddEditTools class.
-  def tools
-    frm.button(:value=>"Tools").click
-    AddEditTools.new(@browser)
-  end
+  button("Tools")
 
   # Interactive page objects that do no navigation
   # or page refreshes go here.
@@ -160,19 +102,8 @@ class AddEditTools < BasePage
 
   frame_element
 
-  # Clicks the New Tool link, then instantiates
-  # the NewTool class.
-  def new_tool
-    frm.link(:text=>"New Tool").click
-    NewTool.new(@browser)
-  end
-
-  # Clicks the Save button, then
-  # instantiates the AddEditPages class.
-  def save
-    frm.button(:value=>"Save").click
-    AddEditPages.new(@browser)
-  end
+  link("New Tool")
+  button("Save")
 
 end
 
@@ -181,12 +112,7 @@ class NewTool < BasePage
 
   frame_element
 
-  # Clicks the Done button, the instantiates
-  # The AddEditTools class.
-  def done
-    frm.button(:value=>"Done").click
-    AddEditTools.new(@browser)
-  end
+  button("Done")
 
   # Interactive page objects that do no navigation
   # or page refreshes go here.
@@ -201,28 +127,18 @@ class RemoveSite < BasePage
 
   frame_element
 
-  # Clicks the Remove button, then
-  # instantiates the Sites class.
-  def remove
-    frm.button(:value=>"Remove").click
-    Sites.new(@browser)
-  end
+  button("Remove")
 
+end
 
 # Page that appears when you click "Save As" when editing a Site in Sites
-  class SiteSaveAs < BasePage
+class SiteSaveAs < BasePage
 
     frame_element
 
-    # Clicks the Save button, then
-    # instantiates the Sites class.
-    def save
-      frm.button(:value, "Save").click
-      Sites.new(@browser)
-    end
+    button("Save")
 
     element(:site_id) { |b| b.frm.text_field(:id=>"id") }
-  end
 
 end
 
@@ -230,26 +146,11 @@ class AddEditSiteProperties < BasePage
 
   frame_element
 
-  # Clicks the New Property button
-  def new_property
-    frm.button(:value=>"New Property").click
-    #Class.new(@browser)
-  end
-
-  # Clicks the Done button, then instantiates
-  # the EditSiteInfo class.
-  def done
-    frm.button(:value=>"Done").click
-    EditSiteInfo.new(@browser)
-  end
-
-  # Clicks the Save button, then instantiates
-  # the Sites page class.
-  def save
-    frm.button(:value=>"Save").click
-    Sites.new(@browser)
-  end
+  button("New Property")
+  button("Done")
+  button("Save")
 
   element(:name) { |b| b.frm.text_field(:id=>"new_name") }
   element(:value) { |b| b.frm.text_field(:id=>"new_value") }
+
 end

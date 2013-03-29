@@ -4,27 +4,28 @@ require 'yaml'
 
 describe "Duplicate Site" do
 
-  include Utilities
-  include Workflows
-  include PageHelper
+  include StringFactory
+  include Navigation
+  include Foundry
 
   before :all do
 
     # Get the test configuration data
     @config = YAML.load_file("config.yml")
     @directory = YAML.load_file("directory.yml")
-    @sakai = SakaiCLE.new(@config['browser'], @config['url'])
+    @sakai = SambalCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
-    # This test case uses the logins of several users
-    @instructor = @directory['person3']['id']
-    @ipassword = @directory['person3']['password']
+
+    @instructor = make UserObject, :id=>@directory['person3']['id'], :password=>@directory['person3']['password'],
+                       :first_name=>@directory['person3']['firstname'], :last_name=>@directory['person3']['lastname'],
+                       :type=>"Instructor"
     @file_path = @config['data_directory']
     @source_site_string = "Links to various items in this site:"
 
     # Log in to Sakai
-    @sakai.page.login(@instructor, @ipassword)
+    @instructor.login
 
-    @site1 = make SiteObject, :description=>"Original Site"
+    @site1 = make CourseSiteObject
     @site1.create
 
     @source_site_string << "<br />\n<br />\nSite ID: #{@site1.id}<br />\n<br />\n"
@@ -47,7 +48,7 @@ describe "Duplicate Site" do
     @file = make FileObject, :site=>@site1.name, :name=>"flower02.jpg", :source_path=>@file_path+"images/"
     @file.create
 
-    @source_site_string << "<br />\nUploaded file: <a href=\"#{@file.href}\">#{@file.name}</a><br />\n"
+    @source_site_string << %|<br />\nUploaded file: <a href="#{@file.href}">#{@file.name}</a><br />\n<img width="203" height="196" src="#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" /><br /><br />|
 
     @htmlpage = make HTMLPageObject, :site=>@site1.name, :folder=>"#{@site1.name} Resources", :html=>@source_site_string
     @htmlpage.create
@@ -130,21 +131,27 @@ describe "Duplicate Site" do
 
     @section1.edit :editor_content=>@source_site_string
 
+    @assessment = make AssessmentObject, :site=>@site1.name
+    @assessment.create
+    @assessment.add_question :type=>"Short Answer/Essay", :rich_text=>true, :text=>%|<img width="203" height="196" src="#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" />|
+    @assessment.publish
+
     @site2 = @site1.duplicate
 
     @new_assignment = make AssignmentObject, :site=>@site2.name, :status=>"Draft", :title=>@assignment.title
     @new_assignment.get_info
 
   end
-=begin
+
   after :all do
     # Close the browser window
     @browser.close
   end
-=end
+
   def check_this_stuff(thing)
     thing.should match /Site ID: #{@site2.id}/
     thing.should match /\(y\) <a href..#{@new_assignment.direct_url}/
+    thing.should match /<img.+#{@site2.id}\/#{@file.name}/
     thing.should_not match /Announcement link:.+#{@announcement.id}.+#{@announcement.title}/
     thing.should match /Uploaded file:.+#{@site2.id}.+#{@file.name}/
     thing.should match /#{@site2.id}\/#{@htmlpage.name}/
@@ -166,7 +173,6 @@ describe "Duplicate Site" do
   end
 
   it "duplicates Assignments correctly" do
-
     check_this_stuff(@new_assignment.instructions)
   end
 
@@ -197,7 +203,7 @@ describe "Duplicate Site" do
     check_this_stuff(@new_topic.description_html)
   end
 
-  xit "duplicates Lessons correctly" do
+  it "duplicates Lessons correctly" do
     lessons
     on Lessons do |lessons|
       lessons.lessons_list.should include @module.title
@@ -241,6 +247,22 @@ describe "Duplicate Site" do
     @new_event.view
 
     check_this_stuff @new_event.message_html
+  end
+
+  it "duplicates Assessments correctly" do
+    @new_assessment = make AssessmentObject, :title=>@assessment.title, :site=>@site2.name
+    @new_assessment.questions=@assessment.questions
+    assessments
+    on AssessmentsList do |list|
+      list.pending_assessment_titles.should include @new_assessment.title
+      list.edit @new_assessment.title
+    end
+    on EditAssessment do |edit|
+      edit.edit_question(1,1)
+    end
+    on ShortAnswer do |q|
+      q.get_source_text(q.question_editor).should==%|<img width="203" height="196" alt="" src="#{$base_url}/access/content/group/#{@site2.id}/#{@file.name}" />|
+    end
   end
 
 end

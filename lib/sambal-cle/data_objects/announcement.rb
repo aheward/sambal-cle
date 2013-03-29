@@ -1,8 +1,10 @@
 class AnnouncementObject
 
-  include Utilities
-  include PageHelper
-  include Workflows
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include DateFactory
+  include Navigation
 
   attr_accessor :title, :body, :site, :link, :access, :availability,
                 :subject, :saved_by, :date, :creation_date, :groups,
@@ -15,16 +17,15 @@ class AnnouncementObject
         :title=>random_alphanums,
         :body=>random_multiline(500, 10, :alpha)
     }
-    options = defaults.merge(opts)
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
 
-  alias :name :title
+  alias_method :name, :title
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    announcements unless @browser.title=~/Announcements$/
+    open_my_site_by_name @site
+    announcements
     on_page Announcements do |page|
       page.add
     end
@@ -41,13 +42,13 @@ class AnnouncementObject
   end
 
   def edit opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    announcements unless @browser.title=~/Announcements$/
+    open_my_site_by_name @site
+    announcements
     on_page Announcements do |list|
       list.edit @title
     end
     on AddEditAnnouncements do |edit|
-      edit.title.set opts[:title] unless opts[:title]==nil
+      edit.title.fit opts[:title]
       edit.send(opts[:access]) unless opts[:access]==nil
       edit.send(opts[:availability]) unless opts[:availability]==nil
       unless opts[:body]==nil
@@ -59,8 +60,8 @@ class AnnouncementObject
   end
 
   def view
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    announcements unless @browser.title=~/Announcements$/
+    open_my_site_by_name @site
+    announcements
     on Announcements do |list|
       list.view @title
     end

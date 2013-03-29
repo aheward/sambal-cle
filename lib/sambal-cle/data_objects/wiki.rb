@@ -1,8 +1,9 @@
 class WikiObject
 
-  include PageHelper
-  include Utilities
-  include Workflows
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include Navigation
 
   attr_accessor :title, :content, :site, :href
 
@@ -13,17 +14,15 @@ class WikiObject
       :title=>random_alphanums,
       :content=>"{worksiteinfo}\n{sakai-sections}"
     }
-    options = defaults.merge(opts)
-
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
 
   alias :name :title
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    wiki unless @browser.title=~/Wiki$/
+    open_my_site_by_name @site
+    wiki
     on Rwiki do |home|
       home.edit
       @current_content = home.content.value
@@ -39,8 +38,8 @@ class WikiObject
   end
 
   def edit opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    wiki unless @browser.title=~/Wiki$/
+    open_my_site_by_name @site
+    wiki
     on Rwiki do |edit|
       edit.open_wiki @title
       edit.edit
@@ -50,8 +49,8 @@ class WikiObject
   end
 
   def get_content
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    wiki unless @browser.title=~/Wiki$/
+    open_my_site_by_name @site
+    wiki
     on Rwiki do |edit|
       edit.open_wiki @title
       edit.edit

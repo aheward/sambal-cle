@@ -9,12 +9,10 @@ class SectionsBase < BasePage
 
   class << self
     def menu_elements
-      # Clicks the Add Sections button/link and instantiates
-      # the AddEditSections Class.
-      action(:add_sections) { |b| b.frm.link(:text=>"Add Sections").click }
-      action(:overview) { |b| b.frm.link(:text=>"Overview").click }
-      action(:student_memberships) { |b| b.frm.link(:text=>"Student Memberships").click }
-      action(:options) { |b| b.frm.link(:text=>"Options").click }
+      link("Add Sections")
+      link("Overview")
+      link("Student Memberships")
+      link("Options")
     end
   end
 end
@@ -26,24 +24,13 @@ class Sections < SectionsBase
 
   # Clicks the Edit link for the specified section.
   # Then instantiates the AddEditSections class.
-  def edit(title)
-    frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/).link(:text=>/Edit/).click
-    AddEditSections.new(@browser)
-  end
+  action(:edit) { |title, b| b.frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/).link(:text=>/Edit/).click }
 
-  def assign_tas(title)
-    frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/).link(:text=>/Assign TAs/).click
-    AssignTeachingAssistants.new(@browser)
-  end
+  action(:assign_tas) { |title, b| b.frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/).link(:text=>/Assign TAs/).click }
 
-  def assign_students(title)
-    frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/).link(:text=>/Assign Students/).click
-    AssignStudents.new(@browser)
-  end
+  action(:assign_students) { |title, b| b.frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/).link(:text=>/Assign Students/).click }
 
-  def check(title)
-    frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/).checkbox(:name=>/remove/).set
-  end
+  action(:check) { |title, b| b.frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/).checkbox(:name=>/remove/).set }
 
   def section_names
     names = []
@@ -55,49 +42,30 @@ class Sections < SectionsBase
     return names
   end
 
-  def remove_sections
-    frm.button(:value=>"Remove Sections").click
-    Sections.new(@browser)
-  end
+  button("Remove Sections")
 
   # Returns the text of the Teach Assistant cell for the specified
   # Section.
-  def tas_for(title)
-    frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/)[1].text
-  end
+  action(:tas_for) { |title, b| b.frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/)[1].text }
 
   #
-  def days_for(title)
-    frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/)[2].text
-  end
+  action(:days_for) { |title, b| b.frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/)[2].text }
 
   #
-  def time_for(title)
-    frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/)[3].text
-  end
+  action(:time_for) { |title, b| b.frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/)[3].text }
 
   #
-  def location_for(title)
-    frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/)[4].text
-  end
+  action(:location_for) { |title, b| b.frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/)[4].text }
 
   #
-  def current_size_for(title)
-    frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/)[5].text
-  end
+  action(:current_size_for) { |title, b| b.frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/)[5].text }
 
   #
-  def availability_for(title)
-    frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/)[6].text
-  end
+  action(:availability_for) { |title, b| b.frm.table(:class=>/listHier/).row(:text=>/#{Regexp.escape(title)}/)[6].text }
 
-  def alert_text
-    frm.div(:class=>"validation").text
-  end
+  value(:alert_text) { |b| b.frm.div(:class=>"validation").text }
 
-  def success_text
-    frm.div(:class=>"success").text
-  end
+  value(:success_text) { |b| b.frm.div(:class=>"success").text }
 
 end
 
@@ -111,14 +79,7 @@ class AddEditSections < SectionsBase
   menu_elements
 
   # The Update button is only available when editing an existing Sections record.
-  def update
-    frm.button(:value=>"Update").click
-    if frm.div(:class=>"validation").exist?
-      AddEditSections.new(@browser)
-    else
-      Sections.new(@browser)
-    end
-  end
+  button("Update")
 
   # This method takes an array object containing strings of the
   # days of the week and then clicks the appropriate checkboxes, based
@@ -155,41 +116,39 @@ class AddEditSections < SectionsBase
 
 end
 
-#
-class AssignTeachingAssistants < SectionsBase
+class AssignBase < SectionsBase
 
   menu_elements
 
-  def assign_TAs
-    frm.button(:value=>"Assign TAs").click
-    Sections.new(@browser)
-  end
+  class << self
+    def assign_elements
+      element(:available_tas) { |b| b.frm.select(:id=>"memberForm:availableUsers") }
+      element(:assigned_tas) { |b| b.frm.select(:id=>"memberForm:selectedUsers") }
+      action(:assign) { |b| b.frm.button(:value=>">").click }
+      action(:unassign) { |b| b.frm.button(:value=>"<").click }
+      action(:assign_all) { |b| b.frm.button(:value=>">>").click }
+      action(:unassign_all) { |b| b.frm.button(:value=>"<<").click }
+    end
 
-  element(:available_tas) { |b| b.frm.select(:id=>"memberForm:availableUsers") }
-  element(:assigned_tas) { |b| b.frm.select(:id=>"memberForm:selectedUsers") }
-  action(:assign) { |b| b.frm.button(:value=>">").click }
-  action(:unassign) { |b| b.frm.button(:value=>"<").click }
-  action(:assign_all) { |b| b.frm.button(:value=>">>").click }
-  action(:unassign_all) { |b| b.frm.button(:value=>"<<").click }
+  end
 
 end
 
 #
-class AssignStudents < SectionsBase
+class AssignTeachingAssistants < AssignBase
 
-  menu_elements
+  assign_elements
 
-  def assign_students
-    frm.button(:value=>"Assign students").click
-    Sections.new(@browser)
-  end
+  button "Assign TAs"
 
-  element(:available_students) { |b| b.frm.select(:id=>"memberForm:availableUsers") }
-  element(:assigned_students) { |b| b.frm.select(:id=>"memberForm:selectedUsers") }
-  action(:assign) { |b| b.frm.button(:value=>">").click }
-  action(:unassign) { |b| b.frm.button(:value=>"<").click }
-  action(:assign_all) { |b| b.frm.button(:value=>">>").click }
-  action(:unassign_all) { |b| b.frm.button(:value=>"<<").click }
+end
+
+#
+class AssignStudents < AssignBase
+
+  assign_elements
+
+  button "Assign students"
 
 end
 
@@ -202,7 +161,6 @@ class SectionsOptions < SectionsBase
   element(:students_can_switch) { |b| b.frm.checkbox(:id=>"optionsForm:selfSwitch") }
 
   action(:update) { |b| b.frm.button(:id=>"optionsForm:_idJsp50").click }
-  action(:cancel) { |b| b.frm.button(:id=>"optionsForm:_idJsp51").click }
 
 end
 
@@ -213,7 +171,7 @@ class AddSections < SectionsBase
 
   element(:num_to_add) { |b| b.frm.select_list(:id=>"addSectionsForm:numToAdd") }
   element(:category) { |b| b.frm.select_list(:id=>"addSectionsForm:category") }
-  action(:cancel) { |b| b.frm.button(:id=>"addSectionsForm:_idJsp90").click }
+  #action(:cancel) { |b| b.frm.button(:id=>"addSectionsForm:_idJsp90").click }
   # Note that the following field definitions are appropriate for
   # ONLY THE FIRST instance of each of the fields. The Add Sections page
   # allows for an arbitrary number of these fields to exist.
@@ -249,7 +207,7 @@ class EditSections < SectionsBase
 
   element(:num_to_add) { |b| b.frm.select_list(:id=>"editSectionsForm:numToAdd") }
   element(:category) { |b| b.frm.select_list(:id=>"editSectionsForm:category") }
-  action(:cancel) { |b| b.frm.button(:id=>"editSectionsForm:_idJsp90").click }
+  #action(:cancel) { |b| b.frm.button(:id=>"editSectionsForm:_idJsp90").click }
   # Note that the following field definitions are appropriate for
   # ONLY THE FIRST instance of each of the fields. The Edit Sections page
   # allows for an arbitrary number of these fields to exist.

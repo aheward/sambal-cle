@@ -1,8 +1,8 @@
 class BloggerPostObject
 
-  include PageHelper
-  include Utilities
-  include Workflows
+  include Foundry
+  include DataFactory
+  include Navigation
   
   attr_accessor :title, :abstract, :site, :text, :read_only, :access, :allow_comments
   
@@ -17,12 +17,12 @@ class BloggerPostObject
     options = defaults.merge(opts)
     
     set(options)
-    requires @site
+    requires :site
   end
     
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    blogs unless @browser.title=~/Blogs$/
+    open_my_site_by_name @site
+    blogs
     # TODO: More needed here
   end
     
@@ -37,7 +37,7 @@ class BloggerPostObject
   def delete
     
   end
-  
+
 end
     
       

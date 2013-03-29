@@ -6,16 +6,16 @@ describe "Assignment Due Date on Calendar" do
 
   include Utilities
   include Workflows
-  include PageHelper
-  include Randomizers
-  include DateMakers
+  include Foundry
+  include StringFactory
+  include DateFactory
 
   before :all do
 
     # Get the test configuration data
     @config = YAML.load_file("config.yml")
     @directory = YAML.load_file("directory.yml")
-    @sakai = SakaiCLE.new(@config['browser'], @config['url'])
+    @sakai = SambalCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
 
     @student = make UserObject, :id=>@directory['person1']['id'], :password=>@directory['person1']['password'],
@@ -28,10 +28,10 @@ describe "Assignment Due Date on Calendar" do
                         :type=>"Instructor"
     @instructor1.log_in
 
-    @site = make SiteObject
+    @site = make CourseSiteObject
     @site.create
-    @site.add_official_participants :role=>@student.type, :participants=>[@student.id]
-    @site.add_official_participants :role=>@instructor2.type, :participants=>[@instructor2.id]
+    @site.add_official_participants @student.type, @student.id
+    @site.add_official_participants @instructor2.type, @instructor2.id
 
     @assignment1 = make AssignmentObject, :site=>@site.name, :title=>random_string, :grade_scale=>"Letter grade", :instructions=>random_multiline(500, 10, :string), :open=>minutes_ago(5)
     @assignment2 = make AssignmentObject, :allow_resubmission=>:set, :add_due_date=>:set, :site=>@site.name, :title=>random_nicelink(15), :open=>hours_ago(5), :student_submissions=>"Inline only", :grade_scale=>"Letter grade", :instructions=>random_multiline(750, 13, :string)
@@ -80,6 +80,60 @@ describe "Assignment Due Date on Calendar" do
     end
   end
 
-  # TODO: Add tests for student and other instructor being able to see the assignment in the calendar
+  it "Students see expected assignments on the calendar" do
+    @student.log_in
+    calendar
+    on Calendar do |calendar|
+      calendar.view.select "List of Events"
+      calendar.show_events.select "Custom date range"
+      calendar.start_month.select @assignment1.due[:MON]
+      calendar.start_day.select @assignment1.due[:day_of_month]
+      calendar.start_year.select @assignment1.due[:year]
+      calendar.end_month.select @assignment1.due[:MON]
+      calendar.end_day.select @assignment1.due[:day_of_month]
+      calendar.end_year.select @assignment1.due[:year]
+      calendar.filter_events
+
+      calendar.events_list.should_not include "Due #{@assignment1.title}"
+
+      calendar.start_month.select @assignment2.due[:MON]
+      calendar.start_day.select @assignment2.due[:day_of_month]
+      calendar.start_year.select @assignment2.due[:year]
+      calendar.end_month.select @assignment2.due[:MON]
+      calendar.end_day.select @assignment2.due[:day_of_month]
+      calendar.end_year.select @assignment2.due[:year]
+      calendar.filter_events
+
+      calendar.events_list.should include "Due #{@assignment2.title}"
+    end
+  end
+
+  it "Other instructors see expected assignments on the calendar" do
+    @instructor2.log_in
+    calendar
+    on Calendar do |calendar|
+      calendar.view.select "List of Events"
+      calendar.show_events.select "Custom date range"
+      calendar.start_month.select @assignment1.due[:MON]
+      calendar.start_day.select @assignment1.due[:day_of_month]
+      calendar.start_year.select @assignment1.due[:year]
+      calendar.end_month.select @assignment1.due[:MON]
+      calendar.end_day.select @assignment1.due[:day_of_month]
+      calendar.end_year.select @assignment1.due[:year]
+      calendar.filter_events
+
+      calendar.events_list.should_not include "Due #{@assignment1.title}"
+
+      calendar.start_month.select @assignment2.due[:MON]
+      calendar.start_day.select @assignment2.due[:day_of_month]
+      calendar.start_year.select @assignment2.due[:year]
+      calendar.end_month.select @assignment2.due[:MON]
+      calendar.end_day.select @assignment2.due[:day_of_month]
+      calendar.end_year.select @assignment2.due[:year]
+      calendar.filter_events
+
+      calendar.events_list.should include "Due #{@assignment2.title}"
+    end
+  end
 
 end

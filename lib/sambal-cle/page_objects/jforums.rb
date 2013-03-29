@@ -2,80 +2,35 @@
 # Discussion Forums Pages
 #================
 
-# This module includes page objects that are common to
-# all pages in the JForums.
-module JForumsResources
+class JForumsBase < BasePage
 
-  # Clicks the Discussion Home link, then
-  # instantiates the JForums page class.
-  def discussion_home
-    frm.link(:id=>"backtosite").click
-    JForums.new(@browser)
+  frame_element
+
+  class << self
+    def forums_page_elements
+      action(:discussion_home) { |b| b.frm.link(:id=>"backtosite").click }
+      action(:search) { |b| b.frm.link(:id=>"search", :class=>"mainmenu").click }
+      action(:my_bookmarks) { |b| b.frm.link(:class=>"mainmenu", :text=>"My Bookmarks").click }
+      action(:my_profile) { |b| b.frm.link(:id=>"myprofile").click }
+      action(:member_listing) { |b| b.frm.link(:text=>"Member Listing", :id=>"latest", :class=>"mainmenu").click }
+      action(:private_messages) { |b| b.frm.link(:id=>"privatemessages", :class=>"mainmenu").click }
+      action(:manage) { |b| b.frm.link(:id=>"adminpanel", :text=>"Manage").click }
+      action(:submit) { |b| b.frm.button(:value=>"Submit").click }
+    end
   end
-
-  # Clicks the Search button in the Main Menu, then
-  # instantiates the DiscussionSearch page class.
-  def search
-    frm.link(:id=>"search", :class=>"mainmenu").click
-    DiscussionSearch.new(@browser)
-  end
-
-  # Clicks the My Bookmarks link in the Main Menu,
-  # then instantiates the MyBookmarks page class.
-  def my_bookmarks
-    frm.link(:class=>"mainmenu", :text=>"My Bookmarks").click
-    MyBookmarks.new(@browser)
-  end
-
-  # Clicks the My Profile link in the Main Menu, then
-  # instantiates the DiscussionsMyProfile page class.
-  def my_profile
-    frm.link(:id=>"myprofile").click
-    DiscussionsMyProfile.new(@browser)
-  end
-
-  # Clicks the Member Listing link in the Main Menu, then
-  # instantiates the DiscussionMemberListing page class.
-  def member_listing
-    frm.link(:text=>"Member Listing", :id=>"latest", :class=>"mainmenu").click
-    DiscussionMemberListing.new(@browser)
-  end
-
-  # Clicks the Private Messages link in the Main Menu, then
-  # instantiates the PrivateMessages page class.
-  def private_messages
-    frm.link(:id=>"privatemessages", :class=>"mainmenu").click
-    PrivateMessages.new(@browser)
-  end
-
-  # Clicks the Manage link on the Main Menu, then
-  # instantiates the ManageDiscussions page class.
-  def manage
-    frm.link(:id=>"adminpanel", :text=>"Manage").click
-    ManageDiscussions.new(@browser)
-  end
-
 end
 
 # The topmost page in Discussion Forums
-class JForums < BasePage
+class JForums < JForumsBase
 
-  frame_element
-  include JForumsResources
+  forums_page_elements
 
   # Clicks on the supplied forum name
-  # Then instantiates the DiscussionForum class.
-  def open_forum(forum_name)
-    frm.link(:text=>forum_name).click
-    DiscussionForum.new(@browser)
-  end
+  action(:open_forum) { |forum_name,b| b.frm.link(:text=>forum_name).click }
 
   # Clicks the specified Topic and instantiates
   # the ViewTopic Class.
-  def open_topic(topic_title)
-    frm.link(:text=>topic_title).click
-    ViewTopic.new(@browser)
-  end
+  action(:open_topic) { |topic_title,b| b.frm.link(:text=>topic_title).click }
 
   # Returns an array containing the names of the Forums listed on the page.
   def forum_list
@@ -98,59 +53,48 @@ end
 
 # The page of a particular Discussion Forum, show the list
 # of Topics in the forum.
-class DiscussionForum < BasePage
+class DiscussionForum < JForumsBase
 
-  frame_element
-  include JForumsResources
+  forums_page_elements
 
   # Clicks the New Topic button,
   # then instantiates the NewTopic class
   def new_topic
     frm.image(:alt=>"New Topic").fire_event("onclick")
     frm.frame(:id, "message___Frame").td(:id, "xEditingArea").wait_until_present
-    NewTopic.new(@browser)
   end
-
   # Clicks the specified Topic Title, then
   # instantiates the ViewTopic Class.
   def open_topic(topic_title)
     frm.link(:href=>/posts.list/, :text=>topic_title).click
-    ViewTopic.new(@browser)
   end
 
 end
 
 # The Discussion Forums Search page.
-class DiscussionSearch < BasePage
+class DiscussionSearch < JForumsBase
 
-  frame_element
-
-  include JForumsResources
+  forums_page_elements
 
   # Clicks the Search button on the page,
   # then instantiates the JForums class.
   def click_search
     frm.button(:value=>"Search").click
-    JForums.new(@browser)
   end
-
 
   element(:keywords) { |b| b.frm.text_field(:name=>"search_keywords") }
 
 end
 
 # The Manage Discussions page in Discussion Forums.
-class ManageDiscussions < BasePage
+class ManageDiscussions < JForumsBase
 
-  frame_element
-
-  include JForumsResources
+  forums_page_elements
 
   # Clicks the Manage Forums link,
   # then instantiates the ManageForums Class.
   def manage_forums
     frm.link(:text=>"Manage Forums").click
-    ManageForums.new(@browser)
   end
 
   # Creates and returns an array of forum titles
@@ -166,25 +110,15 @@ end
 
 # The page for Managing Forums in the Discussion Forums
 # feature.
-class ManageForums < BasePage
+class ManageForums < JForumsBase
 
-  frame_element
-  include JForumsResources
+  forums_page_elements
 
-  # Clicks the Add button, then
-  # instantiates the ManageForums Class.
-  def add
-    frm.button(:value=>"Add").click
-    ManageForums.new(@browser)
-  end
+  # Clicks the Add button
+  action(:add) { |b| b.frm.button(:value=>"Add").click }
 
-  # Clicks the Update button, then
-  # instantiates the ManageDiscussions Class.
-  def update
-    frm.button(:value=>"Update").click
-    ManageDiscussions.new(@browser)
-  end
-
+  # Clicks the Update button
+  action(:update){ |b| b.frm.button(:value=>"Update").click }
 
   element(:forum_name) { |b| b.frm.text_field(:name=>"forum_name") }
   element(:category) { |b| b.frm.select(:id=>"categories_id") }
@@ -193,70 +127,44 @@ class ManageForums < BasePage
 end
 
 # Page for editing/creating Bookmarks in Discussion Forums.
-class MyBookmarks < BasePage
+class MyBookmarks < JForumsBase
 
-  frame_element
-  include JForumsResources
+  forums_page_elements
 
 
 end
 
 # The page for adding a new discussion topic.
-class NewTopic < BasePage
+class NewTopic < JForumsBase
 
-  frame_element
-  include JForumsResources
+  forums_page_elements
+  cke_elements
 
   # Enters the specified string into the FCKEditor for the Message.
   def message_text=(text)
-    frm.frame(:id, "message___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(:home)
-    frm.frame(:id, "message___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
-  end
-
-  # Clicks the Submit button, then instantiates the ViewTopic Class.
-  def submit
-    frm.button(:value=>"Submit").click
-    ViewTopic.new(@browser)
+    rich_text_field.send_keys(:home)
+    rich_text_field.send_keys(text)
   end
 
   # Clicks the Preview button and instantiates the PreviewDiscussionTopic Class.
-  def preview
-    frm.button(:value=>"Preview").click
-    PreviewDiscussionTopic.new(@browser)
-  end
+  button "Preview"
 
-  # Enters the specified filename in the file field. The path to the file can be entered as an optional second parameter
-  def filename1(filename, filepath="")
-    frm.file_field(:name=>"file_0").set(filepath + filename)
-  end
-
-  # Enters the specified filename in the file field.
-  #
-  # Note that the file should be inside the data/sakai-cle-test-api folder.
-  # The file or folder name used for the filename variable
-  # should not include a preceding / character.
-  def filename2(filename)
-    frm.file_field(:name=>"file_1").set(File.expand_path(File.dirname(__FILE__)) + "/../../data/sakai-cle-test-api/" + filename)
-  end
-
+  #TODO: redefine the file fields
 
   element(:subject) { |b| b.frm.text_field(:id=>"subject") }
-  action(:attach_files) { |b| b.frm.button(:value=>"Attach Files").click }
-  action(:add_another_file) { |b| b.frm.button(:value=>"Add another file").click }
+  button "Attach Files"
+  button "Add another file"
 
 end
 
 # Viewing a Topic/Message
-class ViewTopic < BasePage
+class ViewTopic < JForumsBase
 
-  frame_element
-  include JForumsResources
+  forums_page_elements
 
   # Gets the text of the Topic title.
   # Useful for verification.
-  def topic_name
-    frm.link(:id=>"top", :class=>"maintitle").text
-  end
+  value(:topic_name) { |b| b.frm.link(:id=>"top", :class=>"maintitle").text }
 
   # Gets the message text for the specified message (not zero-based).
   # Useful for verification.
@@ -266,46 +174,24 @@ class ViewTopic < BasePage
 
   # Clicks the Post Reply button, then
   # instantiates the NewTopic Class.
-  def post_reply
-    frm.image(:alt=>"Post Reply").fire_event("onclick")
-    NewTopic.new(@browser)
-  end
+  action(:post_reply) { |b| b.frm.image(:alt=>"Post Reply").fire_event("onclick") }
 
   # Clicks the Quick Reply button
   # and does not instantiate any page classes.
-  def quick_reply
-    frm.image(:alt=>"Quick Reply").fire_event("onclick")
-  end
-
-  # Clicks the submit button underneath the Quick Reply box,
-  # then re-instantiates the class, due to the page update.
-  def submit
-    frm.button(:value=>"Submit").click
-    ViewTopic.new(@browser)
-  end
-
+  action(:quick_reply) { |b| b.frm.image(:alt=>"Quick Reply").fire_event("onclick") }
 
   element(:reply_text) { |b| b.frm.text_field(:name=>"quickmessage") }
-
 
 end
 
 # The Profile page for Discussion Forums
-class DiscussionsMyProfile < BasePage
+class DiscussionsMyProfile < JForumsBase
 
-  frame_element
-  include JForumsResources
-
-  def submit
-    frm.button(:value=>"Submit").click
-    DiscussionsMyProfile.new(@browser)
-  end
+  forums_page_elements
 
   # Gets the text at the top of the table.
   # Useful for verification.
-  def header_text
-    frm.table(:class=>"forumline").span(:class=>"gens").text
-  end
+  value(:header_text) { |b| b.frm.table(:class=>"forumline").span(:class=>"gens").text }
 
   # Enters the specified filename in the file field.
   #
@@ -323,10 +209,9 @@ class DiscussionsMyProfile < BasePage
 end
 
 # The List of Members of a Site's Discussion Forums
-class DiscussionMemberListing < BasePage
+class DiscussionMemberListing < JForumsBase
 
-  frame_element
-  include JForumsResources
+  forums_page_elements
 
   # Checks if the specified Member name appears
   # in the member listing.
@@ -341,24 +226,17 @@ end
 
 # The page where users go to read their private messages in the Discussion
 # Forums.
-class PrivateMessages < BasePage
+class PrivateMessages < JForumsBase
 
-  frame_element
-  include JForumsResources
+  forums_page_elements
 
   # Clicks the "New PM" button, then
   # instantiates the NewPrivateMessage Class.
-  def new_pm
-    frm.image(:alt=>"New PM").fire_event("onclick")
-    NewPrivateMessage.new(@browser)
-  end
+  action(:new_pm) { |b| b.frm.image(:alt=>"New PM").fire_event("onclick") }
 
   # Clicks to open the specified message,
   # then instantiates the ViewPM Class.
-  def open_message(title)
-    frm.link(:class=>"topictitle", :text=>title).click
-    ViewPM.new(@browser)
-  end
+  action(:open_message) { |title, b| b.frm.link(:class=>"topictitle", :text=>title).click }
 
   # Collects all subject text strings of the listed
   # private messages and returns them in an Array.
@@ -378,35 +256,25 @@ class ViewPM < BasePage
 
   # Clicks the Reply Quote button, then
   # instantiates the NewPrivateMessage Class.
-  def reply_quote
-    frm.image(:alt=>"Reply Quote").fire_event("onclick")
-    NewPrivateMessage.new(@browser)
-  end
+  action(:reply_quote) { |b| b.frm.image(:alt=>"Reply Quote").fire_event("onclick") }
 
 end
 
 # New Private Message page in Discussion Forums.
-class NewPrivateMessage < BasePage
+class NewPrivateMessage < JForumsBase
 
-  frame_element
-  include JForumsResources
+  forums_page_elements
+  cke_elements
 
   # Enters text into the FCKEditor text area, after
   # going to the beginning of any existing text in the field.
   def message_body=(text)
-    frm.frame(:id, "message___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(:home)
-    frm.frame(:id, "message___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
-  end
-
-  # Clicks the Submit button, then
-  # instantiates the Information Class.
-  def submit
-    frm.button(:value=>"Submit").click
-    Information.new(@browser)
+    rich_text_field.send_keys(:home)
+    rich_text_field.send_keys(text)
   end
 
   # Enters the specified filename in the file field.
-  def filename1(filename)
+  def filename1(filename) #FIXME!
     frm.file_field(:name=>"file_0").set(File.expand_path(File.dirname(__FILE__)) + "/../../data/sakai-cle-test-api/" + filename)
   end
 
@@ -415,30 +283,25 @@ class NewPrivateMessage < BasePage
   # Note that the file should be inside the data/sakai-cle-test-api folder.
   # The file or folder name used for the filename variable
   # should not include a preceding / character.
-  def filename2(filename)
+  def filename2(filename) # FIXME!
     frm.file_field(:name=>"file_1").set(File.expand_path(File.dirname(__FILE__)) + "/../../data/sakai-cle-test-api/" + filename)
   end
-
 
   element(:to_user) { |b| b.frm.select(:name=>"toUsername") }
   element(:subject) { |b| b.frm.text_field(:id=>"subject") }
   action(:attach_files) { |b| b.frm.button(:value=>"Attach Files").click }
   action(:add_another_file) { |b| b.frm.button(:value=>"Add another file").click }
 
-
 end
 
 # The page that appears when you've done something in discussions, like
 # sent a Private Message.
-class Information < BasePage
+class Information < JForumsBase
 
-  frame_element
-  include JForumsResources
+  forums_page_elements
 
   # Gets the information message on the page.
   # Useful for verification.
-  def information_text
-    frm.table(:class=>"forumline").span(:class=>"gen").text
-  end
+  value(:information_text) { |b| b.frm.table(:class=>"forumline").span(:class=>"gen").text }
 
 end

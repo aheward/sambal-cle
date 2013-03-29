@@ -7,7 +7,7 @@ class Polls < BasePage
 
   frame_element
 
-  action(:add) { |b| b.frm.link(:text=>"Add").click }
+  link "Add"
 
   def questions
     questions = []
@@ -33,18 +33,16 @@ end
 class AddEditPoll < BasePage
 
   frame_element
-  include FCKEditor
+  cke_elements
 
   expected_element :editor
 
-  element(:editor) { |b| b.frm.frame(:id, "newpolldescr::input___Frame") }
-
   def additional_instructions=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
-  action(:save_and_add_options) { |b| b.frm.button(:value=>"Save and add options").click }
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
+  button "Save and add options"
+  button "Save"
   element(:question) { |b| b.frm.text_field(:id=>"new-poll-text") }
 
 end
@@ -53,17 +51,15 @@ end
 class AddAnOption < BasePage
 
   frame_element
-  include FCKEditor
+  cke_elements
 
   expected_element :editor
 
-  element(:editor) { |b| b.frm.frame(:id, "optText::input___Frame") }
-
   def answer_option=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
-  action(:save) { |b| b.frm.button(:value=>"Save").click }
-  action(:save_and_add_options) { |b| b.frm.button(:value=>"Save and add options").click }
+  button "Save and add options"
+  button "Save"
 
 end

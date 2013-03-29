@@ -9,31 +9,41 @@ class Matrices < BasePage
 
   # Clicks the Add link and instantiates
   # the AddEditMatrix Class.
-  def add
-    frm.link(:text=>"Add").click
-    AddEditMatrix.new(@browser)
-  end
+  link "Add"
+  link "Import"
+  link "Manage Site Associations"
+  link "Permissions"
+  link "My Preferences"
 
   # Clicks the "Edit" link for the specified
   # Matrix item, then instantiates the EditMatrixCells.
-  def edit(matrixname)
-    frm.table(:class=>"listHier lines nolines").tr(:text=>/#{Regexp.escape(matrixname)}/).link(:text=>"Edit").click
-    EditMatrixCells.new(@browser)
-  end
+  action(:edit) { |matrixname, b| b.matrix_table.tr(:text=>/#{Regexp.escape(matrixname)}/).link(:text=>"Edit").click }
 
   # Clicks the "Preview" link for the specified
   # Matrix item.
-  def preview(matrixname)
-    frm.table(:class=>"listHier lines nolines").tr(:text=>/#{Regexp.escape(matrixname)}/).link(:text=>"Preview").click
-  end
+  action(:preview) { |matrixname, b| b.matrix_table.tr(:text=>/#{Regexp.escape(matrixname)}/).link(:text=>"Preview").click }
 
   # Clicks the "Publish" link for the specified
   # Matrix item, then instantiates the ConfirmPublishMatrix Class.
-  def publish(matrixname)
-    frm.table(:class=>"listHier lines nolines").tr(:text=>/#{Regexp.escape(matrixname)}/).link(:text=>"Publish").click
-    ConfirmPublishMatrix.new(@browser)
-  end
+  action(:publish) { |matrixname, b| b.matrix_table.tr(:text=>/#{Regexp.escape(matrixname)}/).link(:text=>"Publish").click }
 
+  action(:delete) { |matrixname, b| b.matrix_table.tr(:text=>/#{Regexp.escape(matrixname)}/).link(:text=>"Delete").click }
+
+  action(:export) { |matrixname, b| b.matrix_table.tr(:text=>/#{Regexp.escape(matrixname)}/).link(:text=>"Export").click }
+
+  action(:permissions) { |matrixname, b| b.matrix_table.tr(:text=>/#{Regexp.escape(matrixname)}/).link(:text=>"Permissions").click }
+
+  element(:matrix_table) { |b| b.frm.table(:class=>"listHier lines nolines") }
+
+  def matrices_list
+    text_array = matrix_table.to_a
+    text_array.delete_at(0) # deletes the header row which is useless
+    list=[]
+    text_array.each do |line|
+      list << line[0]
+    end
+    list
+  end
 
 end
 
@@ -41,42 +51,24 @@ end
 class AddEditMatrix < BasePage
 
   frame_element
+  cke_elements
 
-  # Clicks the "Create Matrix" button and
-  # instantiates the Matrices Class.
-  def create_matrix
-    frm.button(:value=>"Create Matrix").click
-    Matrices.new(@browser)
-  end
+  expected_element :editor
 
-  # Clicks the "Save Changes" butotn and
-  # instantiates the EditMatrixCells Class.
-  def save_changes
-    frm.button(:value=>"Save Changes").click
-    EditMatrixCells.new(@browser)
-  end
+  # Clicks the "Create Matrix" button
+  button "Create Matrix"
 
-  # Clicks the "Select Style" link and
-  # instantiates the SelectMatrixStyle Class.
-  def select_style
-    frm.link(:text=>"Select Style").click
-    SelectMatrixStyle.new(@browser)
-  end
+  # Clicks the "Save Changes" button
+  button "Save Changes"
 
-  # Clicks the "Add Column" link and
-  # instantiates the AddEditColumn Class.
-  def add_column
-    frm.link(:text=>"Add Column").click
-    AddEditColumn.new(@browser)
-  end
+  # Clicks the "Select Style" link
+  link "Select Style"
 
-  # Clicks the "Add Row" link and instantiates
-  # the AddEditRow Class.
-  def add_row
-    frm.link(:text=>"Add Row").click
-    AddEditRow.new(@browser)
-  end
+  # Clicks the "Add Column" link
+  link "Add Column"
 
+  # Clicks the "Add Row" link
+  link "Add Row"
 
   element(:title) { |b| b.frm.text_field(:id=>"title-id") }
 
@@ -87,55 +79,38 @@ class SelectMatrixStyle < BasePage
 
   frame_element
 
-  # Clicks the "Go Back" button and
-  # instantiates the AddEditMatrix Class.
-  def go_back
-    frm.button(:value=>"Go Back").click
-    AddEditMatrix.new(@browser)
-  end
+  button "Go Back"
 
   # Clicks the "Select" link for the specified
   # Style, then instantiates the AddEditMatrix Class.
-  def select_style(stylename)
-    frm.table(:class=>/listHier lines/).tr(:text=>/#{Regexp.escape(stylename)}/).link(:text=>"Select").click
-    AddEditMatrix.new(@browser)
+  action(:select_style) { |stylename, b| b.frm.table(:class=>/listHier lines/).tr(:text=>/#{Regexp.escape(stylename)}/).link(:text=>"Select").click }
+
+end
+
+class RowColumnCommon < BasePage
+
+  frame_element
+  class << self
+    def table_elements
+      button "Update"
+      element(:name) { |b| b.frm.text_field(:name=>"description") }
+      element(:background_color) { |b| b.frm.text_field(:id=>"color-id") }
+      element(:font_color) { |b| b.frm.text_field(:id=>"textColor-id") }
+    end
   end
+end
+
+#
+class AddEditColumn < RowColumnCommon
+
+  table_elements
 
 end
 
 #
-class AddEditColumn < BasePage
+class AddEditRow < RowColumnCommon
 
-  frame_element
-
-  # Clicks the "Update" button, then
-  # instantiates the AddEditMatrix Class.
-  def update
-    frm.button(:value=>"Update").click
-    AddEditMatrix.new(@browser)
-  end
-
-
-  element(:name) { |b| b.frm.text_field(:name=>"description") }
-
-end
-
-#
-class AddEditRow < BasePage
-
-  frame_element
-
-  # Clicks the "Update" button, then
-  # instantiates the AddEditMatrix Class.
-  def update
-    frm.button(:value=>"Update").click
-    AddEditMatrix.new(@browser)
-  end
-
-
-  element(:name) { |b| b.frm.text_field(:name=>"description") }
-  element(:background_color) { |b| b.frm.text_field(:id=>"color-id") }
-  element(:font_color) { |b| b.frm.text_field(:id=>"textColor-id") }
+  table_elements
 
 end
 
@@ -145,25 +120,24 @@ class EditMatrixCells < BasePage
   frame_element
 
   # Clicks on the cell that is specified, based on
-  # the row number, then the column number.
-  #
-  # Note that the numbering begins in the upper left
-  # of the Matrix, with (1, 1) being the first EDITABLE
-  # cell, NOT the first cell in the table itself.
-  #
-  # In other words, ignore the header row and header column
-  # in your count (or, if you prefer, consider those
-  # to be numbered "0").
-  def edit(row, column)
-    frm.div(:class=>"portletBody").table(:summary=>"Matrix Scaffolding (click on a cell to edit)").tr(:index=>row).td(:index=>column-1).fire_event("onclick")
-    EditCell.new(@browser)
-  end
+  # the "id" found in the onclick tag for the cell.
+  action(:edit_cell_by_id) { |id, b| b.matrix_scaffolding.td(:html=>/#{id}/).fire_event("onclick") }
 
   # Clicks the "Return to List" link and
   # instantiates the Matrices Class.
-  def return_to_list
-    frm.link(:text=>"Return to List").click
-    Matrices.new(@browser)
+  action(:return_to_list) { |b| b.frm.link(:text=>"Return to List").click }
+
+  element(:matrix_scaffolding) { |b| b.frm.div(:class=>"portletBody").table(:summary=>"Matrix Scaffolding (click on a cell to edit)") }
+
+  element(:cells) { |b| b.frm.tds(:class=>/matrix-cell-border/).to_a }
+
+  element(:column_headers) { |b| b.matrix_scaffolding.tr(:index=>0).ths.to_a }
+
+  def edit_cell_by_row_and_column(row, column)
+    columns = []
+    column_headers.each { |col| columns << col.text }
+    columns.delete_at(0)
+    matrix_scaffolding.row(:text=>/#{Regexp.escape(row)}/).td(:index=>columns.index(column)).fire_event("onclick")
   end
 
 end
@@ -173,23 +147,17 @@ class EditCell < BasePage
 
   frame_element
 
-  thing(:select_evaluators_link) { |b| b.frm.link(:text=>"Select Evaluators") }
+  expected_element :select_evaluators_link
+
+  element(:select_evaluators_link) { |b| b.frm.link(:text=>"Select Evaluators") }
 
   # Clicks the "Select Evaluators" link
   # and instantiates the SelectEvaluators Class.
-  def select_evaluators
-    select_evaluators_link.wait_until_present
-    select_evaluators_link.click
-    SelectEvaluators.new(@browser)
-  end
+  action(:select_evaluators) { |p| p.select_evaluators_link.click }
 
   # Clicks the Save Changes button and instantiates
   # the EditMatrixCells Class.
-  def save_changes
-    frm.button(:value=>"Save Changes").click
-    EditMatrixCells.new(@browser)
-  end
-
+  action(:save_changes) { |b| b.frm.button(:value=>"Save Changes").click }
 
   element(:title) { |b| b.frm.text_field(:id=>"title-id") }
   element(:use_default_reflection_form) { |b| b.frm.checkbox(:id=>"defaultReflectionForm") }
@@ -209,12 +177,7 @@ class SelectEvaluators < BasePage
 
   # Clicks the "Save" button and
   # instantiates the EditCell Class.
-  def save
-    frm.button(:value=>"Save").click
-    EditCell.new(@browser)
-  end
-
-
+  action(:save) { |b| b.frm.button(:value=>"Save").click }
   element(:users) { |b| b.frm.select(:id=>"mainForm:availableUsers") }
   element(:selected_users) { |b| b.frm.select(:id=>"mainForm:selectedUsers") }
   element(:roles) { |b| b.frm.select(:id=>"mainForm:audSubV11:availableRoles") }
@@ -233,9 +196,6 @@ class ConfirmPublishMatrix < BasePage
 
   # Clicks the "Continue" button and
   # instantiates the Matrices Class.
-  def continue
-    frm.button(:value=>"Continue").click
-    Matrices.new(@browser)
-  end
+  action(:continue) { |b| b.frm.button(:value=>"Continue").click }
 
 end

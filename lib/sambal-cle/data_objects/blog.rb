@@ -1,8 +1,8 @@
 class BlogEntryObject
 
-  include PageHelper
-  include Utilities
-  include Workflows
+  include Foundry
+  include StringFactory
+  include Navigation
   
   attr_accessor :title, :content, :site, :permissions
   
@@ -14,15 +14,13 @@ class BlogEntryObject
       :content=>random_alphanums,
       :permissions=>:publicly_viewable
     }
-    options = defaults.merge(opts)
-    
-    set_options(options)
-    requirements @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
     
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    blogs unless @browser.title=~/Blogs$/
+    open_my_site_by_name @site
+    blogs
     # TODO: More needed here
   end
     

@@ -46,29 +46,14 @@ class Lessons < LessonsBase
   action(:archive) { |b| b.frm.link(text: "Archive").click }
   action(:move_sections) { |b| b.frm.link(text: "Move Section(s)").click }
 
-  # Clicks on the link that matches the supplied
-  # name value, next is the
-  # AddEditLesson, or ViewLesson class, depending
-  # on which page loads.
-  #
-  # Will error out if there is no
-  # matching link in the list.
-  def open_lesson(name)
-    frm.link(:text=>name).click
-  end
-  alias open_section open_lesson
+  action(:open_lesson) { |name, b| b.frm.link(:text=>name).click }
+  alias :open_section :open_lesson
 
-  def href(name)
-    frm.link(:text=>name).href
-  end
+  action(:href) { |name, b| b.frm.link(:text=>name).href }
 
-  def check_lesson(name)
-    frm.tr(text: /#{Regexp.escape(name)}/).td(class: "ModCheckClass").checkbox.set
-  end
+  action(:check_lesson) { |name, b| b.frm.tr(text: /#{Regexp.escape(name)}/).td(class: "ModCheckClass").checkbox.set }
 
-  def check_section(name)
-    frm.td(class: "SectionClass", text: /#{Regexp.escape(name)}/).checkbox.set
-  end
+  action(:check_section) { |name, b| b.frm.td(class: "SectionClass", text: /#{Regexp.escape(name)}/).checkbox.set }
 
   # Returns an array of the Module titles displayed on the page.
   def lessons_list
@@ -108,7 +93,7 @@ class ViewModule < LessonsBase
     return list
   end
 
-  action(:next) { |b| b.frm.link(:text=>"Next").click }
+  link "Next"
 
   # Returns the text of the Module title row
   value(:module_title) { |b| b.frm.span(:id=>/modtitle/).text }
@@ -129,14 +114,10 @@ class ViewModuleList < LessonsBase
   menu_elements
 
   # LessonStudentSide
-  def open_lesson(name)
-    frm.link(:text=>name).click
-  end
+  action(:open_lesson) { |name, b| b.frm.link(:text=>name).click }
 
   # SectionStudentSide
-  def open_section(name)
-    frm.link(:text=>name).click
-  end
+  action(:open_section) { |name, b| b.frm.link(:text=>name).click }
 
 end
 
@@ -159,13 +140,9 @@ class LessonManage < LessonsBase
 
   menu_elements
 
-  action(:manage_content) {|b| b.frm.link(:text=>"Manage Content").click }
-
-  action(:sort) {|b| b.frm.link(:text=>"Sort").click }
-
-  # Clicks the Import/Export button and
-  # next is the LessonImportExport class.
-  action(:import_export) {|b| b.frm.link(:text=>"Import/Export").click }
+  link "Manage Content"
+  link "Sort"
+  link "Import/Export"
 
 end
 
@@ -264,7 +241,7 @@ end
 class AddEditContentSection < LessonsBase
 
   menu_elements
-  include FCKEditor
+  cke_elements
 
   #expected_element :instructions
 
@@ -272,17 +249,13 @@ class AddEditContentSection < LessonsBase
   # next is the ConfirmSectionAdd class.
   action(:add) { |b| b.frm.link(:id=>/SectionForm:submitsave/).click }
 
-  # Pointer to the frame of the FCKEditor
-  # on the page.
-  element(:content_editor) { |b| b.frm.frame(:id, /SectionForm:fckEditorView:otherMeletecontentEditor_inputRichText___Frame/) }
-
   def add_content=(text)
-    content_editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
   def clear_content  # FIXME - This is an extra method now that we have the FCKEditor module
-    content_editor.div(:title=>"Select All").fire_event("onclick")
-    content_editor.send_keys :backspace
+    select_all
+    editor.send_keys :backspace
   end
 
   # SelectingContent

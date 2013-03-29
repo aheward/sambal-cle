@@ -7,26 +7,13 @@ class Forms < BasePage
 
   frame_element
 
-  # Clicks the Add button and instantiates
-  # the AddForm Class.
-  def add
-    frm.link(:text=>"Add").click
-    AddForm.new(@browser)
-  end
+  link "Add"
 
   # Clicks the Publish buton for the specified
-  # Form, then instantiates the PublishForm Class.
-  def publish(form_name)
-    frm.table(:class=>"listHier lines nolines").tr(:text, /#{Regexp.escape(form_name)}/).link(:text=>/Publish/).click
-    PublishForm.new(@browser)
-  end
+  # Form
+  action(:publish) { |form_name, b| b.frm.table(:class=>"listHier lines nolines").tr(:text, /#{Regexp.escape(form_name)}/).link(:text=>/Publish/).click }
 
-  # Clicks the Import button, then
-  # instantiates the ImportForms Class.
-  def import
-    frm.link(:text=>"Import").click
-    ImportForms.new(@browser)
-  end
+  link "Import"
 
 end
 
@@ -34,38 +21,26 @@ class ImportForms < BasePage
 
   frame_element
 
-  def import
-    frm.button(:value=>"Import").click
-    Forms.new(@browser)
-  end
+  button "Import"
 
-  def select_file
-    frm.link(:text=>"Select File...").click
-    AttachFileFormImport.new(@browser)
-  end
+  link "Select File..."
 
 end
 
 class AddForm < BasePage
 
   frame_element
+  cke_elements
 
-  def select_schema_file
-    frm.link(:text=>"Select Schema File").click
-    SelectSchemaFile.new(@browser)
-  end
+  link "Select Schema File"
 
   def instruction=(text)
-    frm.frame(:id, "instruction___Frame").td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.send_keys(text)
   end
 
-  def add_form
-    frm.button(:value=>"Add Form").click
-    Forms.new(@browser)
-  end
+  button "Add Form"
 
   element(:name) { |b| b.frm.text_field(:id=>"description-id") }
-
 
 end
 
@@ -73,21 +48,11 @@ class SelectSchemaFile < BasePage
 
   frame_element
 
-  def show_other_sites
-    frm.link(:title=>"Show other sites").click
-    SelectSchemaFile.new(@browser)
-  end
+  action(:show_other_sites) { |b| b.frm.link(:title=>"Show other sites").click }
 
-  def open_folder(name)
-    frm.link(:text=>name).click
-    SelectSchemaFile.new(@browser)
-  end
+  action(:open_folder) { |name, b| b.frm.link(:text=>name).click }
 
-  def select_file(filename)
-    index = file_names.index(filename)
-    frm.table(:class=>"listHier lines").tr(:text, /#{Regexp.escape(filename)}/).link(:text=>"Select").click
-    SelectSchemaFile.new(@browser)
-  end
+  action(:select_file) { |filename, b| b.frm.table(:class=>"listHier lines").tr(:text, /#{Regexp.escape(filename)}/).link(:text=>"Select").click }
 
   def file_names #FIXME
     names = []
@@ -100,11 +65,7 @@ class SelectSchemaFile < BasePage
     return names
   end
 
-  def continue
-    frm.button(:value=>"Continue").click
-    frm.frame(:id, "instruction___Frame").td(:id, "xEditingArea").wait_until_present
-    AddForm.new(@browser)
-  end
+  button "Continue"
 
 end
 
@@ -112,9 +73,6 @@ class PublishForm < BasePage
 
   frame_element
 
-  def yes
-    frm.button(:value=>"Yes").click
-    Forms.new(@browser)
-  end
+  button "Yes"
 
 end

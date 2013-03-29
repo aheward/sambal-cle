@@ -1,8 +1,9 @@
 class SyllabusObject
 
-  include PageHelper
-  include Utilities
-  include Workflows
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include Navigation
 
   attr_accessor :title, :content, :site
 
@@ -13,16 +14,15 @@ class SyllabusObject
         :title=>random_alphanums,
         :content=>random_multiline(50, 5, :alpha)
     }
-    options = defaults.merge(opts)
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
 
   alias :name :title
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    syllabus unless @browser.title=~/Syllabus$/
+    open_my_site_by_name @site
+    syllabus
     on Syllabus do |add|
       add.create_edit
       add.add
@@ -35,8 +35,8 @@ class SyllabusObject
   end
 
   def edit opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    syllabus unless @browser.title=~/Syllabus$/
+    open_my_site_by_name @site
+    syllabus
     on Syllabus do |syllabus|
       reset
       syllabus.create_edit
@@ -45,15 +45,16 @@ class SyllabusObject
       edit.open_item @title
     end
     on AddEditSyllabusItem do |item|
-      item.title.set opts[:title] unless opts[:title]==nil
+      item.title.fit opts[:title]
       item.enter_source_text(item.editor, opts[:content]) unless opts[:content]==nil
     end
     set_options(opts)
   end
 
   def get_properties
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    syllabus unless @browser.title=~/Syllabus$/
+    open_my_site_by_name @site
+    syllabus
+    sleep 2 #FIXME
     on Syllabus do |syllabus|
       reset
       syllabus.create_edit

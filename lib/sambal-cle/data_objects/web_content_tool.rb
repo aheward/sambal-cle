@@ -1,8 +1,9 @@
 class WebContentObject
 
-  include PageHelper
-  include Utilities
-  include Workflows
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include Navigation
 
   attr_accessor :title, :source, :site
 
@@ -13,15 +14,13 @@ class WebContentObject
       :title=>random_alphanums,
       :source=>"www.rsmart.com"
     }
-    options = defaults.merge(opts)
-
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
 
   def create
-    my_workspace unless @browser.title=~/My Workspace/
-    site_setup unless @browser.title=~/Site Setup$/
+    my_workspace
+    site_setup
     on_page SiteSetup do |page|
       page.edit @site
     end

@@ -1,14 +1,14 @@
-class SiteObject
+class CourseSiteObject
 
-  include PageHelper
-  include Utilities
-  include Randomizers
-  include DateMakers
-  include Workflows
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include DateFactory
+  include Navigation
 
-  attr_accessor :name, :id, :subject, :course, :section, :term, :authorizer,
+  attr_accessor :name, :id, :subject, :course, :section, :term, :term_value, :authorizer,
     :web_content_source, :email, :joiner_role, :creation_date, :web_content_title,
-    :description, :short_description, :site_contact_name, :site_contact_email
+    :description, :short_description, :site_contact_name, :site_contact_email, :participants
 
   def initialize(browser, opts={})
     @browser = browser
@@ -24,16 +24,16 @@ class SiteObject
       :joiner_role => "Student",
       :description => random_alphanums(30),
       :short_description => random_alphanums,
-      :site_contact_name => random_alphanums(5)+" "+random_alphanums(8)
+      :site_contact_name => random_alphanums(5)+" "+random_alphanums(8),
+      :participants=>{}
     }
-    options = defaults.merge(opts)
-    set_options(options)
+    set_options(defaults.merge(opts))
   end
 
   def create
-    my_workspace unless @browser.title=~/My Workspace/
-    site_setup unless @browser.title=~/Site Setup/
-    on_page SiteSetup do |page|
+    my_workspace
+    site_setup
+    on_page SiteSetupList do |page|
       page.new
     end
     on SiteType do |page|
@@ -41,7 +41,8 @@ class SiteObject
       page.course_site.set
       # Store the selected term value for use later
       # TODO: Add logic here in case we want to actually SET the term value instead.
-      @term = page.academic_term.value
+      @term_value = page.academic_term.value
+      @term = page.academic_term.selected_options[0].text
 
       page.continue
     end
@@ -54,9 +55,7 @@ class SiteObject
       page.section.set @section
 
       # Store site name for ease of coding and readability later
-      @name = "#{@subject} #{@course} #{@section} #{@term}"
-      # Add a valid instructor id
-      page.authorizers_username.set @authorizer
+      @name = "#{@subject} #{@course} #{@section} #{@term_value}"
 
       # Click continue button
       page.continue
@@ -65,7 +64,8 @@ class SiteObject
       page.short_description.set @short_description
       page.site_contact_name.set @site_contact_name
       page.site_contact_email.set @site_contact_email
-      page.enter_source_text page.editor, @description
+      page.source
+      page.source_field.set @description
 
       # Click Continue
       page.continue
@@ -92,21 +92,22 @@ class SiteObject
     end
 
     # Create a string that will match the new Site's "creation date" string
-    @creation_date = make_date(Time.now)
+    @creation_date = right_now[:sakai]
 
-    on SiteSetup do |site_setup|
-      site_setup.search(Regexp.escape(@subject))
+    on SiteSetupList do |site_setup|
+      site_setup.search_field.set(Regexp.escape(@subject))
+      site_setup.search
 
       # Get the site id for storage
-      @browser.frame(:class=>"portletMainIframe").link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
+      site_setup.frm.link(:href=>/portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
       @id = $~.to_s
     end
   end
 
   def create_and_reuse_site(site_name)
-    my_workspace unless @browser.title=~/My Workspace/
-    site_setup unless @browser.title=~/Site Setup/
-    on_page SiteSetup do |page|
+    my_workspace
+    site_setup
+    on_page SiteSetupList do |page|
       page.new
     end
     on SiteType do |site_type|
@@ -130,7 +131,7 @@ class SiteObject
       course_section.section.set @section
 
       # Store site name for ease of coding and readability later
-      @name = "#{@subject} #{@course} #{@section} #{@term}"
+      @name = "#{@subject} #{@course} #{@section} #{@term_value}"
 
       # Add a valid instructor id
       course_section.authorizers_username.set @authorizer
@@ -187,7 +188,7 @@ class SiteObject
     end
     # Create a string that will match the new Site's "creation date" string
     @creation_date = make_date(Time.now)
-    on_page SiteSetup do |page|
+    on_page SiteSetupList do |page|
       page.search(Regexp.escape(@subject))
     end
     # Get the site id for storage
@@ -216,25 +217,10 @@ class SiteObject
     }
     options = defaults.merge(opts)
 
-    new_site = make SiteObject, options
+    new_site = make CourseSiteObject, options
 
-    new_site.name=options[:name]
-    new_site.subject=options[:subject]
-    new_site.course=options[:course]
-    new_site.section=options[:section]
-    new_site.authorizer=options[:authorizer]
-    new_site.web_content_source=options[:web_content_source]
-    new_site.email=options[:email]
-    new_site.joiner_role=options[:joiner_role]
-    new_site.web_content_title=options[:web_content_title]
-    new_site.description=options[:description]
-    new_site.short_description=options[:short_description]
-    new_site.site_contact_name=options[:site_contact_name]
-    new_site.site_contact_email=options[:site_contact_email]
-    new_site.term=options[:term]
-
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    site_editor unless @browser.title=~/Site Editor$/
+    open_my_site_by_name @name
+    site_editor
     on SiteEditor do |edit|
       edit.duplicate_site
     end
@@ -244,8 +230,8 @@ class SiteObject
       dupe.duplicate
     end
     my_workspace
-    site_setup unless @browser.title=~/Site Setup/
-    on SiteSetup do |sites|
+    site_setup
+    on SiteSetupList do |sites|
       sites.search(Regexp.escape(new_site.name))
     end
     # Get the site id for storage
@@ -256,20 +242,19 @@ class SiteObject
 
   end
 
-  # TODO: Improve this method to better take advantage of the UserObject...
-  def add_official_participants opts={}
-    participants = opts[:participants].join("\n")
-    open_my_site_by_name @name unless @browser.title=~/#{@name}/
-    site_editor unless @browser.title=~/Site Editor$/
+  def add_official_participants(role, *participants)
+    list_of_ids=participants.join("\n")
+    open_my_site_by_name @name
+    site_editor
     on SiteEditor do |site|
       site.add_participants
     end
     on SiteSetupAddParticipants do |add|
-      add.official_participants.set participants
+      add.official_participants.set list_of_ids
       add.continue
     end
     on SiteSetupChooseRole do |choose|
-      choose.radio_button(opts[:role]).set
+      choose.radio_button(role).set
       choose.continue
     end
     on SiteSetupParticipantEmail do |send|
@@ -278,7 +263,11 @@ class SiteObject
     on SiteSetupParticipantConfirm do |confirm|
       confirm.finish
     end
+    if @participants.has_key?(role)
+      @participants[role].insert(-1, participants).flatten!
+    else
+      @participants.store(role, participants)
+    end
   end
-
 
 end

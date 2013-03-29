@@ -1,6 +1,5 @@
 require 'cgi'
-require 'watir-webdriver'
-require 'sambal-cle/page_maker.rb'
+require 'test-factory'
 Dir["#{File.dirname(__FILE__)}/sambal-cle/*.rb"].each {|f| require f }
 Dir["#{File.dirname(__FILE__)}/sambal-cle/page_objects/*.rb"].each {|f| require f }
 Dir["#{File.dirname(__FILE__)}/sambal-cle/data_objects/*.rb"].each {|f| require f }
@@ -8,9 +7,9 @@ Dir["#{File.dirname(__FILE__)}/sambal-cle/data_objects/*.rb"].each {|f| require 
 # Initialize this class at the start of your test cases to
 # open the specified test browser at the specified Sakai welcome page URL.
 #
-# The initialization will return the LoginPage class object as well as
+# The initialization will
 # create the @browser variable used throughout the page classes
-class SakaiCLE
+class SambalCLE
 
   attr_reader :browser
 

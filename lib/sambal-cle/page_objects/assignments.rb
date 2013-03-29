@@ -1,13 +1,3 @@
-
-# TODO: There's a lot of cleanup that can be done with the code in these
-# classes--and it's probably even possible to completely eliminate one
-# or more of them. I'm looking at YOU, AssignmentStudentPreview and AssignmentPreview.
-# We could probably make an AssignmentViewBase class with a set of common elements--that's
-# assuming we even need more than one generic View class, and it might turn out that
-# we don't--unless we need one for students and one for instructors. Note that the
-# elimination and/or renaming of classes and methods will break the assignments_submissions_spec
-# (among others), so refactor with care (and use RubyMine to help).
-
 #================
 # Assignments Pages
 #================
@@ -42,10 +32,12 @@ end
 # The page where you create a new assignment
 class AssignmentAdd < AssignmentsBase
 
-  include FCKEditor
+  cke_elements
   menu_elements
 
   expected_element :editor
+
+  action(:instructions=) { |text, b| b.rich_text_field('new_assignment_instructions').send_keys text }
 
   # Clicks the Post button, then
   # next is the AssignmentsList page class.
@@ -62,16 +54,7 @@ class AssignmentAdd < AssignmentsBase
   # Grabs the text contained in the alert box when
   # it is present on the page (will throw an error if
   # called when the box is not present).
-  value(:alert_text) { |b| b.frm.div(:class=>"portletBody").div(:class=>"alertMessage").text }
-
-  element(:editor) { |b| b.frm.frame(:id, "new_assignment_instructions___Frame") }
-
-  # Sends the specified text to the text box in the FCKEditor
-  # on the page.
-  def instructions=(instructions)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys([:command, 'a'], :backspace)
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(instructions)
-  end
+  value(:alert_box) { |b| b.frm.div(:class=>"portletBody").div(:class=>"alertMessage").text }
 
   # Clicks the Preview button, next is
   # the AssignmentsPreview page class.
@@ -194,7 +177,7 @@ class AssignmentsList < AssignmentsBase
     1.upto(a_table.rows.size-1) do |x|
       titles << a_table[x][1].h4(:index=>0).text
     end
-    return titles
+    titles
   end
   alias assignment_titles assignments_titles
   alias assignment_list assignments_titles
@@ -202,72 +185,52 @@ class AssignmentsList < AssignmentsBase
 
   # Clicks the Edit link for the assignment with the specified
   # id, then instantiates the AssignmentAdd page class.
-  def edit_assignment_id(id)
-    frm.link(:href=>/#{Regexp.escape(id)}/).click
-  end
+  action(:edit_assignment_id) { |id, b| b.frm.link(:href=>/#{Regexp.escape(id)}/).click }
 
   # Clicks the Edit link for the Assignment specified.
   # next is the AssignmentAdd page class.
-  def edit_assignment(assignment_name)
-    index = assignments_titles.index(assignment_name)
-    frm.link(:text=>"Edit", :index=>index).click
-  end
+  action(:edit_assignment) { |assignment_name, b|
+    index = b.assignments_titles.index(assignment_name)
+    b.frm.link(:text=>"Edit", :index=>index).click
+  }
 
   # Checks the appropriate checkbox, based on the specified assignment_name
   # Then clicks the Update button and confirms the deletion request.
-  def delete(assignment_name)
-    assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).checkbox(:name=>"selectedAssignments").set
-    frm.button(:value=>"Update").click
-    frm.button(:value=>"Delete").click
-  end
+  action(:delete) { |assignment_name, b|
+    b.assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).checkbox(:name=>"selectedAssignments").set
+    b.frm.button(:value=>"Update").click
+    b.frm.button(:value=>"Delete").click
+  }
 
   # Clicks on the Duplicate link for the Assignment specified.
   # Then instantiates the AssignmentsList page class.
-  def duplicate(assignment_name)
-    index = assignments_titles.index(assignment_name)
-    frm.link(:text=>"Duplicate", :index=>index).click
-  end
+  action(:duplicate) { |assignment_name, b|
+    index = b.assignments_titles.index(assignment_name)
+    b.frm.link(:text=>"Duplicate", :index=>index).click
+  }
 
   # Gets the assignment id from the href of the specified
   # Assignment link.
-  def get_assignment_id(assignment_name)
-    assignment_href(assignment_name) =~ /(?<=\/a\/\S{36}\/).+(?=&pan)/
-    $~.to_s
-  end
-
-  def assignment_href(name)
-    frm.link(:text=>/#{Regexp.escape(name)}/).href
-  end
+  action(:get_assignment_id) { |assignment_name, b| b.assignment_href(assignment_name) =~ /(?<=\/a\/\S{36}\/).+(?=&pan)/; $~.to_s }
+  action(:assignment_href) { |name, b| b.frm.link(:text=>/#{Regexp.escape(name)}/).href }
 
   # Checks the checkbox for the specified Assignment,
   # using the assignment id as the identifier.
-  def check_assignment(id) #FIXME to use name instead of id.
-    frm.checkbox(:value, /#{id}/).set
-  end
-
-  # Opens the specified assignment for viewing
-  def open_assignment(assignment_name)
-    frm.link(:text=>assignment_name).click
-  end
+  action(:check_assignment) { |id,b| b.frm.checkbox(:value, /#{id}/).set } #FIXME to use name instead of id.
+  action(:open_assignment) { |assignment_name, b| b.frm.link(:text=>assignment_name).click }
 
   # Gets the contents of the status column
   # for the specified assignment
-  def status_of(assignment_name)
-    assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).td(:headers=>"status").text
-  end
+  action(:status_of) { |assignment_name, b| b.assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).td(:headers=>"status").text }
 
   # Clicks the View Submissions link for the specified
   # Assignment, then instantiates the AssignmentSubmissionList
   # page class.
-  def view_submissions_for(assignment_name)
-    assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).link(:text=>"View Submissions").click
-  end
+  action(:view_submissions_for) { |assignment_name, b| b.assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).link(:text=>"View Submissions").click }
 
   # Clicks the Grade link for the specified Assignment,
   # then instantiates the AssignmentSubmissionList page class.
-  def grade(assignment_name)
-    assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).link(:text=>"Grade").click
-  end
+  action(:grade) { |assignment_name, b| b.assignments_table.row(:text=>/#{Regexp.escape(assignment_name)}/).link(:text=>"Grade").click }
 
   action(:sort_assignment_title) { |b| b.frm.link(:text=>"Assignment title").click }
   action(:sort_status) { |b| b.frm.link(:text=>"Status").click }
@@ -321,54 +284,36 @@ class AssignmentsPermissions < AssignmentsBase
 end
 
 # Page that appears when you click to preview an Assignment
+# as an instructor user. Note that the primary difference
+# between this class and AssignmentsView is that there are
+# instructor-specific buttons and menu options that don't
+# appear for student users.
 class AssignmentsPreview < AssignmentsBase
 
   menu_elements
+  basic_page_elements # Needed for the header method
 
-  # Returns the text content of the page header
-  def header
-    frm.div(:class=>"portletBody").h3.text
-  end
-
-  # Returns a hash object containing the contents of the Item Summary table.
-  # The hash's Key is the header column and the value is the content column.
-  def item_summary
-    hash = {}
-    frm.table(:class=>"itemSummary").rows.each do |row|
-      hash.store(row.th.text, row.td.text)
+  # returns a hash containing the info in the Summary table.
+  # Header fields are the keys and their associated tds are the values.
+  def summary_info
+    hash={}
+    array = frm.table(:class=>"itemSummary").to_a
+    array.each do |subarray|
+      hash.store(subarray[0], subarray[1])
     end
-    return hash
+    hash
   end
 
   # Grabs the Assignment Instructions text.
-  def assignment_instructions
-    frm.div(:class=>"textPanel").text
-  end
+  value(:instructions) { |b| b.frm.div(:id=>"instructions").text }
 
   # Grabs the instructor comments text.
-  def instructor_comments
-    frm.div(:class=>"portletBody").div(:class=>"textPanel", :index=>2).text
-  end
+  value(:instructor_comments) { |b| b.frm.div(:class=>"portletBody").div(:class=>"textPanel", :index=>2).text }
 
-  #
-  def back_to_list
-    frm.button(:value=>"Back to list").click
-    AssignmentsList.new(@browser)
-  end
+  action(:back_to_list) { |b| b.frm.button(:value=>"Back to list").click }
 
-  # Clicks the Post button, then instantiates
-  # the AssignmentsList page class.
-  def post
-    frm.button(:name=>"post").click
-    AssignmentsList.new(@browser)
-  end
-
-  # Clicks the Cancel button and instantiates the
-  # AssignmentsList Class.
-  def cancel
-    frm.button(:value=>"Cancel").click
-    AssignmentsList.new(@browser)
-  end
+  # Clicks the Post button.
+  action(:post) { |b| b.frm.button(:name=>"post").click }
 
   element(:assignment_id) { |b| b.frm.hidden(:name=>"assignmentId") }
   action(:hide_assignment) { |b| b.frm.link(:href=>/doHide_preview_assignment_assignment/).click }
@@ -385,19 +330,9 @@ end
 class AssignmentsReorder < AssignmentsBase
 
   menu_elements
+  basic_page_elements
 
-  # Clicks the Save button, then instantiates
-  # the AssignmentsList page class.
-  def save
-    frm.button(:value=>"Save").click
-  end
-
-  # Clicks the Cancel button, then instantiates
-  # the AssignmentsList Class.
-  def cancel
-    frm.button(:value=>"Cancel").click
-  end
-
+  action(:save) { |b| b.frm.button(:value=>"Save").click }
   action(:sort_by_title) { |b| b.frm.link(:text=>"Sort by title").click }
   action(:sort_by_open_date) { |b| b.frm.link(:text=>"Sort by open date").click }
   action(:sort_by_due_date) { |b| b.frm.link(:text=>"Sort by due date").click }
@@ -407,161 +342,12 @@ class AssignmentsReorder < AssignmentsBase
 end
 
 # A Student user's page for editing/submitting/view an assignment.
-class AssignmentStudent < BasePage
+class AssignmentStudentView < BasePage
 
-  include FCKEditor
+  cke_elements
   frame_element
+  basic_page_elements
 
-  expected_element :editor
-
-  # Returns the text content of the page header
-  value(:header) { |b| b.frm.div(:class=>"portletBody").h3.text }
-
-  # Returns the contents of the alert box (when present)
-  value(:alert_text) { |b| b.frm.div(:class=>"portletBody").div(:class=>"alertMessage").text }
-
-  # Returns a hash object containing the contents of the Item Summary table.
-  # The hash's Key is the header column and the value is the content column.
-  def item_summary
-    hash = {}
-    frm.table(:class=>"itemSummary").rows.each do |row|
-      hash.store(row.th.text, row.td.text)
-    end
-    return hash
-  end
-
-  # Grabs the instructor comments text.
-  def instructor_comments
-    frm.div(:class=>"portletBody").div(:class=>"textPanel", :index=>2).text
-  end
-
-  element(:editor) { |b| b.frm.frame(:id, "Assignment.view_submission_text___Frame") }
-
-  # Enters the specified text into the Assignment Text FCKEditor.
-  def assignment_text=(text)
-    remove_assignment_text
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
-  end
-
-  # Clears out any existing text from the Assignment Text FCKEditor.
-  def remove_assignment_text
-    editor.div(:title=>"Select All").fire_event("onclick")
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys :backspace
-  end
-
-  # TODO: Rethink all this in light of the fact that we're now using the DataObject class model...
-  # This class variable allows adding an arbitrary number of
-  # files to the page, as long as the adding steps alternate between
-  # selecting the file and clicking the add more files button
-  @@file_number = 0
-
-  # Enters the specified file name into the file field. Entering the path
-  # separately is optional.
-  # Once the filename is entered in the field, the
-  # @@file_number class variable is increased by one
-  # in case any more files need to be added to the upload
-  # list.
-  def select_file(file_name, file_path="")
-    #frm.file_field(:id=>"clonableUpload", :name=>"upload#{@@file_number}").set(file_path + file_name)
-    @@file_number += 1
-  end
-
-  element(:submit_button) { |b| b.frm.button(:value=>"Submit") }
-
-  # Clicks the Submit button, then instantiates
-  # the appropriate page class, based on the
-  # page that gets loaded.
-  def submit
-    submit_button.click
-    @@file_number=0
-  end
-
-  element(:resubmit_button) { |b| b.frm.button(:value=>"Resubmit") }
-
-  # Clicks the Resubmit button, then instantiates
-  # the appropriate page class, based on the
-  # page that gets loaded.
-  #
-  # Resets @@file_number to zero so that file
-  # uploads will work if this page is visited again
-  # in the same script.
-  def resubmit
-    resubmit_button.click
-    @@file_number=0
-  end
-
-  # Clicks the Preview button, then
-  # instantiates the AssignmentStudentPreview page class.
-  #
-  # Resets @@file_number to zero so that file
-  # uploads will work if this page is visited again
-  # in the same script.
-  def preview
-    frm.button(:value=>"Preview").click
-    @@file_number=0
-  end
-
-  # Clicks the Save Draft button, then
-  # instantiates the SubmissionConfirmation
-  # page class.
-  def save_draft
-    frm.button(:value=>"Save Draft").click
-  end
-
-  # Clicks the link to select more files
-  # from the Workspace. Then instantiates
-  # the AssignmentAttachments page class.
-  def select_more_files_from_workspace
-    frm.link(:id=>"attach").click
-  end
-
-  # Clicks the Back to list button, then
-  # instantiates the AssignmentList page class.
-  def back_to_list
-    frm.button(:value=>"Back to list").click
-  end
-
-  # Clicks the Cancel button and instantiates the
-  # AssignmentsList Class.
-  def cancel
-    frm.button(:value=>"Cancel").click
-  end
-
-  action(:add_another_file) { |b| b.frm.link(:id=>"addMoreAttachmentControls") }
-
-end
-
-# Page that appears when
-# 1) a Student User clicks to Preview an
-# assignment that is in progress.
-# 2) A Student views a submitted Assignment (in which case
-# some of the methods in the class will be inappropriate, but
-# useful for verification purposes, nonetheless)
-class AssignmentStudentPreview < BasePage
-
-  frame_element
-
-  element(:submit_button) { |b| b.frm.button(:value=>"Submit") }
-  element(:resubmit_button) { |b| b.frm.button(:value=>"Resubmit") }
-  element(:save_draft_button) { |b| b.frm.button(:value=>"Save Draft") }
-
-  # Clicks the Submit button
-  action(:submit) { |p| p.submit_button.click }
-
-  # Clicks the Save Draft button
-  action(:save_draft) { |p| p.frm.button(:value=>"Save Draft").click }
-
-  action(:back_to_list) { |b| b.frm.button(:value=>"Back to list").click }
-
-  # Returns the contents of the submission box.
-  def submission_text
-    frm.div(:class=>"portletBody").div(:class=>/textPanel/).text
-  end
-
-  # returns a hash containing the info in the Summary table.
-  # Header fields are the keys and their associated tds are the values.
-  # Note that the whitespace is trimmed off the keys, so, for example,
-  # the key for "Submitted Date" becomes "SubmittedDate"
   def summary_info
     hash={}
     array = frm.table(:class=>"itemSummary").to_a
@@ -571,12 +357,48 @@ class AssignmentStudentPreview < BasePage
     hash
   end
 
+  # Enters the specified text into the Assignment Text FCKEditor.
+  def assignment_text=(text)
+    remove_assignment_text
+    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+  end
+
+  # Clears out any existing text from the Assignment Text FCKEditor.
+  def remove_assignment_text
+    select_all(editor)
+    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys :backspace
+  end
+
+  def select_file(file_name, file_path="")
+    frm.file_field(:id=>"clonableUpload", :name=>/upload/).set(file_path + file_name)
+  end
+
+  action(:select_more_files_from_workspace) { |b| b.frm.link(:id=>"attach").click }
+  action(:add_another_file) { |b| b.frm.link(:id=>"addMoreAttachmentControls") }
+
+  element(:submit_button) { |b| b.frm.button(:value=>"Submit") }
+  element(:resubmit_button) { |b| b.frm.button(:value=>"Resubmit") }
+  element(:save_draft_button) { |b| b.frm.button(:value=>"Save Draft") }
+  element(:preview_button) { |b| b.frm.button(:value=>"Preview") }
+
+  action(:submit) { |p| p.submit_button.click }
+  action(:resubmit) { |p| p.resubmit_button.click }
+  action(:save_draft) { |p| p.save_draft_button.click }
+  action(:back_to_list) { |b| b.frm.button(:value=>"Back to list").click }
+  action(:preview) { |p| p.preview_button.click }
+
+  element(:instructor_comment_field) { |b| b.frm.div(:id=>"instructor_comment") }
+
+  value(:instructions) { |b| b.frm.div(:id=>"instructions").text }
+  value(:submission_text) { |b| b.frm.div(:id=>"submission").text }
+  value(:instructor_comments) { |p| p.instructor_comment_field.text }
+
   # Returns an array of strings. Each element in the
   # array is the name of attached files.
   def attachments
     names = []
     frm.ul(:class=>"attachList indnt1").links.each { |link| names << link.text }
-    return names
+    names
   end
 
 end
@@ -623,15 +445,11 @@ class AssignmentSubmissionList < AssignmentsBase
   action(:show_assignment_details) { |b| b.frm.image(:src, "/library/image/sakai/expand.gif").click }
 
   # Gets the Student table text and returns it in an Array object.
-  def student_table
-    frm.table(:class=>"listHier lines nolines").to_a
-  end
+  value(:student_table) { |b| b.frm.table(:class=>"listHier lines nolines").to_a }
 
   # Clicks the Grade link for the specified student, then
   # instantiates the AssignmentSubmission page class.
-  def grade(student_name)
-    frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(student_name)}/).link(:text=>"Grade").click
-  end
+  action(:grade) { |student_name, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(student_name)}/).link(:text=>"Grade").click }
 
   # Gets the value of the status field for the specified
   # Student. Note that the student's name needs to be entered
@@ -640,9 +458,7 @@ class AssignmentSubmissionList < AssignmentsBase
   # students with the same name.
   #
   # Useful for verification purposes.
-  def submission_status_of(student_name)
-    frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(student_name)}/)[4].text
-  end
+  action(:submission_status_of) { |student_name, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(student_name)}/)[4].text }
 
   element(:search_input) { |b| b.frm.text_field(:id=>"search") }
   action(:find) { |b| b.frm.button(:value=>"Find").click }
@@ -672,36 +488,20 @@ end
 # The page that shows a student's submitted assignment to an instructor user.
 class AssignmentSubmission < BasePage
 
-  include FCKEditor
   frame_element
+  cke_elements
 
   expected_element :assignment_submission
 
   element(:assignment_submission) { |b| b.frm.frame(:id, "grade_submission_feedback_text___Frame") }
   element(:instructor_comments) { |b| b.frm.frame(:id, "grade_submission_feedback_comment___Frame") }
 
-  # Enters the specified text string in the FCKEditor box for the assignment text.
-  def assignment_text=(text)
-    assignment_submission.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
-  end
-
-  # Removes all the contents of the FCKEditor Assignment Text box.
-  def remove_assignment_text
-    assignment_submission.div(:title=>"Select All").fire_event("onclick")
-    assignment_submission.td(:id, "xEditingArea").frame(:index=>0).send_keys :backspace
-  end
-
-  # Enters the specified string into the Instructor Comments FCKEditor box.
-  def instructor_comments=(text)
-    instructor_comments.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
-  end
-
   # Clicks the Add Attachments button, then instantiates the AssignmentAttachments Class.
   action(:add_attachments) { |b| b.frm.button(:name=>"attach").click }
 
   # Clicks the Return to List button, then instantiates the
   # AssignmentSubmissionList Class.
-  action(:return_to_list) { |b| b.frm.button(:value=>"Return to List").click }
+  button("Return to List")
 
   element(:grade) { |b| b.frm.select(:name=>"grade_submission_grade") }
   element(:allow_resubmission) { |b| b.frm.checkbox(:id=>"allowResToggle") }

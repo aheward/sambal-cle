@@ -6,16 +6,16 @@ describe "Assignments grading" do
 
   include Utilities
   include Workflows
-  include PageHelper
-  include Randomizers
-  include DateMakers
+  include Foundry
+  include StringFactory
+  include DateFactory
 
   before :all do
 
     # Get the test configuration data
     @config = YAML.load_file("config.yml")
     @directory = YAML.load_file("directory.yml")
-    @sakai = SakaiCLE.new(@config['browser'], @config['url'])
+    @sakai = SambalCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
 
     @student = make UserObject, :id=>@directory['person1']['id'], :password=>@directory['person1']['password'],
@@ -28,10 +28,10 @@ describe "Assignments grading" do
                         :type=>"Instructor"
     @instructor1.log_in
 
-    @site = make SiteObject
+    @site = make CourseSiteObject
     @site.create
-    @site.add_official_participants :role=>@student.type, :participants=>[@student.id]
-    @site.add_official_participants :role=>@instructor2.type, :participants=>[@instructor2.id]
+    @site.add_official_participants @student.type, @student.id
+    @site.add_official_participants @instructor2.type, @instructor2.id
 
     @assignment = make AssignmentObject, :site=>@site.name, :title=>random_string(25),
                        :open=>an_hour_ago, :grade_scale=>"Pass",
@@ -54,12 +54,6 @@ describe "Assignments grading" do
 
     @student.log_out
 
-    @instructor_comments = random_multiline(156, 9, :string)
-    @comment_string = "{{Try again please.}}"
-
-    @grade2 = "A-"
-    @url = "www.rsmart.com"
-
   end
 =begin
   after :all do
@@ -69,89 +63,61 @@ describe "Assignments grading" do
 =end
   it "Assignment can be graded" do
     @instructor1.log_in
-    @submission.grade :grade=>"Fail", :summary_comment=>random_alphanums,
-                      :inline_comment=>random_alphanums, :allow_resubmission==:set
+    @submission.grade_submission :summary_comment=>random_alphanums, :grade=>"Fail",
+                      :inline_comment=>random_alphanums, :allow_resubmission=>:set,
+                      :release_to_student=>"yes"
+    @submission2.grade_submission :grade=>"C", :inline_comment=>random_alphanums,
+                                  :summary_comment=>random_alphanums
+    @instructor1.log_out
+  end
 
+  it "The graded assignment's status is based on whether it was released" do
+    @student.log_in
+    open_my_site_by_name @submission.site
+    assignments
+    on AssignmentsList do |list|
+      list.status_of(@submission2).should=="#{@submission2.status} #{@submission2.submission_date}"
+      list.status_of(@submission).should=="Returned"
+    end
   end
 
   it "Assignment grade can be released to the student" do
 
+    @submission.open
+    on AssignmentStudentView do |view|
+      view.summary_info["Grade"].should==@submission.grade
+    end
   end
 
-  xit "bal" do
-    # Click to Grade the first assignment
-    submissions = assignments.grade(@assignment1)
-
-    # Grade the student's assignment
-    grade_assignment = submissions.grade @student
-
-    # Add comments
-    grade_assignment.assignment_text=@comment_string
-    grade_assignment.instructor_comments=@instructor_comments
-
-    # Set failing grade
-    grade_assignment.select_default_grade=@grade1
-
-    # Allow resubmission
-    grade_assignment.check_allow_resubmission
-
-    # Add attachment
-    attach = grade_assignment.add_attachments
-
-    attach.url=@url
-    attach.add
-
-    grade_assignment = attach.continue
-
-    # Save and release to student
-    grade_assignment.save_and_release
-
-    submissions = grade_assignment.return_to_list
-
-    # Go back to the assignments list
-    assignments = submissions.assignment_list
-
-    # Grade Assignment 2...
-    submissions = assignments.grade(@assignment2)
-
-    # Select the student
-    grade_assignment = submissions.grade @student
-
-    # Select a default grade
-    grade_assignment.select_default_grade=@grade2
-
-    # Save and don't release
-    grade_assignment.save_and_dont_release
-
-    # Log out and log back in as student user
-    grade_assignment.logout
-    workspace = @sakai.page.login(@student_id, @student_pw)
-
-    # Go to the test site
-    home = workspace.open_my_site_by_id @site_id
-
-    # Go to assignments page
-    assignments = home.assignments
-
-    assignment1 = assignments.open_assignment @assignment1
-
-    # TEST CASE: Verify that the assignment grade is "Fail"
-    assert_equal("Fail", assignment1.item_summary["Grade"])
-
-    # TEST CASE: Verify assignment 1 shows "returned"
-    assert_equal( assignment1.header, "#{@assignment1} - Resubmit" )
-
-    assignments = assignment1.cancel
-
-    assignment2 = assignments.open_assignment @assignment2
-
-    # TEST CASE: Verify assignment 2 still shows "submitted"
-    assert_equal( assignment2.header, "#{@assignment2} - Submitted" )
-
-    list = assignment2.back_to_list
-
-    # TEST CASE: Verify assignment 2 shows as "submitted" in the assignments list.
-    assert list.status_of(@assignment2).include?("Submitted")
+  it "Assignments can be resubmitted if instructor allows" do
+    on AssignmentStudentView do |view|
+      view.summary_info["Status"].should=="Return #{@submission.returned[:sakai]}"
+      view.summary_info["Number of resubmissions allowed"].should==@submission.num_resubmissions
+      view.summary_info["Accept Resubmission Until"].should==@submission.accept_until[:sakai_rounded]
+      view.resubmit_button.should_be present
+    end
   end
+
+  it "Student can read instructor comments for returned assignments" do
+    on AssignmentStudentView do |view|
+      view.instructions.should==@assignment.instructions
+      view.instructor_comments.should==@submission.summary_comment
+      view.submission_text.should include @submission.inline_comment
+
+    end
+  end
+
+  it "Students can't see grade or instructor comments until released" do
+    @submission2.open
+    on AssignmentStudentView do |view|
+      view.summary_info["Grade"].should==nil
+      view.instructor_comment_field.should_not be_present
+      view.submission_text.should_not include @submission2.inline_comment
+    end
+  end
+
+  # TODO: Other tests to add:
+  # - Assignment resubmissions from the Grade page are per student, not global
+  # - Tests of the second submission: Does it not allow any more?
 
 end

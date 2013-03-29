@@ -7,16 +7,16 @@ describe "Assignments Submission" do
 
   include Utilities
   include Workflows
-  include PageHelper
-  include Randomizers
-  include DateMakers
+  include Foundry
+  include StringFactory
+  include DateFactory
 
   before :all do
 
     # Get the test configuration data
     @config = YAML.load_file("config.yml")
     @directory = YAML.load_file("directory.yml")
-    @sakai = SakaiCLE.new(@config['browser'], @config['url'])
+    @sakai = SambalCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
 
     @student = make UserObject, :id=>@directory['person1']['id'], :password=>@directory['person1']['password'],
@@ -29,10 +29,10 @@ describe "Assignments Submission" do
                         :type=>"Instructor"
     @instructor1.log_in
 
-    @site = make SiteObject
+    @site = make CourseSiteObject
     @site.create
-    @site.add_official_participants :role=>@student.type, :participants=>[@student.id]
-    @site.add_official_participants :role=>@instructor2.type, :participants=>[@instructor2.id]
+    @site.add_official_participants @student.type, @student.id
+    @site.add_official_participants @instructor2.type, @instructor2.id
 
     @assignment = make AssignmentObject, :site=>@site.name, :title=>random_string(25),
                        :open=>an_hour_ago, :grade_scale=>"Pass",
@@ -69,10 +69,11 @@ describe "Assignments Submission" do
   end
 
   it "Blank submissions throw a warning and aren't submitted" do
-    @submission.text=""
+    @submission.text="" # Typically we want to avoid doing this!
     @submission.submit
-    on AssignmentStudent do |assignment|
-      assignment.alert_text.should=="Alert: You must either type in your answer in the text input or attach at least one document before submission."
+    on AssignmentStudentView do |assignment|
+      assignment.instructions.should==@assignment.instructions
+      assignment.alert_box.should=="Alert: You must either type in your answer in the text input or attach at least one document before submission."
     end
   end
 
@@ -95,7 +96,7 @@ describe "Assignments Submission" do
 
   it "Assignments by default do not allow resubmission" do
     @submission.view
-    on AssignmentStudentPreview do |view|
+    on AssignmentStudentView do |view|
       view.summary_info["Submitted Date"].should==@submission.submission_date
       view.summary_info["Title"].should==@submission.title
       view.submit_button.should_not be_present
@@ -113,13 +114,13 @@ describe "Assignments Submission" do
       list.status_of(@submission2.title).should=="#{@submission2.status} #{@submission2.submission_date}"
       list.open_assignment @submission2.title
     end
-    on AssignmentStudent do |assignment|
+    on AssignmentStudentView do |assignment|
       assignment.resubmit_button.should be_present
       assignment.resubmit
     end
     on SubmissionConfirmation do |confirm|
       confirm.summary_info["Class site:"].should==@submission2.site
-      #confirm.summary_info["User:"].should== TODO: Add this line when we're making UserObjects.
+      confirm.summary_info["User:"].should==@student.long_name
       confirm.summary_info["Assignment:"].should==@submission2.title
       confirm.summary_info["Submitted on:"].should==@submission2.submission_date # TODO: "resubmission" date? This needs testing.
       confirm.submission_text.should==@submission2.text
@@ -133,7 +134,7 @@ describe "Assignments Submission" do
     on AssignmentsList do |list|
       list.open_assignment @submission2.title
     end
-    on AssignmentStudentPreview do |assignment|
+    on AssignmentStudentView do |assignment|
       assignment.resubmit_button.should_not be_present
     end
 

@@ -1,8 +1,9 @@
 class MessageObject
 
-  include PageHelper
-  include Utilities
-  include Workflows
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include Navigation
 
   attr_accessor :site, :subject, :send_cc, :recipients, :message, :label
 
@@ -13,15 +14,14 @@ class MessageObject
       :subject=>random_alphanums,
       :recipients=>["All Participants"]
     }
-    options = defaults.merge(opts)
 
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
 
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    messages unless @browser.title=~/Messages$/
+    open_my_site_by_name @site
+    messages
   end
 
   alias compose create
@@ -32,9 +32,9 @@ end
 
 class MessageFolderObject
 
-  include PageHelper
-  include Utilities
-  include Workflows
+  include Foundry
+  include DataFactory
+  include Navigation
 
   attr_accessor :site
 

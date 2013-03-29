@@ -5,7 +5,7 @@ class BlogsBase < BasePage
   class << self
     def menu_elements
       # AddBlogEntry
-      action(:add_blog_entry) { |b| b.frm.link(:text=>"Add blog entry").click }
+      link 'Add blog entry'
     end
   end
 end
@@ -15,10 +15,10 @@ class Blogs < BlogsBase
   menu_elements
 
   # Returns an array containing the list of Bloggers
-  # in the "All the blogs" table.
+  # in the 'All the blogs' table.
   def blogger_list
     bloggers = []
-    frm.table(:class=>"listHier lines").rows.each do |row|
+    frm.table(:class=>'listHier lines').rows.each do |row|
       bloggers << row[1].text
     end
     bloggers.delete_at(0)
@@ -29,27 +29,22 @@ end
 class AddBlogEntry < BlogsBase
 
   menu_elements
-
-  include FCKEditor
+  cke_elements
 
   expected_element :editor
 
-  element(:editor) { |b| b.frm.frame(:id, "blog-text-input:1:input___Frame") }
-
   def blog_text=(text)
-    editor.td(:id, "xEditingArea").frame(:index=>0).wait_until_present
-    editor.td(:id, "xEditingArea").frame(:index=>0).send_keys(text)
+    rich_text_field.wait_until_present
+    rich_text_field.send_keys(text)
   end
 
-  # BlogsList
-  action(:publish_entry) { |b| b.frm.button(:value=>"Publish entry").click }
-  # BlogsList
-  action(:save_draft){ |b| b.frm.button(:value=>"Save Draft").click }
+  button 'Publish entry'
+  button 'Save Draft'
 
-  element(:title) { |b| b.frm.text_field(:name=>"title-input") }
-  element(:only_site_admins) { |b| b.frm.radio(:id=>"instructors-only-radio") }
-  element(:all_members) { |b| b.frm.radio(:id=>"all-members-radio") }
-  element(:publicly_viewable) { |b| b.frm.radio(:id=>"public-viewable-radio") }
+  element(:title) { |b| b.frm.text_field(:name=>'title-input') }
+  element(:only_site_admins) { |b| b.frm.radio(:id=>'instructors-only-radio') }
+  element(:all_members) { |b| b.frm.radio(:id=>'all-members-radio') }
+  element(:publicly_viewable) { |b| b.frm.radio(:id=>'public-viewable-radio') }
 
 end
 

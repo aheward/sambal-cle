@@ -1,8 +1,8 @@
 class AssignmentPermissionsObject # TODO: Need to add support for Group-specific permissions
 
-  include PageHelper
-  include Utilities
-  include Workflows
+  include Foundry
+  include DataFactory
+  include Navigation
   
   attr_accessor :site, :group, :guest, :instructor, :student, :teaching_assistant
   
@@ -14,13 +14,13 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
     @student=checkboxes
     @teaching_assistant=checkboxes
     set_options(opts)
-    requires @site
+    requires :site
     get
   end
     
   def set opts={}
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    assignments unless @browser.title=~/Assignments$/
+    open_my_site_by_name @site
+    assignments
     reset
     on AssignmentsList do |list|
       list.permissions
@@ -43,8 +43,8 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
   end
 
   def get
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    assignments unless @browser.title=~/Assignments$/
+    open_my_site_by_name @site
+    assignments
     reset
     on AssignmentsList do |list|
       list.permissions

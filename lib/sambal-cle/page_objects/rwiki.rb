@@ -23,12 +23,8 @@ class Rwiki < RwikiBase
   action(:save) { |b| b.frm.button(text: "Save").click }
   action(:cancel) { |b| b.frm.button(text: "Cancel").click }
 
-  def open_wiki(title)
-    frm.link(:text=>title).click
-  end
+  action(:open_wiki) { |title, b| b.frm.link(:text=>title).click }
 
-  def wiki_href(title)
-    frm.link(:text=>title).href
-  end
+  action(:wiki_href) { |title, b| b.frm.link(:text=>title).href }
 
 end

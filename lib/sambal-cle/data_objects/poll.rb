@@ -1,8 +1,9 @@
 class PollObject
 
-  include PageHelper
-  include Utilities
-  include Workflows
+  include Foundry
+  include DataFactory
+  include StringFactory
+  include Navigation
   
   attr_accessor :question, :instructions, :options, :opening_date, :closing_date,
                 :access, :visibility, :site
@@ -14,15 +15,14 @@ class PollObject
       :question=>random_alphanums,
       :options=>[random_alphanums, random_alphanums]
     }
-    options = defaults.merge(opts)
     
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
     
   def create
-    open_my_site_by_name @site unless @browser.title=~/#{@site}/
-    polls unless @browser.title=~/Polls$/
+    open_my_site_by_name @site
+    polls
     on Polls do |polls|
       polls.add
     end

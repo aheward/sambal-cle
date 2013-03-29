@@ -8,16 +8,16 @@ describe "Assignment Permissions" do
 
   include Utilities
   include Workflows
-  include PageHelper
-  include Randomizers
-  include DateMakers
+  include Foundry
+  include StringFactory
+  include DateFactory
 
   before :all do
 
     # Get the test configuration data
     @config = YAML.load_file("config.yml")
     @directory = YAML.load_file("directory.yml")
-    @sakai = SakaiCLE.new(@config['browser'], @config['url'])
+    @sakai = SambalCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
 
     @student = make UserObject, :id=>@directory['person1']['id'], :password=>@directory['person1']['password'],
@@ -30,12 +30,12 @@ describe "Assignment Permissions" do
                         :type=>"Instructor"
     @instructor1.log_in
 
-    @site = make SiteObject
+    @site = make CourseSiteObject
     @site.create
-    @site.add_official_participants :role=>@student.type, :participants=>[@student.id]
-    @site.add_official_participants :role=>@instructor2.type, :participants=>[@instructor2.id]
+    @site.add_official_participants @student.type, @student.id
+    @site.add_official_participants @instructor2.type, @instructor2.id
 
-    @site = make SiteObject
+    @site = make CourseSiteObject
     @site.create
 
     @site.add_official_participants :role=>"Student", :participants=>[@student]
