@@ -29,7 +29,16 @@ class SiteSetupList < SiteSetupBase
 
   element(:search_field) { |b| b.frm.text_field(:id, 'search') }
   button 'Search'
-  link 'Edit'
+
+  element(:edit_link) { |b| b.frm.link(text: 'Edit') }
+
+  def edit site
+    search_field.set site
+    search
+    check_site site
+    edit_link.click
+  end
+
   link 'New'
   element(:view) { |b| b.frm.select(:id=>'view') }
   button 'Clear Search'
@@ -38,7 +47,7 @@ class SiteSetupList < SiteSetupBase
   # all Site titles displayed on the web page.
   action(:site_titles) { |b| titles = []; 1.upto(b.sites_table.rows.size-1) { |x| titles << b.sites_table[x][1].text }; titles }
 
-  action(:check_site) { |site_name, b| b.sites_table }
+  action(:check_site) { |site_name, b| b.sites_table.row(text: /#{site_name}/).checkbox.set }
 
   element(:select_page_size) { |b| b.frm.select(:id=>'selectPageSize').click }
   action(:sort_by_title) { |b| b.frm.link(:text=>'Worksite Title').click }
