@@ -97,6 +97,8 @@ class AddEditAnnouncements < BasePage
   frame_element
   cke_elements
 
+  action(:body=) { |text, b| b.rich_text_field('body').send_keys text }
+
   expected_element :editor
 
   # Clicks the Add Announcement button. The next class is either

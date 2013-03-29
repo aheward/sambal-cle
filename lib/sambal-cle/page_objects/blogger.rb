@@ -60,6 +60,8 @@ class CreateBloggerPost < BasePage
   frame_element
   cke_elements
 
+  action(:instructions=) { |text, b| b.rich_text_field('new_assignment_instructions').send_keys text }
+
   # Clicks the Add to document button in the text
   # tab.
   action(:add_text_to_document) { |b| b.frm.div(:id=>"PostForm:tab0").button(:value=>"Add to document").click }
