@@ -458,7 +458,7 @@ class CourseSiteInfo < SiteSetupBase
 
   expected_element :editor
 
-  action(:description=) { |text, b| b.rich_text_field.send_keys text }
+  action(:description=) { |text, b| b.rich_text_field('description').send_keys text }
 
   element(:special_instructions) { |b| b.frm.text_field(:id=>'additional') }
 
@@ -473,9 +473,7 @@ class PortfolioSiteInfo < SiteSetupBase
 
   expected_element :editor
 
-  def description=(text)
-    rich_text_field.send_keys(text)
-  end
+    action(:description=) { |text, b| b.rich_text_field('description').send_keys text }
 
   element(:title) { |b| b.frm.text_field(:id=>'title') }
   element(:url_alias) { |b| b.frm.text_field(:id=>'alias_0') }

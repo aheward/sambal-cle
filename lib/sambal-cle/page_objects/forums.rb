@@ -116,6 +116,8 @@ class ComposeForumMessage < BasePage
   frame_element
   cke_elements
 
+  action(:description=) { |text, b| b.rich_text_field('Rich text editor, revise:df_compose_description_inputRichText, press ALT 0 for help.').send_keys text }
+
   expected_element :editor
 
   # TopicPage, probably
@@ -185,6 +187,8 @@ class AddEditTopic < BasePage
   frame_element
   basic_page_elements
   cke_elements
+
+  action(:topic_description=) { |text, b| b.rich_text_field('revise:topic_description_inputRichText').send_keys text }
 
   @@table_index=0 # TODO: Seriously think about a better way to do this
 

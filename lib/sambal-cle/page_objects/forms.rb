@@ -32,6 +32,8 @@ class AddForm < BasePage
   frame_element
   cke_elements
 
+  action(:instruction=) { |text, b| b.rich_text_field('instruction').send_keys text }
+
   link "Select Schema File"
 
   def instruction=(text)
