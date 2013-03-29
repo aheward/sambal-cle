@@ -33,7 +33,7 @@ class AnnouncementObject
       page.title.set @title
       page.source
       page.source_field.set @body
-      page.add_announcement
+      page.post_announcement
       @creation_date=make_date Time.now
     end
     on_page Announcements do |page|
