@@ -519,7 +519,7 @@ class ShortAnswer < AssessmentsBase
 
   action(:toggle_question_editor) { |b| b.frm.link(:id=>"itemForm:_id69_toggle").click; b.editor.wait_until_present }
 
-  action(:information=) { |text, b| b.rich_text_field('Rich text editor, modifyPartForm:_id10_textinput, press ALT 0 for help.').send_keys text }
+  action(:information=) { |text, b| b.rich_text_field('modifyPartForm:_id10_textinput').send_keys text }
 
 end
 

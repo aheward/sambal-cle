@@ -291,6 +291,8 @@ class EditHTMLPageProperties < ResourcesBase
   element(:name) { |b| b.frm.text_field(id: "displayName_0") }
   element(:description) { |b| b.frm.text_field(id: "description_0") }
 
+  action(:html_content=) { |text, b| b.rich_text_field('content').send_keys text }
+
   action(:finish) { |b| b.frm.button(id: "finish_button").click }
 
 end

@@ -163,14 +163,12 @@ class AddEditEvent < CalendarBase
 
   expected_element :editor
 
-  action(:message=) { |text, b| b.rich_text_field('description').send_keys text }
-
   # Calendar class
   action(:save_event) { |b| b.frm.button(:value=>"Save Event").click }
 
-  action(:message=) { |text, b| b.rich_text_field.send_keys(text) }
-
   action(:frequency) { |b| b.frm.button(:name=>"eventSubmit_doEditfrequency").click }
+
+  action(:message=) { |text, b| b.rich_text_field('description').send_keys text }
 
   button "Add Attachments"
   button "Add/remove attachments"
