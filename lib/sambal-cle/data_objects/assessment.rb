@@ -8,16 +8,16 @@ class AssessmentObject
 
   def question_types
     {
-      :"Multiple Choice"=>MultipleChoiceQuestion,
+      :'Multiple Choice'=>MultipleChoiceQuestion,
       :Survey=>SurveyQuestion,
-      :"Short Answer/Essay"=>ShortAnswerQuestion,
-      :"Fill in the Blank"=>FillInBlankQuestion,
-      :"Numeric Response"=>NumericResponseQuestion,
+      :'Short Answer/Essay'=>ShortAnswerQuestion,
+      :'Fill in the Blank'=>FillInBlankQuestion,
+      :'Numeric Response'=>NumericResponseQuestion,
       :Matching=>MatchingQuestion,
-      :"True False"=>TrueFalseQuestion,
-      :"Audio Recording"=>AudioRecordingQuestion,
-      :"File Upload"=>FileUploadQuestion,
-      :"Calculated Question"=>CalculatedQuestion
+      :'True False'=>TrueFalseQuestion,
+      :'Audio Recording'=>AudioRecordingQuestion,
+      :'File Upload'=>FileUploadQuestion,
+      :'Calculated Question'=>CalculatedQuestion
     }
   end
 
@@ -50,13 +50,13 @@ class AssessmentObject
         :submissions=>:unlimited_submissions,
         :late_handling=>:late_submissions_not_accepted,
         :submission_message=>random_alphanums,
-        :final_page_url=>"http://www.rsmart.com",
+        :final_page_url=>'http://www.rsmart.com',
         :student_ids=>:student_ids_seen
         # TODO: More to add
     }
     set_options(defaults.merge(opts))
     requires :site
-    default_part = make PartObject, :title=>"Default", :assessment=>@title, :part_number=>1, :information=>""
+    default_part = make PartObject, :title=>'Default', :assessment=>@title, :part_number=>1, :information=>''
     @parts << default_part
   end
 
@@ -172,7 +172,7 @@ class AssessmentObject
   def position
     open_my_site_by_name @site
     tests_and_quizzes
-    unless @browser.frame(:class=>"portletMainIframe").h3.text=="Questions: #{@title}"
+    unless @browser.frame(:class=>'portletMainIframe').h3.text=="Questions: #{@title}"
       reset
       on AssessmentsList do |list|
         list.edit @title

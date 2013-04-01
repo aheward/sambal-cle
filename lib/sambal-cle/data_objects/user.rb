@@ -17,7 +17,7 @@ class UserObject
         :first_name=>random_alphanums,
         :last_name=>random_alphanums,
         :email=>random_email,
-        :type=>"Student",
+        :type=>'Student',
         :password=>random_alphanums,
     }
     set_options(defaults.merge(opts))
@@ -71,7 +71,7 @@ class UserObject
   end
 
   def log_out
-    @browser.link(:text=>"Logout").click
+    @browser.link(:text=>'Logout').click
   end
 
   private

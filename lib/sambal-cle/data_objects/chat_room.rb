@@ -23,7 +23,7 @@ class ChatRoomObject
   end
     
   def create
-    open_my_site_by_name
+    open_my_site_by_name @site
     chat_room
     on ChatRoom do |chat|
       chat.options

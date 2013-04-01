@@ -12,7 +12,7 @@ class WebContentObject
 
     defaults = {
       :title=>random_alphanums,
-      :source=>"www.rsmart.com"
+      :source=>'www.rsmart.com'
     }
     set_options(defaults.merge(opts))
     requires :site

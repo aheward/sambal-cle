@@ -34,7 +34,7 @@ class MultipleChoiceQuestion
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
     on EditAssessment do |edit|
-      edit.question_type "Multiple Choice"
+      edit.question_type 'Multiple Choice'
     end
     on MultipleChoice do |add|
       add.answer_point_value.set @point_value
@@ -59,7 +59,7 @@ class MultipleChoiceQuestion
           3.times {add.insert_additional_answers.select "6"}
           add.insert_additional_answers.select((@answers.length-22).to_s)
         else
-          raise "There is no support for more than 26 choices right now"
+          raise 'There is no support for more than 26 choices right now'
       end
       @answers.each_with_index do |answer, x|
         add.answer_text((x+65).chr).set answer
@@ -123,7 +123,7 @@ class SurveyQuestion
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
     on EditAssessment do |edit|
-      edit.question_type "Survey"
+      edit.question_type 'Survey'
     end
     on Survey do |add|
       add.question_text.set @text
@@ -173,7 +173,7 @@ class ShortAnswerQuestion
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
     on EditAssessment do |edit|
-      edit.question_type "Short Answer/Essay"
+      edit.question_type 'Short Answer/Essay'
     end
     on ShortAnswer do |add|
       if @rich_text
@@ -232,7 +232,7 @@ class FillInBlankQuestion
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
     on EditAssessment do |edit|
-      edit.question_type "Fill in the Blank"
+      edit.question_type 'Fill in the Blank'
     end
     on FillInBlank do |add|
       add.question_text.set @text
@@ -349,7 +349,7 @@ class MatchingQuestion
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
     on EditAssessment do |edit|
-      edit.question_type "Matching"
+      edit.question_type 'Matching'
     end
     on Matching do |add|
       add.question_text.set @text
@@ -411,7 +411,7 @@ class TrueFalseQuestion
     defaults = {
         :point_value=>(rand(100)+1).to_s,
         :text=>random_alphanums,
-        :negative_point_value=>"0",
+        :negative_point_value=>'0',
         :answer=>ANSWERS[rand(2)]
     }
     options = defaults.merge(opts)
@@ -425,7 +425,7 @@ class TrueFalseQuestion
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
     on EditAssessment do |edit|
-      edit.question_type "True False"
+      edit.question_type 'True False'
     end
     on TrueFalse do |add|
       add.question_text.set @text
@@ -435,7 +435,7 @@ class TrueFalseQuestion
       add.assign_to_pool.fit @pool
       add.correct_answer_feedback.fit @correct_answer_feedback
       add.incorrect_answer_feedback.fit @incorrect_answer_feedback
-      add.require_rationale_yes.set if @require_rationale=="yes"
+      add.require_rationale_yes.set if @require_rationale=='yes'
       add.save
     end
   end
@@ -484,7 +484,7 @@ class AudioRecordingQuestion
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
     on EditAssessment do |edit|
-      edit.question_type "Audio Recording"
+      edit.question_type 'Audio Recording'
     end
     on AudioRecording do |add|
       add.question_text.set @text
@@ -540,7 +540,7 @@ class FileUploadQuestion
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
     on EditAssessment do |edit|
-      edit.question_type "File Upload"
+      edit.question_type 'File Upload'
     end
     on FileUpload do |add|
       add.question_text.set @text
@@ -589,10 +589,10 @@ class CalculatedQuestion
             :z=>{:min=>rand(50)+1,:max=>rand(50)+51, :decimals=>rand(11)}
         },
         :formulas=>[{
-                        :name=>"abc",
-                        :text=>"SQRT({z}^2/({x}^2+{y}^2))*60",
-                        :tolerance=>"0.01",
-                        :decimals=>"0"
+                        :name=>'abc',
+                        :text=>'SQRT({z}^2/({x}^2+{y}^2))*60',
+                        :tolerance=>'0.01',
+                        :decimals=>'0'
                     }],
         :point_value=>(rand(100)+1).to_s
     }
@@ -609,7 +609,7 @@ class CalculatedQuestion
 
   def create
     on EditAssessment do |edit|
-      edit.question_type "Calculated Question"
+      edit.question_type 'Calculated Question'
     end
     on CalculatedQuestions do |add|
       add.question_text.set @text

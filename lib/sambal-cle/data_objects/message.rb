@@ -12,7 +12,7 @@ class MessageObject
 
     defaults = {
       :subject=>random_alphanums,
-      :recipients=>["All Participants"]
+      :recipients=>['All Participants']
     }
 
     set_options(defaults.merge(opts))

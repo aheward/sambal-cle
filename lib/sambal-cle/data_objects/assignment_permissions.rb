@@ -26,7 +26,7 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
       list.permissions
     end
     on AssignmentsPermissions do |perm|
-      roles={:guest=>"Guest", :instructor=>"Instructor", :student=>"Student", :teaching_assistant=>"Teaching Assistant"}
+      roles={:guest=>'Guest', :instructor=>'Instructor', :student=>'Student', :teaching_assistant=>'Teaching Assistant'}
       roles.each_pair do |role, title|
         if opts[role]!=nil
           opts[role].each_pair do |checkbox, setting|
@@ -50,7 +50,7 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
       list.permissions
     end
     on AssignmentsPermissions do |perm|
-      roles={@guest=>"Guest", @instructor=>"Instructor", @student=>"Student", @teaching_assistant=>"Teaching Assistant"}
+      roles={@guest=>'Guest', @instructor=>'Instructor', @student=>'Student', @teaching_assistant=>'Teaching Assistant'}
       roles.each_pair do |role, name|
         role.each_key { |key| role.store(key, checkbox_setting(perm.send(key, name))) }
       end
