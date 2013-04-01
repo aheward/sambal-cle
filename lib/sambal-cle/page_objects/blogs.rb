@@ -33,6 +33,8 @@ class AddBlogEntry < BlogsBase
 
   expected_element :editor
 
+  ##TODO: Keep tabs on the status of the blog tool's need for the cke_editor
+
   def blog_text=(text)
     rich_text_field.wait_until_present
     rich_text_field.send_keys(text)

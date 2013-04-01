@@ -36,12 +36,9 @@ class AddForm < BasePage
 
   link 'Select Schema File'
 
-  def instruction=(text)
-    rich_text_field.send_keys(text)
-  end
-
   button 'Add Form'
 
+  action(:instruction=) { |text, b| b.rich_text_field('instruction').send_keys text }
   element(:name) { |b| b.frm.text_field(:id=>'description-id') }
 
 end

@@ -482,7 +482,7 @@ class PortfolioSiteInfo < SiteSetupBase
 
   expected_element :editor
 
-    action(:description=) { |text, b| b.rich_text_field('description').send_keys text }
+  action(:description=) { |text, b| b.rich_text_field('description').send_keys text }
 
   element(:title) { |b| b.frm.text_field(:id=>'title') }
   element(:url_alias) { |b| b.frm.text_field(:id=>'alias_0') }

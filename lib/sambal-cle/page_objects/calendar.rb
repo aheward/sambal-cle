@@ -99,7 +99,7 @@ class Calendar < CalendarBase
     events_table.links.each do |link|
       list.store(link.title, {:text=>link.text,
                               :href=>link.href,
-                              :html=>link.html[/(?<='location=').+doDescription/] }
+                              :html=>link.html[/(?<="location=").+doDescription/] }
                 )
     end
     list
@@ -107,13 +107,15 @@ class Calendar < CalendarBase
   alias event_list events_list
   alias events event_list
 
-  # Clicks the 'Previous X' button, where X might be Day, Week, or Month,
+  # Clicks the "Previous X" button, where X might be Day, Week, or Month,
   # then reinstantiates the Calendar class to ensure against any obsolete element
   # errors.
   action(:previous) { |b| b.frm.button(:name=>'eventSubmit_doPrev').click }
 
-  # Clicks the 'Next X' button, where X might be Day, Week, or Month
-  action(:next) { |b| b.frm.button(:name=>'eventSubmit_doNext').click }
+  # Clicks the "Next X" button, where X might be Day, Week, or Month,
+  # then reinstantiates the Calendar class to ensure against any obsolete element
+  # errors.
+  action(:next) { |b| b.frm.button(:name=>"eventSubmit_doNext").click }
 
   button 'Today'
   button 'Earlier'
@@ -161,14 +163,12 @@ class AddEditEvent < CalendarBase
 
   expected_element :editor
 
-  action(:message=) { |text, b| b.rich_text_field('description').send_keys text }
-
   # Calendar class
   action(:save_event) { |b| b.frm.button(:value=>'Save Event').click }
 
-  action(:message=) { |text, b| b.rich_text_field.send_keys(text) }
+  action(:frequency) { |b| b.frm.button(:name=>"eventSubmit_doEditfrequency").click }
 
-  action(:frequency) { |b| b.frm.button(:name=>'eventSubmit_doEditfrequency').click }
+  action(:message=) { |text, b| b.rich_text_field('description').send_keys text }
 
   button 'Add Attachments'
   button 'Add/remove attachments'
@@ -180,8 +180,8 @@ class AddEditEvent < CalendarBase
   end
 
   # Use this method to enter text into custom fields
-  # on the page. The 'field' variable is the name of the
-  # field, while the 'text' is the string you want to put into
+  # on the page. The "field" variable is the name of the
+  # field, while the "text" is the string you want to put into
   # it.
   action(:custom_field) { |field, b| b.frm.text_field(:name=>field) }
 
