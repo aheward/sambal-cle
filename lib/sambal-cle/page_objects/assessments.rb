@@ -606,7 +606,7 @@ class CalculatedQuestions < AssessmentsBase
   menu_bar_elements
   question_page_elements
 
-  action(:extract_vs_and_fs) { |b| b.frm.button(:value=>"Extract Variables and Formulas").click; b.variables_table.wait_until_present }
+  action(:extract_vs_and_fs) { |b| b.frm.button(:value=>'Extract Variables and Formulas').click; b.variables_table.wait_until_present }
 
   action(:min_value) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.text_field(:name=>/itemForm:pairs:.:_id167/) }
   action(:max_value) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.text_field(:name=>/_id170/) }
@@ -700,11 +700,11 @@ class SelectQuestionType < AssessmentsBase
   # page class, based on the question type selected.
   # @param qtype [String] the text of the question type you want to select from the drop down list.
   def select_question_type(qtype)
-    frm.select(:id=>"_id1:selType").select(qtype)
-    frm.button(:value=>"Save").click
+    frm.select(:id=>'_id1:selType').select(qtype)
+    frm.button(:value=>'Save').click
   end
 
-  action(:cancel) { |b| b.frm.button(:value=>"Cancel").click }
+  action(:cancel) { |b| b.frm.button(:value=>'Cancel').click }
 
 end
 
@@ -714,9 +714,9 @@ class BeginAssessment < BasePage
 
   frame_element
 
-  button("Begin Assessment")
+  button 'Begin Assessment'
 
-  value(:assessment_introduction) { |b| b.frm.div(:class=>"assessmentIntroduction").text }
+  value(:assessment_introduction) { |b| b.frm.div(:class=>'assessmentIntroduction').text }
 
   element(:info_table) { |b| b.frm.table(:index=>0) }
 
@@ -729,7 +729,7 @@ end
 # is set up to only display one question per page.
 class TakeAssessment < AssessmentsBase
 
-  action(:multiple_choice_answer) { |answer_text, b| b.frm }
+  action(:multiple_choice_answer) { |answer_text, b| b.frm } # TODO: Finish this method definition
 
   action(:fill_in_blank_answer) { |box, b| b.frm.text_field(:name=>/deliverFillInTheBlank:_id.+:#{box.to_i}/) }
   action(:numeric_answer) { |box, b| b.frm.text_field(:name=>/deliverFillInNumeric:_id.+:#{box.to_i}/) }
@@ -751,15 +751,15 @@ class TakeAssessment < AssessmentsBase
 
   # Enters the specified file name in the file field. You can include the path to the file
   # as an optional second parameter.
-  def file_answer(file_name, file_path="")
+  def file_answer(file_name, file_path='')
     frm.file_field(:name=>/deliverFileUpload/).set(file_path + file_name)
-    frm.button(:value=>"Upload").click
+    frm.button(:value=>'Upload').click
   end
 
   # Clicks the Next button and instantiates the BeginAssessment Class.
-  action(:next) { |b| b.frm.button(:value=>"Next").click }
+  action(:next) { |b| b.frm.button(:value=>'Next').click }
 
-  button("Submit for Grading")
+  button 'Submit for Grading'
 
 end
 
@@ -769,17 +769,17 @@ class ConfirmSubmission < AssessmentsBase
 
   # Clicks the Submit for Grading button and instantiates
   # the SubmissionSummary Class.
-  button("Submit for Grading")
+  button 'Submit for Grading'
   
-  value(:validation) { |b| b.frm.span(:class=>"validation").text }
+  value(:validation) { |b| b.frm.span(:class=>'validation').text }
 
 end
 
 # The summary page that appears when an Assessment has been submitted.
 class SubmissionSummary < AssessmentsBase
 
-  button("Continue")
+  button 'Continue'
 
-  value(:summary_info) { |b| b.frm.div(:class=>"tier1").text }
+  value(:summary_info) { |b| b.frm.div(:class=>'tier1').text }
 
 end
