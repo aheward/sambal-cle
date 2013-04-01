@@ -8,14 +8,14 @@ class JForumsBase < BasePage
 
   class << self
     def forums_page_elements
-      action(:discussion_home) { |b| b.frm.link(:id=>"backtosite").click }
-      action(:search) { |b| b.frm.link(:id=>"search", :class=>"mainmenu").click }
-      action(:my_bookmarks) { |b| b.frm.link(:class=>"mainmenu", :text=>"My Bookmarks").click }
-      action(:my_profile) { |b| b.frm.link(:id=>"myprofile").click }
-      action(:member_listing) { |b| b.frm.link(:text=>"Member Listing", :id=>"latest", :class=>"mainmenu").click }
-      action(:private_messages) { |b| b.frm.link(:id=>"privatemessages", :class=>"mainmenu").click }
-      action(:manage) { |b| b.frm.link(:id=>"adminpanel", :text=>"Manage").click }
-      action(:submit) { |b| b.frm.button(:value=>"Submit").click }
+      action(:discussion_home) { |b| b.frm.link(:id=>'backtosite').click }
+      action(:search) { |b| b.frm.link(:id=>'search', :class=>'mainmenu').click }
+      action(:my_bookmarks) { |b| b.frm.link(:class=>'mainmenu', :text=>'My Bookmarks').click }
+      action(:my_profile) { |b| b.frm.link(:id=>'myprofile').click }
+      action(:member_listing) { |b| b.frm.link(:text=>'Member Listing', :id=>'latest', :class=>'mainmenu').click }
+      action(:private_messages) { |b| b.frm.link(:id=>'privatemessages', :class=>'mainmenu').click }
+      action(:manage) { |b| b.frm.link(:id=>'adminpanel', :text=>'Manage').click }
+      action(:submit) { |b| b.frm.button(:value=>'Submit').click }
     end
   end
 end
@@ -34,7 +34,7 @@ class JForums < JForumsBase
 
   # Returns an array containing the names of the Forums listed on the page.
   def forum_list
-    list = frm.table(:class=>"forumline").links.map do |link|
+    list = frm.table(:class=>'forumline').links.map do |link|
       if link.href =~ /forums\/show\//
         link.text
       end
@@ -46,7 +46,7 @@ class JForums < JForumsBase
   # Returns the displayed count of topics for the specified
   # Forum.
   def topic_count(forum_name)
-    frm.table(:class=>"forumline").row(:text=>/#{Regexp.escape(forum_name)}/)[2].text
+    frm.table(:class=>'forumline').row(:text=>/#{Regexp.escape(forum_name)}/)[2].text
   end
 
 end
@@ -60,8 +60,8 @@ class DiscussionForum < JForumsBase
   # Clicks the New Topic button,
   # then instantiates the NewTopic class
   def new_topic
-    frm.image(:alt=>"New Topic").fire_event("onclick")
-    frm.frame(:id, "message___Frame").td(:id, "xEditingArea").wait_until_present
+    frm.image(:alt=>'New Topic').fire_event('onclick')
+    frm.frame(:id, 'message___Frame').td(:id, 'xEditingArea').wait_until_present
   end
   # Clicks the specified Topic Title, then
   # instantiates the ViewTopic Class.
@@ -79,10 +79,10 @@ class DiscussionSearch < JForumsBase
   # Clicks the Search button on the page,
   # then instantiates the JForums class.
   def click_search
-    frm.button(:value=>"Search").click
+    frm.button(:value=>'Search').click
   end
 
-  element(:keywords) { |b| b.frm.text_field(:name=>"search_keywords") }
+  element(:keywords) { |b| b.frm.text_field(:name=>'search_keywords') }
 
 end
 
@@ -94,14 +94,14 @@ class ManageDiscussions < JForumsBase
   # Clicks the Manage Forums link,
   # then instantiates the ManageForums Class.
   def manage_forums
-    frm.link(:text=>"Manage Forums").click
+    frm.link(:text=>'Manage Forums').click
   end
 
   # Creates and returns an array of forum titles
   # which can be used for verification
   def forum_titles
     forum_titles = []
-    forum_links = frm.links.find_all { |link| link.id=="forumEdit"}
+    forum_links = frm.links.find_all { |link| link.id=='forumEdit'}
     forum_links.each { |link| forum_titles << link.text }
     return forum_titles
   end
@@ -115,14 +115,14 @@ class ManageForums < JForumsBase
   forums_page_elements
 
   # Clicks the Add button
-  action(:add) { |b| b.frm.button(:value=>"Add").click }
+  action(:add) { |b| b.frm.button(:value=>'Add').click }
 
   # Clicks the Update button
-  action(:update){ |b| b.frm.button(:value=>"Update").click }
+  action(:update){ |b| b.frm.button(:value=>'Update').click }
 
-  element(:forum_name) { |b| b.frm.text_field(:name=>"forum_name") }
-  element(:category) { |b| b.frm.select(:id=>"categories_id") }
-  element(:description) { |b| b.frm.text_field(:name=>"description") }
+  element(:forum_name) { |b| b.frm.text_field(:name=>'forum_name') }
+  element(:category) { |b| b.frm.select(:id=>'categories_id') }
+  element(:description) { |b| b.frm.text_field(:name=>'description') }
 
 end
 
@@ -144,13 +144,13 @@ class NewTopic < JForumsBase
   action(:message_body=) { |text, b| b.rich_text_field('message').send_keys text }
 
   # Clicks the Preview button and instantiates the PreviewDiscussionTopic Class.
-  button "Preview"
+  button 'Preview'
 
   #TODO: redefine the file fields
 
-  element(:subject) { |b| b.frm.text_field(:id=>"subject") }
-  button "Attach Files"
-  button "Add another file"
+  element(:subject) { |b| b.frm.text_field(:id=>'subject') }
+  button 'Attach Files'
+  button 'Add another file'
 
 end
 
@@ -161,23 +161,23 @@ class ViewTopic < JForumsBase
 
   # Gets the text of the Topic title.
   # Useful for verification.
-  value(:topic_name) { |b| b.frm.link(:id=>"top", :class=>"maintitle").text }
+  value(:topic_name) { |b| b.frm.link(:id=>'top', :class=>'maintitle').text }
 
   # Gets the message text for the specified message (not zero-based).
   # Useful for verification.
   def message_text(message_number)
-    frm.span(:class=>"postbody", :index=>message_number.to_i-1).text
+    frm.span(:class=>'postbody', :index=>message_number.to_i-1).text
   end
 
   # Clicks the Post Reply button, then
   # instantiates the NewTopic Class.
-  action(:post_reply) { |b| b.frm.image(:alt=>"Post Reply").fire_event("onclick") }
+  action(:post_reply) { |b| b.frm.image(:alt=>'Post Reply').fire_event('onclick') }
 
   # Clicks the Quick Reply button
   # and does not instantiate any page classes.
-  action(:quick_reply) { |b| b.frm.image(:alt=>"Quick Reply").fire_event("onclick") }
+  action(:quick_reply) { |b| b.frm.image(:alt=>'Quick Reply').fire_event('onclick') }
 
-  element(:reply_text) { |b| b.frm.text_field(:name=>"quickmessage") }
+  element(:reply_text) { |b| b.frm.text_field(:name=>'quickmessage') }
 
 end
 
@@ -188,20 +188,20 @@ class DiscussionsMyProfile < JForumsBase
 
   # Gets the text at the top of the table.
   # Useful for verification.
-  value(:header_text) { |b| b.frm.table(:class=>"forumline").span(:class=>"gens").text }
+  value(:header_text) { |b| b.frm.table(:class=>'forumline').span(:class=>'gens').text }
 
   # Enters the specified filename in the file field.
   #
   # The method takes the filepath as an optional second parameter.
-  def avatar(filename, filepath="")
-    frm.file_field(:name=>"avatar").set(filepath + filename)
+  def avatar(filename, filepath='')
+    frm.file_field(:name=>'avatar').set(filepath + filename)
   end
 
-  element(:icq_uin) { |b| b.frm.text_field(:name=>"icq") }
-  element(:aim) { |b| b.frm.text_field(:name=>"aim") }
-  element(:web_site) { |b| b.frm.text_field(:name=>"website") }
-  element(:occupation) { |b| b.frm.text_field(:name=>"occupation") }
-  element(:view_email) { |b| b.radio(:name=>"viewemail") }
+  element(:icq_uin) { |b| b.frm.text_field(:name=>'icq') }
+  element(:aim) { |b| b.frm.text_field(:name=>'aim') }
+  element(:web_site) { |b| b.frm.text_field(:name=>'website') }
+  element(:occupation) { |b| b.frm.text_field(:name=>'occupation') }
+  element(:view_email) { |b| b.radio(:name=>'viewemail') }
 
 end
 
@@ -229,11 +229,11 @@ class PrivateMessages < JForumsBase
 
   # Clicks the "New PM" button, then
   # instantiates the NewPrivateMessage Class.
-  action(:new_pm) { |b| b.frm.image(:alt=>"New PM").fire_event("onclick") }
+  action(:new_pm) { |b| b.frm.image(:alt=>'New PM').fire_event('onclick') }
 
   # Clicks to open the specified message,
   # then instantiates the ViewPM Class.
-  action(:open_message) { |title, b| b.frm.link(:class=>"topictitle", :text=>title).click }
+  action(:open_message) { |title, b| b.frm.link(:class=>'topictitle', :text=>title).click }
 
   # Collects all subject text strings of the listed
   # private messages and returns them in an Array.
@@ -253,7 +253,7 @@ class ViewPM < BasePage
 
   # Clicks the Reply Quote button, then
   # instantiates the NewPrivateMessage Class.
-  action(:reply_quote) { |b| b.frm.image(:alt=>"Reply Quote").fire_event("onclick") }
+  action(:reply_quote) { |b| b.frm.image(:alt=>'Reply Quote').fire_event('onclick') }
 
 end
 
@@ -268,8 +268,8 @@ class NewPrivateMessage < JForumsBase
   action(:message_body=) { |text, b| b.rich_text_field('message').send_keys text }
 
   # Enters the specified filename in the file field.
-  def filename1(filename) #FIXME!
-    frm.file_field(:name=>"file_0").set(File.expand_path(File.dirname(__FILE__)) + "/../../data/sakai-cle-test-api/" + filename)
+  def filename1(filename, file_path='') 
+    frm.file_field(:name=>'file_0').set(file_path + filename)
   end
 
   # Enters the specified filename in the file field.
@@ -277,14 +277,14 @@ class NewPrivateMessage < JForumsBase
   # Note that the file should be inside the data/sakai-cle-test-api folder.
   # The file or folder name used for the filename variable
   # should not include a preceding / character.
-  def filename2(filename) # FIXME!
-    frm.file_field(:name=>"file_1").set(File.expand_path(File.dirname(__FILE__)) + "/../../data/sakai-cle-test-api/" + filename)
+  def filename2(filename, file_path='') 
+    frm.file_field(:name=>'file_1').set(file_path + filename)
   end
 
-  element(:to_user) { |b| b.frm.select(:name=>"toUsername") }
-  element(:subject) { |b| b.frm.text_field(:id=>"subject") }
-  action(:attach_files) { |b| b.frm.button(:value=>"Attach Files").click }
-  action(:add_another_file) { |b| b.frm.button(:value=>"Add another file").click }
+  element(:to_user) { |b| b.frm.select(:name=>'toUsername') }
+  element(:subject) { |b| b.frm.text_field(:id=>'subject') }
+  action(:attach_files) { |b| b.frm.button(:value=>'Attach Files').click }
+  action(:add_another_file) { |b| b.frm.button(:value=>'Add another file').click }
 
 end
 
@@ -296,6 +296,6 @@ class Information < JForumsBase
 
   # Gets the information message on the page.
   # Useful for verification.
-  value(:information_text) { |b| b.frm.table(:class=>"forumline").span(:class=>"gen").text }
+  value(:information_text) { |b| b.frm.table(:class=>'forumline').span(:class=>'gen').text }
 
 end

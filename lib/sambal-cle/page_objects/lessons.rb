@@ -12,11 +12,11 @@ class LessonsBase < BasePage
     def menu_elements
       # Clicks on the Preferences link on the Lessons page,
       # next is the LessonPreferences class.
-      action(:preferences) { |b| b.frm.link(:text=>"Preferences").click }
+      action(:preferences) { |b| b.frm.link(:text=>'Preferences').click }
 
-      action(:view) { |b| b.frm.link(:text=>"View").click }
+      action(:view) { |b| b.frm.link(:text=>'View').click }
 
-      action(:manage) { |b| b.frm.link(:text=>"Manage").click }
+      action(:manage) { |b| b.frm.link(:text=>'Manage').click }
     end
   end
 end
@@ -37,23 +37,23 @@ class Lessons < LessonsBase
 
   # Clicks the Add Module link, then
   # next is the AddModule class.
-  action(:add_module) { |b| b.frm.link(:text=>"Add Module").click }
-  action(:add_content) { |b| b.frm.link(text: "Add Content").click }
-  action(:edit) { |b| b.frm.link(text: "Edit").click }
-  action(:left) { |b| b.frm.link(text: "Left").click }
-  action(:right) { |b| b.frm.link(text: "Right").click }
-  action(:delete) { |b| b.frm.link(text: "Delete").click }
-  action(:archive) { |b| b.frm.link(text: "Archive").click }
-  action(:move_sections) { |b| b.frm.link(text: "Move Section(s)").click }
+  action(:add_module) { |b| b.frm.link(:text=>'Add Module').click }
+  action(:add_content) { |b| b.frm.link(text: 'Add Content').click }
+  action(:edit) { |b| b.frm.link(text: 'Edit').click }
+  action(:left) { |b| b.frm.link(text: 'Left').click }
+  action(:right) { |b| b.frm.link(text: 'Right').click }
+  action(:delete) { |b| b.frm.link(text: 'Delete').click }
+  action(:archive) { |b| b.frm.link(text: 'Archive').click }
+  action(:move_sections) { |b| b.frm.link(text: 'Move Section(s)').click }
 
   action(:open_lesson) { |name, b| b.frm.link(:text=>name).click }
   alias :open_section :open_lesson
 
   action(:href) { |name, b| b.frm.link(:text=>name).href }
 
-  action(:check_lesson) { |name, b| b.frm.tr(text: /#{Regexp.escape(name)}/).td(class: "ModCheckClass").checkbox.set }
+  action(:check_lesson) { |name, b| b.frm.tr(text: /#{Regexp.escape(name)}/).td(class: 'ModCheckClass').checkbox.set }
 
-  action(:check_section) { |name, b| b.frm.td(class: "SectionClass", text: /#{Regexp.escape(name)}/).checkbox.set }
+  action(:check_section) { |name, b| b.frm.td(class: 'SectionClass', text: /#{Regexp.escape(name)}/).checkbox.set }
 
   # Returns an array of the Module titles displayed on the page.
   def lessons_list
@@ -89,11 +89,11 @@ class ViewModule < LessonsBase
 
   def sections_list
     list = []
-    frm.table(:id=>"viewmoduleStudentform:tablesec").links.each { |link| list << link.text }
+    frm.table(:id=>'viewmoduleStudentform:tablesec').links.each { |link| list << link.text }
     return list
   end
 
-  link "Next"
+  link 'Next'
 
   # Returns the text of the Module title row
   value(:module_title) { |b| b.frm.span(:id=>/modtitle/).text }
@@ -102,7 +102,7 @@ class ViewModule < LessonsBase
   value(:section_title) { |b| b.frm.span(:id=>/form:title/).text }
 
   def content_include?(content)
-    frm.form(:id=>"viewsectionStudentform").text.include?(content)
+    frm.form(:id=>'viewsectionStudentform').text.include?(content)
   end
 
 end
@@ -140,9 +140,9 @@ class LessonManage < LessonsBase
 
   menu_elements
 
-  link "Manage Content"
-  link "Sort"
-  link "Import/Export"
+  link 'Manage Content'
+  link 'Sort'
+  link 'Import/Export'
 
 end
 
@@ -158,8 +158,8 @@ class LessonManageSort < LessonsBase
 
   menu_elements
 
-  action(:sort_modules) { |b| b.frm.link(:id=>"SortSectionForm:sortmod").click }
-  action(:sort_sections) { |b| b.frm.link(:id=>"SortModuleForm:sortsec").click }
+  action(:sort_modules) { |b| b.frm.link(:id=>'SortSectionForm:sortmod').click }
+  action(:sort_sections) { |b| b.frm.link(:id=>'SortModuleForm:sortsec').click }
 
 end
 
@@ -173,14 +173,14 @@ class LessonImportExport < LessonsBase
   # button.
   #
   # The file path is an optional parameter.
-  def upload_IMS(file_name, file_path="")
-    frm.file_field(:name, "impfile").set(file_path + file_name)
-    frm.link(:id=>"importexportform:importModule").click
-    frm.table(:id=>"AutoNumber1").div(:text=>"Processing...").wait_while_present
+  def upload_IMS(file_name, file_path='')
+    frm.file_field(:name, 'impfile').set(file_path + file_name)
+    frm.link(:id=>'importexportform:importModule').click
+    frm.table(:id=>'AutoNumber1').div(:text=>'Processing...').wait_while_present
   end
 
   # Returns the text of the alert box.
-  value(:alert_text) { |b| b.frm.span(:class=>"BlueClass").text }
+  value(:alert_text) { |b| b.frm.span(:class=>'BlueClass').text }
 
 end
 
@@ -194,9 +194,9 @@ class LessonPreferences < LessonsBase
 
   menu_elements
 
-  element(:expanded) { |b| b.frm.radio(:name=>"UserPreferenceForm:_id5", :index=>0) }
-  element(:collapsed) { |b| b.frm.radio(:name=>"UserPreferenceForm:_id5", :index=>1) }
-  action(:set) { |b| b.frm.link(:id=>"UserPreferenceForm:SetButton").click }
+  element(:expanded) { |b| b.frm.radio(:name=>'UserPreferenceForm:_id5', :index=>0) }
+  element(:collapsed) { |b| b.frm.radio(:name=>'UserPreferenceForm:_id5', :index=>1) }
+  action(:set) { |b| b.frm.link(:id=>'UserPreferenceForm:SetButton').click }
   
 end
 
@@ -249,23 +249,23 @@ class AddEditContentSection < LessonsBase
   # next is the ConfirmSectionAdd class.
   action(:add) { |b| b.frm.link(:id=>/SectionForm:submitsave/).click }
 
-  ###there are no obvious rich_text_editor elements in this tool that I could locate
+  ###TODO there are no obvious rich_text_editor elements in this tool that I could locate
 
-  def clear_content  # FIXME - This is an extra method now that we have the FCKEditor module
+  def clear_content  # FIXME -
     select_all
     editor.send_keys :backspace
   end
 
   # SelectingContent
-  action(:select_url) { |b| b.frm.link(:id=>"AddSectionForm:ContentLinkView:serverViewButton").click }
+  action(:select_url) { |b| b.frm.link(:id=>'AddSectionForm:ContentLinkView:serverViewButton').click }
 
   # This method clicks the Select button that appears on the page
   # then call the LessonAddAttachment class.
-  action(:select_or_upload_file) { |b| b.frm.link(:id=>"AddSectionForm:ResourceHelperLinkView:serverViewButton").click }
+  action(:select_or_upload_file) { |b| b.frm.link(:id=>'AddSectionForm:ResourceHelperLinkView:serverViewButton').click }
 
   # Clicks the select button for "Upload or link to a file"
   # NOT for "Upload or link to a file in Resources"!
-  action(:select_a_file) { |b| b.frm.link(:id=>"AddSectionForm:ContentUploadView:serverViewButton").click }
+  action(:select_a_file) { |b| b.frm.link(:id=>'AddSectionForm:ContentUploadView:serverViewButton').click }
 
   element(:title) { |b| b.frm.text_field(:id=>/SectionForm:title/) }
   element(:instructions) { |b| b.frm.text_field(:id=>/SectionForm:instr/) }
@@ -311,10 +311,10 @@ class SelectingContent < LessonsBase
   menu_elements
 
   # AddEditContentSection
-  action(:continue) { |b| b.frm.link(:id=>"ServerViewForm:addButton").click }
+  action(:continue) { |b| b.frm.link(:id=>'ServerViewForm:addButton').click }
 
-  element(:new_url) { |b| b.frm.text_field(:id=>"ServerViewForm:link") }
-  element(:url_title) { |b| b.frm.text_field(:id=>"ServerViewForm:link_title") }
+  element(:new_url) { |b| b.frm.text_field(:id=>'ServerViewForm:link') }
+  element(:url_title) { |b| b.frm.text_field(:id=>'ServerViewForm:link_title') }
 
 end
 
@@ -323,10 +323,10 @@ class LessonAddAttachment < LessonsBase # TODO: DRY up this class
 
   menu_elements
 
-  action(:continue) { |b| b.frm.link(:id=>"UploadServerViewForm:addButton").click }
+  action(:continue) { |b| b.frm.link(:id=>'UploadServerViewForm:addButton').click }
 
-  def upload_local_file(filename, filepath="")
-    frm.file_field(:id=>"file1").set(filepath + filename)
+  def upload_local_file(filename, filepath='')
+    frm.file_field(:id=>'file1').set(filepath + filename)
   end
 
 end

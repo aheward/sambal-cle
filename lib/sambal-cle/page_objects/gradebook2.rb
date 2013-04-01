@@ -6,7 +6,7 @@ class Gradebook2 < BasePage
   # Returns an array of names of Gradebook items
   def gradebook_items
     items = []
-    frm.div(:class=>"x-grid3-scroller").spans.each do |span|
+    frm.div(:class=>'x-grid3-scroller').spans.each do |span|
       if span.class_name =~ /^x-tree3-node-text/
         items << span.text
       end
