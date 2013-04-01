@@ -14,7 +14,7 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
     @student=checkboxes
     @teaching_assistant=checkboxes
     set_options(opts)
-    requires @site
+    requires :site
     get
   end
     

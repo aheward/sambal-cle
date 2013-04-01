@@ -8,14 +8,14 @@ class Announcements < BasePage
 
   # Edits the specified announcement in the list.
   # @param subject [String] the text of the announcement listing link.
-  action(:edit) { |subject, b| b.frm.table(:class=>"listHier").row(:text=>/#{Regexp.escape(subject)}/).link(:text=>"Edit").click }
+  action(:edit) { |subject, b| b.announcements_table.row(:text=>/#{Regexp.escape(subject)}/).link(:text=>"Edit").click }
 
   action(:view) { |title, b| b.frm.link(:text=>title).click }
 
   # Returns an array of the subject strings of the announcements
   # listed on the page.
   def subjects
-    links = frm.table(:class=>"listHier").links.find_all { |link| link.title=~/View announcement/ }
+    links = announcements_table.links.find_all { |link| link.title=~/View announcement/ }
     subjects = []
     links.each { |link| subjects << link.text }
     return subjects
@@ -26,18 +26,18 @@ class Announcements < BasePage
   # Returns true or false depending on whether the specified announcement has an attachment.
   # @param subject [String] the text of the announcement listing link.
   def has_attachment?(subject)
-    if frm.table(:class=>"listHier").row(:text=>/#{Regexp.escape(subject)}/).exist?
-      return frm.table(:class=>"listHier").row(:text=>/#{Regexp.escape(subject)}/).image(:alt=>"attachment").exist?
+    if announcements_table.row(:text=>/#{Regexp.escape(subject)}/).exist?
+      return announcements_table.row(:text=>/#{Regexp.escape(subject)}/).image(:alt=>'attachment').exist?
     else
-      puts "Can't find your target row. Your test is faulty."
+      puts 'Can\'t find your target row. Your test is faulty.'
       return false
     end
   end
 
-  # Returns the text of the "For" column for
+  # Returns the text of the 'For' column for
   # the specified announcement.
   # @param subject [String] the text of the announcement listing link.
-  action(:for_column) { |subject, b| b.frm.table(:class=>"listHier").row(:text=>/#{Regexp.escape(subject)}/)[4].text }
+  action(:for_column) { |subject, b| b.announcements_table.row(:text=>/#{Regexp.escape(subject)}/)[4].text }
 
   # Clicks the specified announcement link and instantiates the PreviewAnnouncements class.
   # @param subject [String] the text of the announcement listing link.
@@ -46,12 +46,18 @@ class Announcements < BasePage
   # Selects the specified list item from the View selection list.
   # @param list_item [String] the text of the option in the selection list.
   def view=(list_item)
-    frm.select(:id=>"view").set(list_item)
+    frm.select(:id=>'view').set(list_item)
   end
 
   # Clicks the Merge link and goes to the AnnouncementsMerge class.
-  link("Merge")
+  link('Merge')
 
+  # =========
+  private
+  # =========
+  
+  element(:announcements_table) { |b| b.frm.table(:class=>'listHier') }
+  
 end
 
 # Show Announcements from Another Site. On this page you select what announcements
@@ -97,11 +103,13 @@ class AddEditAnnouncements < BasePage
   frame_element
   cke_elements
 
+  action(:body=) { |text, b| b.rich_text_field('body').send_keys text }
+
   expected_element :editor
 
   # Clicks the Add Announcement button. The next class is either
   # AddEditAnnouncements or Announcements.
-  button 'Add Announcement'
+  button 'Post Announcement'
 
   # Clicks the Save changes button. Next is the Announcements class.
   button 'Save Changes'

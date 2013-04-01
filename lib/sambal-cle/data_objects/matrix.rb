@@ -26,7 +26,7 @@ class MatrixObject
       :cells=>[]
     }
     set_options(defaults.merge(opts))
-    requires @portfolio
+    requires :portfolio
 
   end
     

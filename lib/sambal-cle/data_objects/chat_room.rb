@@ -19,7 +19,7 @@ class ChatRoomObject
     options = defaults.merge(opts)
     
     set_options(options)
-    requires @site
+    requires :site
   end
     
   def create

@@ -15,7 +15,7 @@ class BlogEntryObject
       :permissions=>:publicly_viewable
     }
     set_options(defaults.merge(opts))
-    requirements @site
+    requires :site
   end
     
   def create

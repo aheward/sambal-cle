@@ -118,9 +118,7 @@ class ComposeMessage < BasePage
 
   action(:send) { |b| b.frm.button(:value=>"Send ").click }
 
-  def message_text=(text)
-    rich_text_field.send_keys(text)
-  end
+  action(:message=) { |text, b| b.rich_text_field('compose:pvt_message_body_inputRichText').send_keys text }
 
   button "Add attachments"
   button "Preview"
@@ -140,10 +138,7 @@ class ReplyToMessage < BasePage
 
   action(:send) { |b| b.frm.button(:value=>"Send ").click }
 
-  def message_text=(text)
-    rich_text_field.send_keys(:home)
-    rich_text_field.send_keys(text)
-  end
+  action(:reply=) { |text, b| b.rich_text_field('pvtMsgReply:df_compose_body_inputRichText').send_keys text }
 
   button "Add attachments"
   button "Preview"
@@ -164,10 +159,7 @@ class ForwardMessage < BasePage
 
   action(:send) { |b| b.frm.button(:value=>"Send ").click }
 
-  def message_text=(text)
-    rich_text_field.send_keys(:home)
-    rich_text_field.send_keys(text)
-  end
+  action(:forward_message=) { |text, b| b.rich_text_field('pvtMsgForward:df_compose_body_inputRichText').send_keys text }
 
   button "Add attachments"
   button "Preview"

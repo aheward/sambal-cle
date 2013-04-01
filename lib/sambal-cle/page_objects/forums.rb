@@ -116,14 +116,12 @@ class ComposeForumMessage < BasePage
   frame_element
   cke_elements
 
+  action(:forum_description=) { |text, b| b.rich_text_field('revise:df_compose_description_inputRichText').send_keys text }
+
   expected_element :editor
 
   # TopicPage, probably
   button "Post Message"
-
-  def message=(text)
-    rich_text_field.send_keys(text)
-  end
 
   value(:reply_text) { |b| b.frame(:index=>1).div(:class=>"singleMessageReply").text }
 
@@ -168,9 +166,7 @@ class EditForum < BasePage
   # AddEditTopic
   action(:save_and_add) { |b| b.frm.button(:value=>"Save Settings & Add Topic").click }
 
-  def description=(text)
-    rich_text_field.send_keys(text)
-  end
+  action(:forum_description=) { |text, b| b.rich_text_field('revise:df_compose_description_inputRichText').send_keys text }
 
   #ForumsAddAttachments (or not, actually, now that I think of it)
   action(:add_attachments) { |b| b.frm.button(:value=>/attachments/).click }
@@ -186,11 +182,9 @@ class AddEditTopic < BasePage
   basic_page_elements
   cke_elements
 
-  @@table_index=0 # TODO: Seriously think about a better way to do this
+  action(:topic_description=) { |text, b| b.rich_text_field('revise:topic_description_inputRichText').send_keys text }
 
-  def description=(text)
-    rich_text_field.send_keys(text)
-  end
+  @@table_index=0 # TODO: Seriously think about a better way to do this
 
   action(:add_attachments) { |b| b.frm.button(:value=>/Add.+ttachment/).click }
 

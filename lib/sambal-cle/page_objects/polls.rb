@@ -37,9 +37,7 @@ class AddEditPoll < BasePage
 
   expected_element :editor
 
-  def additional_instructions=(text)
-    rich_text_field.send_keys(text)
-  end
+  action(:additional_instructions=) { |text, b| b.rich_text_field('newpolldescr::input').send_keys text }
 
   button "Save and add options"
   button "Save"
@@ -55,9 +53,7 @@ class AddAnOption < BasePage
 
   expected_element :editor
 
-  def answer_option=(text)
-    rich_text_field.send_keys(text)
-  end
+  action(:answer_option=) { |text, b| b.rich_text_field('optText::input').send_keys text }
 
   button "Save and add options"
   button "Save"

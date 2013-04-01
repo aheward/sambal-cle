@@ -249,9 +249,7 @@ class AddEditContentSection < LessonsBase
   # next is the ConfirmSectionAdd class.
   action(:add) { |b| b.frm.link(:id=>/SectionForm:submitsave/).click }
 
-  def add_content=(text)
-    rich_text_field.send_keys(text)
-  end
+  ###there are no obvious rich_text_editor elements in this tool that I could locate
 
   def clear_content  # FIXME - This is an extra method now that we have the FCKEditor module
     select_all

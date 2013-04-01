@@ -30,7 +30,7 @@ class AssignmentObject
         :accept_until=>{}
     }
     set_options(defaults.merge(opts))
-    requires @site
+    requires :site
     raise "You must specify max points if your grade scale is 'points'" if @max_points==nil && @grade_scale=="Points"
   end
 
@@ -57,8 +57,8 @@ class AssignmentObject
         @resubmission[:minute_rounded]=get_or_select(@resubmission[:minute_rounded], add.resub_until_minute)
         @resubmission[:MERIDIAN]=get_or_select(@resubmission[:MERIDIAN], add.resub_until_meridian)
       end
-      #add.title.set @title
-      #add.instructions=@instructions
+      add.title.set @title
+      add.instructions=@instructions
       get_or_select! :@student_submissions, add.student_submissions
       get_or_select! :@grade_scale, add.grade_scale
       @open[:MON]=get_or_select @open[:MON], add.open_month
@@ -158,22 +158,8 @@ class AssignmentObject
     # TODO: Add more stuff here as needed...
 
     on AssignmentAdd do |edit|
-
-      @instructions=edit.get_source_text edit.editor
-      edit.source edit.editor
-      edit.entity_picker(edit.editor)
-    end
-    on EntityPicker do |info|
-      info.view_assignment_details @title
-      @retract_time=info.retract_time
-      @time_due=info.time_due
-      @time_modified=info.time_modified
-      @url=info.url
-      @portal_url=info.portal_url
-      @description=info.description
-      @time_created=info.time_created
-      @direct_url=info.direct_link
-      info.close_picker
+      edit.source
+      @instructions=edit.source_field.value
     end
     on AssignmentAdd do |edit|
       edit.cancel

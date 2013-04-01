@@ -67,11 +67,7 @@ class AddEditPortfolioPage < BasePage
   link 'Select Layout'
   link 'Select Style'
 
-  def simple_html_content=(text)
-    select_all
-    rich_text_field.send_keys :backspace
-    rich_text_field.send_keys(text)
-  end
+  ##TODO: Add rich_text_editor element for new content
 
   element(:title) { |b| b.frm.text_field(:id=>"_id1:title") }
   element(:description) { |b| b.frm.text_field(:id=>"_id1:description") }

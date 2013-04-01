@@ -16,7 +16,7 @@ class ForumObject
       :title=>random_alphanums
     }
     set_options(defaults.merge(opts))
-    requires @site
+    requires :site
   end
 
   alias :name :title

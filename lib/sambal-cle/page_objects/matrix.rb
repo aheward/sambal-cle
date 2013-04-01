@@ -72,6 +72,8 @@ class AddEditMatrix < BasePage
 
   element(:title) { |b| b.frm.text_field(:id=>"title-id") }
 
+  action(:description=) { |text, b| b.rich_text_field('descriptionTextArea').send_keys text }
+
 end
 
 #

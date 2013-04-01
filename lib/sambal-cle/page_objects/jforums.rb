@@ -141,10 +141,7 @@ class NewTopic < JForumsBase
   cke_elements
 
   # Enters the specified string into the FCKEditor for the Message.
-  def message_text=(text)
-    rich_text_field.send_keys(:home)
-    rich_text_field.send_keys(text)
-  end
+  action(:message_body=) { |text, b| b.rich_text_field('message').send_keys text }
 
   # Clicks the Preview button and instantiates the PreviewDiscussionTopic Class.
   button "Preview"
@@ -268,10 +265,7 @@ class NewPrivateMessage < JForumsBase
 
   # Enters text into the FCKEditor text area, after
   # going to the beginning of any existing text in the field.
-  def message_body=(text)
-    rich_text_field.send_keys(:home)
-    rich_text_field.send_keys(text)
-  end
+  action(:message_body=) { |text, b| b.rich_text_field('message').send_keys text }
 
   # Enters the specified filename in the file field.
   def filename1(filename) #FIXME!

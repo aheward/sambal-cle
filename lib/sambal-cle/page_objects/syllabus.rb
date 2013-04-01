@@ -94,9 +94,7 @@ class AddEditSyllabusItem < SyllabusBase
   button("Post")
 
   # Sends the specified string to the FCKEditor text area on the page.
-  def content=(text)
-    rich_text_field.send_keys(text)
-  end
+  action(:content=) { |text, b| b.rich_text_field('_id4:syllabus_compose_edit_inputRichText').send_keys text }
 
   button("Add attachments")
 

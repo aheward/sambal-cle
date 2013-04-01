@@ -33,7 +33,7 @@ class CourseSiteObject
   def create
     my_workspace
     site_setup
-    on_page SiteSetup do |page|
+    on_page SiteSetupList do |page|
       page.new
     end
     on SiteType do |page|
@@ -56,8 +56,6 @@ class CourseSiteObject
 
       # Store site name for ease of coding and readability later
       @name = "#{@subject} #{@course} #{@section} #{@term_value}"
-      # Add a valid instructor id
-      page.authorizers_username.set @authorizer
 
       # Click continue button
       page.continue
@@ -66,7 +64,8 @@ class CourseSiteObject
       page.short_description.set @short_description
       page.site_contact_name.set @site_contact_name
       page.site_contact_email.set @site_contact_email
-      page.enter_source_text page.editor, @description
+      page.source
+      page.source_field.set @description
 
       # Click Continue
       page.continue
@@ -95,11 +94,12 @@ class CourseSiteObject
     # Create a string that will match the new Site's "creation date" string
     @creation_date = right_now[:sakai]
 
-    on SiteSetup do |site_setup|
-      site_setup.search(Regexp.escape(@subject))
+    on SiteSetupList do |site_setup|
+      site_setup.search_field.set(Regexp.escape(@subject))
+      site_setup.search
 
       # Get the site id for storage
-      @browser.frame(:class=>"portletMainIframe").link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
+      site_setup.frm.link(:href=>/portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
       @id = $~.to_s
     end
   end
@@ -107,7 +107,7 @@ class CourseSiteObject
   def create_and_reuse_site(site_name)
     my_workspace
     site_setup
-    on_page SiteSetup do |page|
+    on_page SiteSetupList do |page|
       page.new
     end
     on SiteType do |site_type|
@@ -188,7 +188,7 @@ class CourseSiteObject
     end
     # Create a string that will match the new Site's "creation date" string
     @creation_date = make_date(Time.now)
-    on_page SiteSetup do |page|
+    on_page SiteSetupList do |page|
       page.search(Regexp.escape(@subject))
     end
     # Get the site id for storage
@@ -231,7 +231,7 @@ class CourseSiteObject
     end
     my_workspace
     site_setup
-    on SiteSetup do |sites|
+    on SiteSetupList do |sites|
       sites.search(Regexp.escape(new_site.name))
     end
     # Get the site id for storage

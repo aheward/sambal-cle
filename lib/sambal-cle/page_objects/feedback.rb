@@ -13,7 +13,7 @@ class Feedback < BasePage
   # of the Feedback items listed on the page.
   def feedback_items
     items = []
-    frm.table(:class=>"listHier lines nolines").rows.each_with_index do |row, index|
+    frm.table(:class=>'listHier lines nolines').rows.each_with_index do |row, index|
       next if index == 0
       items << row[0].text
     end
@@ -27,6 +27,6 @@ class AddUpdateFeedback < BasePage
 
   frame_element
 
-  element(:title) { |b| b.frm.text_field(:id=>"_idJsp1:title") }
+  element(:title) { |b| b.frm.text_field(:id=>'_idJsp1:title') }
 
 end

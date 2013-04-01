@@ -21,7 +21,7 @@ class AssignmentSubmissionObject
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @site, @title, @student
+    requires :site, :title, :student
   end
 
   def submit

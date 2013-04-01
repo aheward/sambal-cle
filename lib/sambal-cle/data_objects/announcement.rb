@@ -18,7 +18,7 @@ class AnnouncementObject
         :body=>random_multiline(500, 10, :alpha)
     }
     set_options(defaults.merge(opts))
-    requires @site
+    requires :site
   end
 
   alias_method :name, :title
@@ -31,8 +31,9 @@ class AnnouncementObject
     end
     on_page AddEditAnnouncements do |page|
       page.title.set @title
-      page.enter_source_text page.editor, @body
-      page.add_announcement
+      page.source
+      page.source_field.set @body
+      page.post_announcement
       @creation_date=make_date Time.now
     end
     on_page Announcements do |page|

@@ -16,7 +16,7 @@ class GlossaryTermObject
       :long_description=>random_alphanums
     }
     set_options(defaults.merge(opts))
-    requires @portfolio
+    requires :portfolio
   end
     
   def create

@@ -55,9 +55,7 @@ class EditSiteInfo < BasePage
 
   # Enters the specified text string in the text area of
   # the FCKEditor.
-  def description=(text)
-    rich_text_field.send_keys(text)
-  end
+  action(:description=) { |text, b| b.rich_text_field('description').send_keys text }
 
   button("Properties")
   button("Pages")

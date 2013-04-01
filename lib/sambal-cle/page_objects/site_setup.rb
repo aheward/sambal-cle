@@ -29,7 +29,16 @@ class SiteSetupList < SiteSetupBase
 
   element(:search_field) { |b| b.frm.text_field(:id, 'search') }
   button 'Search'
-  link 'Edit'
+
+  element(:edit_link) { |b| b.frm.link(text: 'Edit') }
+
+  def edit site
+    search_field.set site
+    search
+    check_site site
+    edit_link.click
+  end
+
   link 'New'
   element(:view) { |b| b.frm.select(:id=>'view') }
   button 'Clear Search'
@@ -38,7 +47,7 @@ class SiteSetupList < SiteSetupBase
   # all Site titles displayed on the web page.
   action(:site_titles) { |b| titles = []; 1.upto(b.sites_table.rows.size-1) { |x| titles << b.sites_table[x][1].text }; titles }
 
-  action(:check_site) { |site_name, b| b.sites_table }
+  action(:check_site) { |site_name, b| b.sites_table.row(text: /#{site_name}/).checkbox.set }
 
   element(:select_page_size) { |b| b.frm.select(:id=>'selectPageSize').click }
   action(:sort_by_title) { |b| b.frm.link(:text=>'Worksite Title').click }
@@ -406,8 +415,9 @@ class CourseSectionInfo < SiteSetupBase
   element(:subject) { |b| b.frm.text_field(:name=>/Subject:/) }
   element(:course) { |b| b.frm.text_field(:name=>/Course:/) }
   element(:section) { |b| b.frm.text_field(:name=>/Section:/) }
-  element(:authorizers_username) { |b| b.frm.text_field(:id=>'uniqname') }
-  element(:special_instructions) { |b| b.frm.text_field(:id=>'additional') }
+  # These two elements appear to have been removed in version 2.9...
+  #element(:authorizers_username) { |b| b.frm.text_field(:id=>'uniqname') }
+  #element(:special_instructions) { |b| b.frm.text_field(:id=>'additional') }
   element(:add_more_rosters) { |b| b.frm.select(:id=>'number')  }
 
 end
@@ -457,7 +467,7 @@ class CourseSiteInfo < SiteSetupBase
 
   expected_element :editor
 
-  action(:description=) { |text, b| b.rich_text_field.send_keys text }
+  action(:description=) { |text, b| b.rich_text_field('description').send_keys text }
 
   element(:special_instructions) { |b| b.frm.text_field(:id=>'additional') }
 
@@ -472,9 +482,7 @@ class PortfolioSiteInfo < SiteSetupBase
 
   expected_element :editor
 
-  def description=(text)
-    rich_text_field.send_keys(text)
-  end
+  action(:description=) { |text, b| b.rich_text_field('description').send_keys text }
 
   element(:title) { |b| b.frm.text_field(:id=>'title') }
   element(:url_alias) { |b| b.frm.text_field(:id=>'alias_0') }

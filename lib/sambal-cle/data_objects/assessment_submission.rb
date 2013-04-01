@@ -18,7 +18,7 @@ class AssessmentSubmissionObject
 
     set_options(options)
     # Note that the assessment requirement is for the Assessment Object itself.
-    requires @assessment
+    requires :assessment
   end
 
 

@@ -12,9 +12,9 @@ class FileObject
     defaults = {
     }
 
-    set_options(defaults.merge(opts))
-    @target_folder=@site if options[:target_folder]==nil
-    requires @site
+    set_options(defaults.merge!(opts))
+    @target_folder=@site if defaults[:target_folder]==nil
+    requires :site
   end
 
   def create
@@ -50,7 +50,7 @@ class FolderObject
     }
 
     set_options(defaults.merge(opts))
-    requires @site
+    requires :site
   end
 
   def create
@@ -80,7 +80,7 @@ class WebLinkObject
     defaults = {}
     options = defaults.merge(opts)
     set_options(options)
-    requires @site
+    requires :site
   end
 
   def create
@@ -109,7 +109,7 @@ class HTMLPageObject
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @site
+    requires :site
   end
 
   alias :title :name
@@ -123,7 +123,8 @@ class HTMLPageObject
       page.create_html_page_in @folder
     end
     on_page EditHTMLPageContent do |page|
-      page.enter_source_text page.editor, @html
+      page.source
+      page.source_field.set @html
       page.continue
     end
     on_page EditHTMLPageProperties do |page|
@@ -166,7 +167,7 @@ class TextDocumentObject
     defaults = {}
     options = defaults.merge(opts)
     set_options(options)
-    requires @site
+    requires :site
   end
 
   def create
@@ -189,7 +190,7 @@ class CitationListObject
     defaults = {}
     options = defaults.merge(opts)
     set_options(options)
-    requires @site
+    requires :site
   end
 
   def create

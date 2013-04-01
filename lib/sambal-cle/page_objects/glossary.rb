@@ -40,9 +40,7 @@ class AddEditTerm < BasePage
   button("Add Term")
   button("Save Changes")
 
-  def long_description=(text)
-    rich_text_field.send_keys(text)
-  end
+  action(:long_description=) { |text, b| b.rich_text_field('LongDescription').send_keys text }
 
   element(:term) { |b| b.frm.text_field(:id=>"term-id") }
   element(:short_description) { |b| b.frm.text_field(:id=>"description-id") }
