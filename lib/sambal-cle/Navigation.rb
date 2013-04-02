@@ -9,9 +9,13 @@ module Navigation
   # Site name--unless the specified site is what you're already in.
   def open_my_site_by_name(name)
     unless @browser.title=~/#{name}/
-      @browser.link(:text, 'More Sites').click
-      @browser.text_field(id: 'txtSearch').set name[0..5]
-      @browser.div(id: 'selectSite').link(title: name).click
+      if @browser.link(:text, 'More Sites').exists?
+        @browser.link(:text, 'More Sites').click
+        @browser.text_field(id: 'txtSearch').set name[0..5]
+        @browser.div(id: 'selectSite').link(title: name).click
+      else
+        @browser.link(title: /#{name}/).click
+      end
     end
   end
 
