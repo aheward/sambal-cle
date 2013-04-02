@@ -192,7 +192,7 @@ class CourseSiteObject
       page.search(Regexp.escape(@subject))
     end
     # Get the site id for storage
-    @browser.frame(:class=>"portletMainIframe").link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
+    @browser.frame(:class=>'portletMainIframe').link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
     @id = $~.to_s
 
   end
@@ -235,7 +235,7 @@ class CourseSiteObject
       sites.search(Regexp.escape(new_site.name))
     end
     # Get the site id for storage
-    @browser.frame(:class=>"portletMainIframe").link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
+    @browser.frame(:class=>'portletMainIframe').link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
     new_site.id = $~.to_s
 
     new_site

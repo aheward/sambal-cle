@@ -239,7 +239,7 @@ class AssessmentSettings < AssessmentsBase
   element(:late_submissions_not_accepted) { |b| b.frm.radio(:name=>'assessmentSettingsAction:lateHandling', :value=>'2') }
   element(:late_submissions_accepted) { |b| b.frm.radio(:name=>'assessmentSettingsAction:lateHandling', :value=>'1') }
   # Submission Message
-  element(:submission_message) { |b| b.frm.text_field(:id=>'assessmentSettingsAction:_id250_textinput') }
+  element(:submission_message) { |b| b.frm.text_field(:id=>/assessmentSettingsAction:_id\d+_textinput/) }
   element(:final_page_url) { |b| b.frm.text_field(:id=>'assessmentSettingsAction:finalPageUrl') }
   # Feedback
   element(:question_level_feedback) { |b| b.frm.radio(:name=>'assessmentSettingsAction:feedbackAuthoring', :value=>'1') }
@@ -469,21 +469,21 @@ class MultipleChoice < AssessmentsBase
   element(:multi_multi) { |b| b.frm.radio(:name=>'itemForm:chooseAnswerTypeForMC', :index=>2) }
 
   action(:correct_answer) { |answer, b| b.frm.radio(:value=>answer) }
-  action(:answer_text) { |answer, b| b.frm.text_field(:name=>'itemForm:mcchoices:#{answer.ord-65}:_id140_textinput') }
-  action(:answer_feedback_text) { |answer, b| b.frm.text_field(:name=>'itemForm:mcchoices:#{answer.ord-65}:_id143_textinput') }
+  action(:answer_text) { |answer, b| b.frm.text_field(:name=>"itemForm:mcchoices:#{answer.ord-65}:_id144_textinput") }
+  action(:answer_feedback_text) { |answer, b| b.frm.text_field(:name=>"itemForm:mcchoices:#{answer.ord-65}:_id147_textinput") }
 
-  element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id186_textinput') }
-  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id190_textinput') }
+  element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id190_textinput') }
+  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id198_textinput') }
 
-  link('Reset Score Values')
+  link 'Reset Score Values'
 
   action(:remove_last_answer) { |b| b.frm.link(:text=>'Remove', :index=>-1).click }
 
   element(:insert_additional_answers) { |b| b.frm.select(:id=>'itemForm:insertAdditionalAnswerSelectMenu') }
-  element(:randomize_answers_yes) { |b| b.frm.radio(:index=>0, :name=>'itemForm:_id162') }
-  element(:randomize_answers_no) { |b| b.frm.radio(:index=>1, :name=>'itemForm:_id162') }
-  element(:require_rationale_yes) { |b| b.frm.radio(:index=>0, :name=>'itemForm:_id166') }
-  element(:require_rationale_no) { |b| b.frm.radio(:index=>1, :name=>'itemForm:_id166') }
+  element(:randomize_answers_yes) { |b| b.frm.radio(:index=>0, :name=>'itemForm:_id166') }
+  element(:randomize_answers_no) { |b| b.frm.radio(:index=>1, :name=>'itemForm:_id166') }
+  element(:require_rationale_yes) { |b| b.frm.radio(:index=>0, :name=>'itemForm:_id170') }
+  element(:require_rationale_no) { |b| b.frm.radio(:index=>1, :name=>'itemForm:_id170') }
 
 end
 
@@ -501,7 +501,7 @@ class Survey < AssessmentsBase
   element(:unacceptable_excellent) { |b| b.frm.radio(:index=>5, :name=>'itemForm:selectscale') }
   element(:one_to_five) { |b| b.frm.radio(:index=>6, :name=>'itemForm:selectscale') }
   element(:one_to_ten) { |b| b.frm.radio(:index=>7, :name=>'itemForm:selectscale') }
-  element(:feedback) { |b| b.frm.text_field(:id=>'itemForm:_id140_textinput') }
+  element(:feedback) { |b| b.frm.text_field(:id=>'itemForm:_id144_textinput') }
 
 end
 

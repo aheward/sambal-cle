@@ -146,7 +146,7 @@ class Resources < ResourcesBase
   #
   # Finally, it re-instantiates the appropriate page class.
   # Note that it expects all files to be located in the same folder (can be in subfolders of that folder).
-  def upload_multiple_files_to_folder(folder, file_array, file_path="")
+  def upload_multiple_files_to_folder(folder, file_array, file_path='')
 
     upload = upload_files_to_folder folder
 

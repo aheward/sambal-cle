@@ -1,19 +1,19 @@
 require 'rspec'
-require 'sambal-cle'
+require "#{File.dirname(__FILE__)}/../lib/sambal-cle"
 require 'yaml'
 
-describe "Assessments" do
+describe 'Assessments' do
 
   include Utilities
-  include Workflows
+  include Navigation
   include Foundry
   include StringFactory
   include DateFactory
 
   before :all do
     # Get the test configuration data
-    @config = YAML.load_file("config.yml")
-    @directory = YAML.load_file("directory.yml")
+    @config = YAML.load_file('config.yml')
+    @directory = YAML.load_file('directory.yml')
     @sakai = SambalCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
 
@@ -21,61 +21,55 @@ describe "Assessments" do
                     :first_name=>@directory['person1']['firstname'], :last_name=>@directory['person1']['lastname']
     @instructor1 = make UserObject, :id=>@directory['person3']['id'], :password=>@directory['person3']['password'],
                         :first_name=>@directory['person3']['firstname'], :last_name=>@directory['person3']['lastname'],
-                        :type=>"Instructor"
+                        :type=>'Instructor'
     @instructor2 = make UserObject, :id=>@directory['person4']['id'], :password=>@directory['person4']['password'],
                         :first_name=>@directory['person4']['firstname'], :last_name=>@directory['person4']['lastname'],
-                        :type=>"Instructor"
+                        :type=>'Instructor'
     @instructor1.log_in
 
-    @site = make SiteObject
+    @site = make CourseSiteObject
     @site.create
-    @site.add_official_participants :role=>@student.type, :participants=>[@student.id]
-    @site.add_official_participants :role=>@instructor2.type, :participants=>[@instructor2.id]
+    @site.add_official_participants @student.type, @student.id
+    @site.add_official_participants @instructor2.type, @instructor2.id
 
     @assessment = make AssessmentObject, :site=>@site.name
     @assessment.create
 
-    @assessment.add_part
-    @assessment.add_part
-    @assessment.add_question
-    exit
+    2.times{@assessment.add_part}
 
     @questions = [
-        {:type=>"Multiple Choice", :point_value=>"5", :question_text=>"Who was the first US president?", :a=>"Jefferson", :b=>"Lincoln", :c=>"Grant", :d=>"Washington" },
-        {:type=>"True False", :point_value=>"5", :question_text=>"The sky is blue."},
-        {:type=>"Fill in the Blank", :point_value=>"5", :question_text=>"The largest state in the US according to land mass is {Alaska}." },
-        {:type=>"Survey", :question_text=>"Do you find this CLE instance usable?" },
-        {:type=>"Short Answer/Essay", :point_value=>"5", :question_text=>"Write an essay about something." },
-        {:type=>"Fill in the Blank", :point_value=>"5", :question_text=>"After Queen Anne's War, French residents of Acadia were given one year to declare allegiance to {Britain} or leave {Nova Scotia}." },
-        {:type=>"Matching", :point_value=>"5", :question_text=>"This is a matching question", :choice_one=>"1", :match_one=>"one", :choice_two=>"2", :match_two=>"two" },
-        {:type=>"True False", :point_value=>"5", :question_text=>"Epistemology is the study of rocks." },
-        {:type=>"File Upload", :point_value=>"5", :question_text=>"Upload a file..." },
-        {:type=>"Fill in the Blank", :point_value=>"5", :question_text=>"Roses are {red} and violets are {blue}." },
-        {:type=>"Multiple Choice", :point_value=>"5", :question_text=>"How many licks does it take to get to the center of a Tootsie Roll Pop?", :a=>"3", :b=>"20", :c=>"500", :d=>"10,000" },
-        {:type=>"True False", :point_value=>"10", :question_text=>"The United States of America is in the Northern hemisphere." },
-        {:type=>"True False", :question_text=>"Birds can fly." }
+        {:type=>'Multiple Choice', :point_value=>'5', :question_text=>'Who was the first US president?', :a=>'Jefferson', :b=>'Lincoln', :c=>'Grant', :d=>'Washington' },
+        {:type=>'True False', :point_value=>'5', :question_text=>'The sky is blue.'},
+        {:type=>'Fill in the Blank', :point_value=>'5', :question_text=>'The largest state in the US according to land mass is {Alaska}.' },
+        {:type=>'Survey', :question_text=>'Do you find this CLE instance usable?' },
+        {:type=>'Short Answer/Essay', :point_value=>'5', :question_text=>'Write an essay about something.' },
+        {:type=>'Fill in the Blank', :point_value=>'5', :question_text=>"After Queen Anne's War, French residents of Acadia were given one year to declare allegiance to {Britain} or leave {Nova Scotia}." },
+        {:type=>'Matching', :point_value=>'5', :question_text=>'This is a matching question', :choice_one=>'1', :match_one=>'one', :choice_two=>'2', :match_two=>'two' },
+        {:type=>'True False', :point_value=>'5', :question_text=>'Epistemology is the study of rocks.' },
+        {:type=>'File Upload', :point_value=>'5', :question_text=>'Upload a file...' },
+        {:type=>'Fill in the Blank', :point_value=>'5', :question_text=>'Roses are {red} and violets are {blue}.' },
+        {:type=>'Multiple Choice', :point_value=>'5', :question_text=>'How many licks does it take to get to the center of a Tootsie Roll Pop?', :a=>'3', :b=>'20', :c=>'500', :d=>'10,000' },
+        {:type=>'True False', :point_value=>'10', :question_text=>'The United States of America is in the Northern hemisphere.' },
+        {:type=>'True False', :question_text=>'Birds can fly.' }
     ]
-
-
-
 
     @questions.each do |question|
       @assessment.add_question question
     end
 
-    @part_2_title = "This is Part 2"
-    @part_2_info = "This is the information for Part 2"
+    @part_2_title = 'This is Part 2'
+    @part_2_info = 'This is the information for Part 2'
 
     @settings = {
-        :available_date=>((Time.now - 60).strftime("%m/%d/%Y %I:%M:%S %p")),
-        :due_date=>((Time.now + (86400*3)).strftime("%m/%d/%Y %I:%M:%S %p")),
-        :retract_date=>((Time.now + (86400*3)).strftime("%m/%d/%Y %I:%M:%S %p"))
+        :available_date=>((Time.now - 60).strftime('%m/%d/%Y %I:%M:%S %p')),
+        :due_date=>((Time.now + (86400*3)).strftime('%m/%d/%Y %I:%M:%S %p')),
+        :retract_date=>((Time.now + (86400*3)).strftime('%m/%d/%Y %I:%M:%S %p'))
     }
     @file_path = @config['data_directory']
     @pool_title = random_alphanums
-    @pool_description = "Sample Question Pool"
-    @pool_file = "documents/Exam1.xml"
-    @imported_pool_name = "Exam 1"
+    @pool_description = 'Sample Question Pool'
+    @pool_file = 'documents/Exam1.xml'
+    @imported_pool_name = 'Exam 1'
 
     # Store the quiz titles in the directory.yml for later use
     @directory['site1']['quiz1'] = @assessments[0][:title]
@@ -83,18 +77,17 @@ describe "Assessments" do
 
     # Validation text -- These contain page content that will be used for
     # test asserts.
-    @due_date = "There is no due date for this assessment."
-    @time_limit = "There is no time limit."
-    @submission_limit = "You can submit this assessment an unlimited number of times. Your highest score will be recorded."
-    @feedback_policy = "No feedback will be provided."
+    @due_date = 'There is no due date for this assessment.'
+    @time_limit = 'There is no time limit.'
+    @submission_limit = 'You can submit this assessment an unlimited number of times. Your highest score will be recorded.'
+    @feedback_policy = 'No feedback will be provided.'
   end
 
   after :all do
 
   end
 
-  it "Does stuff" do
-
+  it 'Creates an Assessment with multiple parts, various questions, and different question types' do
 
     # Select multiple choice question type
     question1 = quiz.select_question_type @questions[0][:type]
@@ -112,7 +105,7 @@ describe "Assessments" do
     quiz = question1.save
 
     # TEST CASE: Verify the question appears on the Edit Assessment page
-    assert @browser.frame(:index=>1).select(:id=>"assesssmentForm:parts:0:parts:0:number").exist?
+    assert @browser.frame(:index=>1).select(:id=>'assesssmentForm:parts:0:parts:0:number').exist?
     assert_not_equal false, quiz.get_question_text(1, 1)=~/#{Regexp.escape(@questions[0][:question_text])}/
 
     # Add a True/False question
@@ -124,7 +117,7 @@ describe "Assessments" do
     quiz = question2.save
 
     # TEST CASE: Verify the question appears
-    assert @browser.frame(:index=>1).select(:id=>"assesssmentForm:parts:0:parts:1:number").exist?
+    assert @browser.frame(:index=>1).select(:id=>'assesssmentForm:parts:0:parts:1:number').exist?
 
     # Select fill-in-the-blank question type
     question3 = quiz.select_question_type @questions[2][:type]
@@ -203,7 +196,7 @@ describe "Assessments" do
     quiz = part.save
 
     # TEST CASE: Verify part 2 appears
-    assert @browser.frame(:index=>1).select(:id=>"assesssmentForm:parts:1:number").exist?
+    assert @browser.frame(:index=>1).select(:id=>'assesssmentForm:parts:1:number').exist?
 
     # Add questions to Part 2
     question10 = quiz.insert_question_after(2, 0, @questions[9][:type])
@@ -240,7 +233,7 @@ describe "Assessments" do
 
     # Set only one submission allowed
     settings_page.select_only_x_submissions
-    settings_page.allowed_submissions="1"
+    settings_page.allowed_submissions='1'
 
     # Save and publish the assessment
     assessment = settings_page.save_and_publish
@@ -321,7 +314,7 @@ describe "Assessments" do
     quiz2 = mcq.save
 
     # TEST CASE: Verify question saved...
-    assert @browser.frame(:index=>1).select(:id=>"assesssmentForm:parts:0:parts:0:number").exist?
+    assert @browser.frame(:index=>1).select(:id=>'assesssmentForm:parts:0:parts:0:number').exist?
     assert_not_equal false, quiz2.get_question_text(1, 1)=~/#{Regexp.escape(@questions[0][:question_text])}/
 
     # Add a True/False question
@@ -341,13 +334,12 @@ describe "Assessments" do
     settings_page.due_date=@settings[:due_date]
     settings_page.retract_date=@settings[:retract_date]
     settings_page.select_only_x_submissions
-    settings_page.allowed_submissions="1"
+    settings_page.allowed_submissions='1'
     assessment = settings_page.save_and_publish
     list_page = assessment.publish
 
     # TEST CASE: Verify assessment published
     assert list_page.published_assessment_titles.include?(@assessments[1][:title]), "Can't find #{@assessments[1][:title]} in published list: #{list_page.published_assessment_titles}"
-
 
   end
 

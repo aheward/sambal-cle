@@ -1,8 +1,8 @@
 require 'rspec'
-require 'sambal-cle'
+require "#{File.dirname(__FILE__)}/../lib/sambal-cle"
 require 'yaml'
 
-describe "Duplicate Site" do
+describe 'Duplicate Site' do
 
   include StringFactory
   include Navigation
@@ -11,16 +11,16 @@ describe "Duplicate Site" do
   before :all do
 
     # Get the test configuration data
-    @config = YAML.load_file("config.yml")
-    @directory = YAML.load_file("directory.yml")
+    @config = YAML.load_file('config.yml')
+    @directory = YAML.load_file('directory.yml')
     @sakai = SambalCLE.new(@config['browser'], @config['url'])
     @browser = @sakai.browser
 
     @instructor = make UserObject, :id=>@directory['person3']['id'], :password=>@directory['person3']['password'],
                        :first_name=>@directory['person3']['firstname'], :last_name=>@directory['person3']['lastname'],
-                       :type=>"Instructor"
+                       :type=>'Instructor'
     @file_path = @config['data_directory']
-    @source_site_string = "Links to various items in this site:"
+    @source_site_string = 'Links to various items in this site:'
 
     # Log in to Sakai
     @instructor.login
@@ -197,7 +197,7 @@ describe "Duplicate Site" do
     check_this_stuff(@new_forum.description_html)
   end
 
-  it "duplicates Topics correctly" do
+  it 'duplicates Topics correctly' do
     @new_topic = make TopicObject, :site=>@site2.name, :forum=>@forum.title, :title=>@topic.title
     @new_topic.view
     check_this_stuff(@new_topic.description_html)

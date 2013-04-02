@@ -16,7 +16,7 @@ class AssignmentSubmissionObject
 
     defaults = {
       :text=>random_alphanums,
-      :status=>"Not Started"
+      :status=>'Not Started'
     }
     options = defaults.merge(opts)
 
@@ -31,7 +31,7 @@ class AssignmentSubmissionObject
       # TODO: Add stuff for adding file(s) to the assignment
       assignment.submit
       @submission_date=right_now[:sakai]
-      @status="Submitted"
+      @status='Submitted'
     end
   end
 
@@ -42,7 +42,7 @@ class AssignmentSubmissionObject
       # TODO: Add stuff for adding file(s) to the assignment
       assignment.save_draft
       @submission_date=right_now[:sakai]
-      @status="Draft - In progress"
+      @status='Draft - In progress'
     end
   end
 
@@ -53,7 +53,7 @@ class AssignmentSubmissionObject
       # TODO: Add stuff for adding/updating/removing file(s) for the assignment
       assignment.resubmit
       @submission_date=right_now[:sakai] # Is this right?
-      @status="Submitted"
+      @status='Submitted'
     end
     @text=opts[:text]
   end

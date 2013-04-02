@@ -124,9 +124,9 @@ class AssignmentObject
       edit.add_to_gradebook.fit opts[:add_to_gradebook] #.send(opts[:add_to_gradebook]) unless opts[:add_to_gradebook]==nil
       sleep 5
 
-      if (@status=="Draft" && opts[:status]==nil) || opts[:status]=="Draft"
+      if (@status=='Draft' && opts[:status]==nil) || opts[:status]=='Draft'
         edit.save_draft
-      elsif opts[:status]=="Editing"
+      elsif opts[:status]=='Editing'
         # Stay on the page
       else
         edit.post
@@ -134,7 +134,7 @@ class AssignmentObject
     end
     update_options(opts)
 
-    unless opts[:status]=="Editing"
+    unless opts[:status]=='Editing'
       on AssignmentsList do |list|
         @status=list.status_of @title
       end
@@ -148,7 +148,7 @@ class AssignmentObject
       @id = list.get_assignment_id @title
       @status=list.status_of @title
       @link=list.assignment_href @title
-      if @status=="Draft"
+      if @status=='Draft'
         list.open_assignment "Draft - #{@title}"
       else
         list.edit_assignment @title
@@ -176,7 +176,7 @@ class AssignmentObject
 
     duplicate_assignment = self
     duplicate_assignment.title="Draft - #{self.title} - Copy"
-    duplicate_assignment.status="Draft"
+    duplicate_assignment.status='Draft'
     duplicate_assignment
   end
 

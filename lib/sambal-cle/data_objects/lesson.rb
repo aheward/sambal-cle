@@ -60,14 +60,14 @@ class ContentSectionObject
 
     defaults = {
       :title=>random_alphanums,
-      :copyright_status=>"Public Domain",
+      :copyright_status=>'Public Domain',
       :modality=>[:check_textual]
     }
 
     set_options(defaults.merge(opts))
     raise "Your modality variable must be an Array containing one or more keys\nthat match the checkbox methods, like this:\n[:uncheck_textual, :check_visual, :check_auditory]" unless @modality.class==Array
-    raise "You must specify a Site for your Section" if @site==nil
-    raise "You must specify a Module for your Section" if @module==nil
+    raise 'You must specify a Site for your Section' if @site==nil
+    raise 'You must specify a Module for your Section' if @module==nil
   end
 
   alias :name :title
@@ -96,16 +96,16 @@ class ContentSectionObject
                                        # WeakReference error, given the partial page reload.
                                        # TODO: Figure out if there's a better solution for this
       case @content_type
-        when "Compose content with editor"
+        when 'Compose content with editor'
           page.enter_source_text page.content_editor, @editor_content
-        when "Upload or link to a file"
+        when 'Upload or link to a file'
           page.select_a_file
           on_page LessonAddAttachment do |add|
             add.upload_local_file @file_name, @file_path
             add.continue
           end
           page.file_description.set @file_description
-        when "Link to new or existing URL resource on server"
+        when 'Link to new or existing URL resource on server'
           page.select_url
           on_page SelectingContent do |select|
             select.new_url.set @url
@@ -113,7 +113,7 @@ class ContentSectionObject
             select.continue
           end
           page.url_description.set @url_description
-        when "Upload or link to a file in Resources"
+        when 'Upload or link to a file in Resources'
           page.select_or_upload_file
           on_page Resources do |add|
             add.open_folder @file_folder unless @file_folder == nil

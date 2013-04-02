@@ -83,7 +83,6 @@ class ForumObject
     on EntityPicker do |pick|
       pick.view_forum_details @title
       @direct_link = pick.direct_link
-      # TODO: put more entity info stuff here!!
       pick.close_picker
     end
     on EditForum do |edit|

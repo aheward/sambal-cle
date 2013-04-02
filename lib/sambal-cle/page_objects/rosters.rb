@@ -7,11 +7,11 @@ class Roster < BasePage
 
   frame_element
 
-  button("Find")
+  button 'Find'
 
   def names
     list = []
-    frm.table(:id=>"roster_form:rosterTable").rows.each do |row|
+    frm.table(:id=>'roster_form:rosterTable').rows.each do |row|
       list << row[0].text
     end
     list.delete_at(0)
@@ -24,7 +24,7 @@ class Roster < BasePage
   # the script will error out.
   action(:view) { |name, b| b.frm.link(:text=>name).click }
 
-  element(:name_or_id) { |b| b.frm.text_field(:id=>"roster_form:search") }
+  element(:name_or_id) { |b| b.frm.text_field(:id=>'roster_form:search') }
 
 end
 
@@ -33,14 +33,14 @@ class RosterProfileView < BasePage
 
   frame_element
 
-  button("Back")
+  button 'Back'
 
   # Returns a hash containing the contents of the Public Information
   # table on the page, with the keys being the row headers and the values
   # being the row's data contents.
   def public_information
     hash = {}
-    frm.table(:class=>"chefEditItem", :index=>0).rows.each do |row|
+    frm.table(:class=>'chefEditItem', :index=>0).rows.each do |row|
       hash.store(row[0].text, row[1].text)
     end
     return hash
@@ -51,7 +51,7 @@ class RosterProfileView < BasePage
   # being the row's data contents.
   def personal_information
     hash = {}
-    frm.table(:class=>"chefEditItem", :index=>1).rows.each do |row|
+    frm.table(:class=>'chefEditItem', :index=>1).rows.each do |row|
       hash.store(row[0].text, row[1].text)
     end
     return hash
