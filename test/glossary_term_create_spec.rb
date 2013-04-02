@@ -1,10 +1,10 @@
 require 'rspec'
-require 'sambal-cle'
+require "#{File.dirname(__FILE__)}/../lib/sambal-cle"
 require 'yaml'
 
 describe "Portfolio Glossary Term CRUD" do
 
-  include Workflows
+  include Navigation
   include Foundry
   include StringFactory
   include DateFactory

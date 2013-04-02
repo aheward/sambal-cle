@@ -1,10 +1,10 @@
 require 'rspec'
-require 'sambal-cle'
+require "#{File.dirname(__FILE__)}/../lib/sambal-cle"
 require 'yaml'
 
 describe "Assessment Feedback" do
 
-  include Workflows
+  include Navigation
   include Foundry
   include StringFactory
   include DateFactory

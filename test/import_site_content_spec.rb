@@ -1,11 +1,11 @@
 require 'rspec'
-require 'sambal-cle'
+require "#{File.dirname(__FILE__)}/../lib/sambal-cle"
 require 'yaml'
 
 describe "Import Site" do
   
   include StringFactory
-  include Workflows
+  include Navigation
   include Foundry
 
   before :all do

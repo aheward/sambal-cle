@@ -1,12 +1,12 @@
 # coding: UTF-8
 require 'rspec'
-require 'sambal-cle'
+require "#{File.dirname(__FILE__)}/../lib/sambal-cle"
 require 'yaml'
 
 describe "Assignments Submission" do
 
   include Utilities
-  include Workflows
+  include Navigation
   include Foundry
   include StringFactory
   include DateFactory
