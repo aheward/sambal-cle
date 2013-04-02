@@ -608,17 +608,17 @@ class CalculatedQuestions < AssessmentsBase
 
   action(:extract_vs_and_fs) { |b| b.frm.button(:value=>'Extract Variables and Formulas').click; b.variables_table.wait_until_present }
 
-  action(:min_value) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.text_field(:name=>/itemForm:pairs:.:_id167/) }
-  action(:max_value) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.text_field(:name=>/_id170/) }
-  action(:var_decimals) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.select(:name=>/_id173/) }
-  action(:formula) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.text_field(:name=>/_id186/) }
-  action(:tolerance) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.text_field(:name=>/_id189/) }
+  action(:min_value) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.text_field(:name=>/itemForm:pairs:.:_id171/) }
+  action(:max_value) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.text_field(:name=>/_id174/) }
+  action(:var_decimals) { |variable_name, p| p.variables_table.td(:text=>variable_name).parent.select(:name=>/_id177/) }
+  action(:formula) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.text_field(:name=>/_id190/) }
+  action(:tolerance) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.text_field(:name=>/_id193/) }
   action(:form_decimals) { |formula_name, p| p.formulas_table.td(:text=>formula_name).parent.select(:name=>/assignToPart/) }
   element(:variables_table) { |b| b.frm.table(:id=>'itemForm:pairs') }
   element(:formulas_table) { |b| b.frm.table(:id=>'itemForm:formulas') }
 
-  element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id207_textinput') }
-  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id211_textinput') }
+  element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id211_textinput') }
+  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id215_textinput') }
 
 end
 
@@ -685,7 +685,7 @@ class PoolImport < AssessmentsBase
   # @param file_name [String] the name of the file you want to choose. Can include path info, if desired.
   # @param file_path [String] Optional. This is the path information for the file location.
   def choose_file(file_name, file_path='')
-    frm.file_field(:name=>'importPoolForm:_id6.upload').set(file_path + file_name)
+    frm.file_field(:name=>'importPoolForm:_id7.upload').set(file_path + file_name)
   end
 
   button 'Import'
