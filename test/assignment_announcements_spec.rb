@@ -1,11 +1,11 @@
 require 'rspec'
-require 'sambal-cle'
+require "#{File.dirname(__FILE__)}/../lib/sambal-cle"
 require 'yaml'
 
 describe "Assignments appearing in Announcements" do
 
   include Utilities
-  include Workflows
+  include Navigation
   include Foundry
   include StringFactory
   include DateFactory
@@ -33,7 +33,7 @@ describe "Assignments appearing in Announcements" do
     @site.add_official_participants @student.type, @student.id
     @site.add_official_participants @instructor2.type, @instructor2.id
 
-    @assignment1 = make AssignmentObject, :status=>"Draft", :add_open_announcement=>:set, :site=>@site.name, :title=>random_xss_string(30), :open=>in_an_hour, :student_submissions=>"Attachments only", :grade_scale=>"Points", :max_points=>"100", :instructions=>random_multiline(600, 12, :string)
+    @assignment1 = make AssignmentObject, :status=>"Draft", :add_open_announcement=>:set, :site=>@site.name, :title=>random_string(30), :open=>in_an_hour, :student_submissions=>"Attachments only", :grade_scale=>"Points", :max_points=>"100", :instructions=>random_multiline(300, 12, :string)
     @assignment2 = make AssignmentObject, :site=>@site.name, :add_open_announcement=>:set, :open=>an_hour_ago
     @assignment1.create
     @assignment2.create
