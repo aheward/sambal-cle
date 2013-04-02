@@ -100,13 +100,7 @@ class AssignmentObject
   def edit opts={}
     open_my_site_by_name @site
     assignments
-    on AssignmentsList do |list|
-      if @status=="Draft"
-        list.edit_assignment "Draft - #{@title}"
-      else
-        list.edit_assignment @title
-      end
-    end
+    on(AssignmentsList).edit_assignment @title
 
     on AssignmentAdd do |edit|
       edit.title.fit opts[:title]
@@ -119,10 +113,8 @@ class AssignmentObject
       #end
       #TODO: All the rest goes here
 
-      sleep 20
       # This should be one of the last items edited...
-      edit.add_to_gradebook.fit opts[:add_to_gradebook] #.send(opts[:add_to_gradebook]) unless opts[:add_to_gradebook]==nil
-      sleep 5
+      edit.add_to_gradebook.send(opts[:add_to_gradebook]) unless opts[:add_to_gradebook]==nil
 
       if (@status=='Draft' && opts[:status]==nil) || opts[:status]=='Draft'
         edit.save_draft
