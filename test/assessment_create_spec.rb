@@ -35,9 +35,7 @@ describe 'Assessments' do
     @assessment = make AssessmentObject, :site=>@site.name
     @assessment.create
 
-    @assessment.add_part
-    @assessment.add_part
-    @assessment.add_question
+    2.times{@assessment.add_part}
 
     @questions = [
         {:type=>'Multiple Choice', :point_value=>'5', :question_text=>'Who was the first US president?', :a=>'Jefferson', :b=>'Lincoln', :c=>'Grant', :d=>'Washington' },
