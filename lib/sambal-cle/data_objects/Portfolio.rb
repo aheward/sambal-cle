@@ -69,7 +69,7 @@ class PortfolioSiteObject
       site_setup.search(Regexp.escape(@title))
 
       # Get the site id for storage
-      @browser.frame(:class=>"portletMainIframe").link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
+      @browser.frame(:class=>'portletMainIframe').link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
       @id = $~.to_s
     end
   end

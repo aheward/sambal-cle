@@ -239,7 +239,7 @@ class AssessmentSettings < AssessmentsBase
   element(:late_submissions_not_accepted) { |b| b.frm.radio(:name=>'assessmentSettingsAction:lateHandling', :value=>'2') }
   element(:late_submissions_accepted) { |b| b.frm.radio(:name=>'assessmentSettingsAction:lateHandling', :value=>'1') }
   # Submission Message
-  element(:submission_message) { |b| b.frm.text_field(:id=>'assessmentSettingsAction:_id250_textinput') }
+  element(:submission_message) { |b| b.frm.text_field(:id=>/assessmentSettingsAction:_id\d+_textinput/) }
   element(:final_page_url) { |b| b.frm.text_field(:id=>'assessmentSettingsAction:finalPageUrl') }
   # Feedback
   element(:question_level_feedback) { |b| b.frm.radio(:name=>'assessmentSettingsAction:feedbackAuthoring', :value=>'1') }

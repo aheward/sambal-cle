@@ -1,11 +1,11 @@
 require 'rspec'
-require 'sambal-cle'
+require "#{File.dirname(__FILE__)}/../lib/sambal-cle"
 require 'yaml'
 
 describe "Assignment Due Date on Calendar" do
 
   include Utilities
-  include Workflows
+  include Navigation
   include Foundry
   include StringFactory
   include DateFactory
@@ -33,8 +33,8 @@ describe "Assignment Due Date on Calendar" do
     @site.add_official_participants @student.type, @student.id
     @site.add_official_participants @instructor2.type, @instructor2.id
 
-    @assignment1 = make AssignmentObject, :site=>@site.name, :title=>random_string, :grade_scale=>"Letter grade", :instructions=>random_multiline(500, 10, :string), :open=>minutes_ago(5)
-    @assignment2 = make AssignmentObject, :allow_resubmission=>:set, :add_due_date=>:set, :site=>@site.name, :title=>random_nicelink(15), :open=>hours_ago(5), :student_submissions=>"Inline only", :grade_scale=>"Letter grade", :instructions=>random_multiline(750, 13, :string)
+    @assignment1 = make AssignmentObject, :site=>@site.name, :title=>random_string, :grade_scale=>"Letter grade", :instructions=>random_multiline(200, 10, :string), :open=>minutes_ago(5)
+    @assignment2 = make AssignmentObject, :allow_resubmission=>:set, :add_due_date=>:set, :site=>@site.name, :title=>random_nicelink(15), :open=>hours_ago(5), :student_submissions=>"Inline only", :grade_scale=>"Letter grade", :instructions=>random_multiline(300, 13, :string)
 
     @assignment1.create
     @assignment2.create

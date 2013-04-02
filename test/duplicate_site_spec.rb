@@ -1,5 +1,5 @@
 require 'rspec'
-require "#{File.dirname(__FILE__)}/../../lib/sambal-cle"
+require "#{File.dirname(__FILE__)}/../lib/sambal-cle"
 require 'yaml'
 
 describe 'Duplicate Site' do

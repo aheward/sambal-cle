@@ -203,7 +203,7 @@ class PartObject
     options = defaults.merge(opts)
     
     set_options(options)
-    requires @assessment
+    requires :assessment
   end
     
   def create

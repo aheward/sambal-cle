@@ -115,7 +115,7 @@ class SurveyQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @assessment
+    requires :assessment
   end
 
   def create
@@ -165,7 +165,7 @@ class ShortAnswerQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @assessment, @part
+    requires :assessment, :part
   end
 
   def create
@@ -224,7 +224,7 @@ class FillInBlankQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @assessment
+    requires :assessment
   end
 
   def create
@@ -278,7 +278,7 @@ class NumericResponseQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @text
+    requires :text
   end
 
   def create
@@ -341,7 +341,7 @@ class MatchingQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @assessment
+    requires :assessment
   end
 
   def create
@@ -417,7 +417,7 @@ class TrueFalseQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @point_value
+    requires :point_value
   end
 
   def create
@@ -476,7 +476,7 @@ class AudioRecordingQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @text
+    requires :text
   end
 
   def create
@@ -532,7 +532,7 @@ class FileUploadQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @text
+    requires :text
   end
 
   def create
@@ -600,7 +600,7 @@ class CalculatedQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @text
+    requires :text
   end
 
   def calculation(x, y, z)
@@ -671,7 +671,7 @@ class PoolObject #TODO: Someday add support for sub pools
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @site
+    requires :site
   end
 
   alias :group :department
