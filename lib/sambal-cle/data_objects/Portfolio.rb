@@ -34,10 +34,7 @@ class PortfolioSiteObject
       page.continue
     end
     on PortfolioSiteInfo do |info|
-      info.title.set @title
-      info.description=@description unless @description==nil
-      info.short_description.fit @short_description
-      #TODO Add support for other fields here
+      fill_out_form info, :title, :description, :short_description
       info.continue
     end
     on PortfolioSiteTools do |tools|
@@ -46,7 +43,7 @@ class PortfolioSiteObject
       tools.continue
     end
     on PortfolioConfigureToolOptions do |options|
-      options.email.set @site_email
+      fill_out_form options, :site_email
       # TODO Add support for other fields here
       options.continue
     end

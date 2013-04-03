@@ -473,7 +473,7 @@ class MultipleChoice < AssessmentsBase
   action(:answer_feedback_text) { |answer, b| b.frm.text_field(:name=>"itemForm:mcchoices:#{answer.ord-65}:_id147_textinput") }
 
   element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id190_textinput') }
-  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id198_textinput') }
+  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id194_textinput') }
 
   link 'Reset Score Values'
 
@@ -512,7 +512,7 @@ class ShortAnswer < AssessmentsBase
   menu_bar_elements
   question_page_elements
 
-  element(:model_short_answer) { |b| b.frm.text_field(:id=>'itemForm:_id129_textinput') }
+  element(:model_short_answer) { |b| b.frm.text_field(:id=>'itemForm:_id133_textinput') }
   element(:feedback) { |b| b.frm.text_field(:id=>'itemForm:_id133_textinput') }
 
   action(:toggle_question_editor) { |b| b.frm.link(:id=>'itemForm:_id69_toggle').click; b.editor.wait_until_present }

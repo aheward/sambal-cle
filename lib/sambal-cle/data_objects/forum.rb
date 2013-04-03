@@ -28,8 +28,7 @@ class ForumObject
       forums.new_forum
     end
     on EditForum do |edit|
-      edit.title.set @title
-      edit.short_description.fit @short_description
+      fill_out_form edit, :title, :short_description
       edit.enter_source_text(edit.editor, @description) unless @description==nil
       edit.save
     end
@@ -125,8 +124,7 @@ class TopicObject
       forums.new_topic_for_forum @forum
     end
     on AddEditTopic do |add|
-      add.title.set @title
-      add.short_description.set @short_description
+      fill_out_form add, :title, :short_description
       add.enter_source_text add.editor, @description
       add.save
     end

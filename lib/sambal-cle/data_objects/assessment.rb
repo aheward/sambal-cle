@@ -75,8 +75,9 @@ class AssessmentObject
     on AssessmentSettings do |settings|
       settings.open
       # Introduction
-      settings.authors.set @authors
-      settings.description.set @description
+
+      #settings.authors.set @authors
+      #settings.description.set @description
       # Delivery Dates
       settings.available_date.set @available_date[:samigo]
       settings.due_date.set @due_date[:samigo]
@@ -102,8 +103,8 @@ class AssessmentObject
       end
       settings.send(@late_handling).set
       # Submission Message
-      settings.submission_message.set @submission_message
-      settings.final_page_url.set @final_page_url
+      #settings.submission_message.set @submission_message
+      #settings.final_page_url.set @final_page_url
       # Feedback
       settings.send(@feedback_authoring).set
       settings.send(@feedback_delivery).set
@@ -120,6 +121,7 @@ class AssessmentObject
 
       # Metadata
 
+      fill_out_form settings, :authors, :description, :submission_message, :final_page_url
 
       settings.save_settings
     end

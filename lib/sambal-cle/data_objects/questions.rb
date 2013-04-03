@@ -239,7 +239,8 @@ class FillInBlankQuestion
       add.answer_point_value.set @point_value
       add.case_sensitive.send(@case_sensitive) unless @case_sensitive==nil
       add.mutually_exclusive.send(@mutually_exclusive) unless @mutually_exclusive==nil
-      add.feedback.fit @feedback
+      add.correct_answer_feedback.fit @correct_answer_feedback
+      add.incorrect_answer_feedback.fit @incorrect_answer_feedback
       add.assign_to_part.select /#{@part}/
       add.assign_to_pool.fit @pool
       add.save

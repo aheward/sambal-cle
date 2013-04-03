@@ -27,11 +27,7 @@ class ModuleObject
       page.add_module
     end
     on_page AddEditModule do |page|
-      page.title.set @title
-      page.description.set @description
-      page.keywords.set @keywords
-      page.start_date.set @start_date
-      page.end_date.set @end_date
+      fill_out_form page, :title, :description, :keywords, :start_date, :end_date
       page.add
     end
     on_page ConfirmModule do |page|
@@ -83,8 +79,7 @@ class ContentSectionObject
       page.add_content_sections
     end
     on_page AddEditContentSection do |page|
-      page.title.set @title
-      page.instructions.set @instructions
+      fill_out_form page, :title, :instructions
       @modality.each do |content|
         page.send(content)
       end

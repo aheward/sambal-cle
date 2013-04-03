@@ -11,11 +11,11 @@ module Navigation
     case
       when @browser.title=~/#{name}/
         # do nothing, you're already there
-      when @browser.link(title: /#{name}/).exists?
+      when @browser.link(title: /#{name}/).present?
         @browser.link(title: /#{name}/).click
-      when @browser.link(:text, 'More Sites').exists?
+      when @browser.link(:text, 'More Sites').present?
         @browser.link(:text, 'More Sites').click
-        if @browser.link(title: /#{name}/).exists?
+        if @browser.link(title: /#{name}/).present?
           @browser.link(title: /#{name}/).click
         else
           @browser.text_field(id: 'txtSearch').set name[0..5]
@@ -101,6 +101,31 @@ module Navigation
   # The Page Reset button, found on all Site pages
   def reset
     @browser.link(:href=>/tool-reset/).click
+  end
+
+  # Experimental at this point. Not entirely sure it's really going to be
+  # useful.
+  def fill_out_form(page, *fields)
+
+    methods={
+        "Watir::TextField"=>:fit,
+        "Watir::Select"=>:pick!
+    }
+
+    fields.each do |field|
+      fill page, field, methods[page.send(field).class.to_s]
+    end
+
+  end
+  alias_method :fill_in_form, :fill_out_form
+  alias_method :fill_in_page, :fill_out_form
+
+  # =======
+  private
+  # =======
+
+  def fill page, field, meth
+    page.send(field).send(meth, instance_variable_get('@'+field.to_s))
   end
 
 end

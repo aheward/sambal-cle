@@ -36,13 +36,9 @@ class EventObject
     end
     on AddEditEvent do |add_event|
       add_event.enter_source_text add_event.editor, @message
-      add_event.title.set @title
-      add_event.month.select @month
-      add_event.day.select @day
-      add_event.year.select @year
-      add_event.start_hour.select @start_hour
-      add_event.start_minute.select @start_minute
-      add_event.start_meridian.select @start_meridian
+      fill_out_form add_event, :title, :month, :day,
+                    :year, :start_hour, :start_minute,
+                    :start_meridian
       if @end_hour == nil && @duration_hours == nil
         @duration_hours = add_event.hours.value
         @duration_minutes = add_event.minutes.value
