@@ -1,10 +1,6 @@
 # Navigation is a module containing helper navigation methods
 module Navigation
 
-  def self.menu_link link_text
-    define_method(StringFactory.damballa(link_text)) { @browser.link(text: link_text).click unless @browser.title=~/#{link_text}/ }
-  end
-
   # Opens 'My Sites' and then clicks on the matching
   # Site name--unless the specified site is what you're already in.
   def open_my_site_by_name(name)
@@ -22,6 +18,10 @@ module Navigation
           @browser.link(title: /#{name}/).click
         end
     end
+  end
+
+  def self.menu_link link_text
+    define_method(StringFactory.damballa(link_text)) { @browser.link(text: link_text).click unless @browser.title=~/#{link_text}/ }
   end
 
   menu_link 'Account'
@@ -59,7 +59,7 @@ module Navigation
   menu_link 'Matrices'
   menu_link 'Media Gallery'
   menu_link 'Membership'
-  menu_link'Memory'
+  menu_link 'Memory'
   menu_link 'Messages'
   menu_link 'My Sites'
   menu_link 'My Workspace'
@@ -103,29 +103,38 @@ module Navigation
     @browser.link(:href=>/tool-reset/).click
   end
 
-  # Experimental at this point. Not entirely sure it's really going to be
-  # useful.
-  def fill_out_form(page, *fields)
-
+  # Use in the #create method of your data objects for filling out
+  # fields. This method eliminates the need to write repetitive
+  # lines of code, with one line for every field needing to be
+  # filled in.
+  #
+  # Requirement: The field method name and the class instance variable
+  # must be the same!
+  #
+  # This method currently only supports text fields, selection lists,
+  # and radio buttons.
+  def fill_out(page, *fields)
     methods={
-        "Watir::TextField"=>:fit,
-        "Watir::Select"=>:pick!
+        'Watir::TextField' => lambda{|p, f| p.send(f).fit(ivg f)},
+        'Watir::Select'    => lambda{|p, f| p.send(f).pick!(ivg f)},
+        # Standard model for Sakai radio buttons is that the instance
+        # variable contains a symbol matching the method for the radio
+        # button you're going to set. Do not use #fill_out for radio
+        # buttons that don't follow that pattern.
+        'Watir::Radio'     => lambda{|p, f| p.send(ivg f).set}
     }
-
     fields.each do |field|
-      fill page, field, methods[page.send(field).class.to_s]
+      methods[page.send(field).class.to_s].call(page, field)
     end
-
   end
-  alias_method :fill_in_form, :fill_out_form
-  alias_method :fill_in_page, :fill_out_form
+  alias_method :fill_in, :fill_out
 
-  # =======
+  # ==========
   private
-  # =======
+  # ==========
 
-  def fill page, field, meth
-    page.send(field).send(meth, instance_variable_get('@'+field.to_s))
+  def ivg(symb)
+    instance_variable_get('@'+symb.to_s)
   end
 
 end

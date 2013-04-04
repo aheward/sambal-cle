@@ -33,9 +33,7 @@ class MultipleChoiceQuestion
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type 'Multiple Choice'
-    end
+    on(EditAssessment).question_type 'Multiple Choice'
     on MultipleChoice do |add|
       add.answer_point_value.set @point_value
       add.question_text.set @text
@@ -122,9 +120,7 @@ class SurveyQuestion
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type 'Survey'
-    end
+    on(EditAssessment).question_type 'Survey'
     on Survey do |add|
       add.question_text.set @text
       add.send(@answer).set
@@ -172,9 +168,7 @@ class ShortAnswerQuestion
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type 'Short Answer/Essay'
-    end
+    on(EditAssessment).question_type 'Short Answer/Essay'
     on ShortAnswer do |add|
       if @rich_text
         add.toggle_question_editor
@@ -231,9 +225,7 @@ class FillInBlankQuestion
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type 'Fill in the Blank'
-    end
+    on(EditAssessment).question_type 'Fill in the Blank'
     on FillInBlank do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
@@ -286,9 +278,7 @@ class NumericResponseQuestion
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type "Numeric Response"
-    end
+    on(EditAssessment).question_type 'Numeric Response'
     on NumericResponse do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
@@ -349,9 +339,7 @@ class MatchingQuestion
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type 'Matching'
-    end
+    on(EditAssessment).question_type 'Matching'
     on Matching do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
@@ -425,9 +413,7 @@ class TrueFalseQuestion
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type 'True False'
-    end
+    on(EditAssessment).question_type 'True False'
     on TrueFalse do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
@@ -484,9 +470,7 @@ class AudioRecordingQuestion
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type 'Audio Recording'
-    end
+    on(EditAssessment).question_type 'Audio Recording'
     on AudioRecording do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
@@ -538,9 +522,7 @@ class FileUploadQuestion
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type 'File Upload'
-    end
+    on(EditAssessment).question_type 'File Upload'
     on FileUpload do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
@@ -607,9 +589,7 @@ class CalculatedQuestion
   end
 
   def create
-    on EditAssessment do |edit|
-      edit.question_type 'Calculated Question'
-    end
+    on(EditAssessment).question_type 'Calculated Question'
     on CalculatedQuestions do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value

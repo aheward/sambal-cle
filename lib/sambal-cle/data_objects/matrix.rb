@@ -33,19 +33,15 @@ class MatrixObject
   def create
     open_my_site_by_name @portfolio
     matrices
-    on Matrices do |list|
-      list.add
-    end
+    on(Matrices).add
     on AddEditMatrix do |add|
-      add.title.set @title
+      fill_out add, :title
 
       # TODO Add filling in the non-essential fields.
 
     end
     @columns.each do |column|
-      on AddEditMatrix do |add|
-        add.add_column
-      end
+      on(AddEditMatrix).add_column
       on AddEditColumn do |add|
         add.name.set column[:name]
         add.background_color.set column[:bg_color]
@@ -54,9 +50,7 @@ class MatrixObject
       end
     end
     @rows.each do |row|
-      on AddEditMatrix do |add|
-        add.add_row
-      end
+      on(AddEditMatrix).add_row
       on AddEditRow do |add|
         add.name.set row[:name]
         add.background_color.set row[:bg_color]
@@ -64,12 +58,8 @@ class MatrixObject
         add.update
       end
     end
-    on AddEditMatrix do |add|
-      add.save_changes
-    end
-    on EditMatrixCells do |matrix|
-      matrix.return_to_list
-    end
+    on(AddEditMatrix).save_changes
+    on(EditMatrixCells).return_to_list
   end
     
   def edit opts={}
@@ -115,7 +105,7 @@ class CellObject
     }
     
     set_options(defaults.merge(opts))
-    requires @matrix, @row, @column
+    requires :matrix, :row, :column
   end
     
   def create

@@ -31,9 +31,7 @@ class EventObject
   def create
     open_my_site_by_name @site
     calendar
-    on Calendar do |cal|
-      cal.add_event
-    end
+    on( Calendar).add_event
     on AddEditEvent do |add_event|
       add_event.enter_source_text add_event.editor, @message
       fill_out_form add_event, :title, :month, :day,
@@ -60,9 +58,7 @@ class EventObject
   def view
     open_my_site_by_name @site
     calendar
-    on Calendar do |cal|
-      cal.open_event @title
-    end
+    on(Calendar).open_event @title
     on EventDetail do |event|
       @message_html = event.message_html
       # TODO: Lots of stuff to add here...

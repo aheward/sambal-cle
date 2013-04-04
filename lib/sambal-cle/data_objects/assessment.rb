@@ -69,9 +69,7 @@ class AssessmentObject
       page.type.select @type unless @type==nil
       page.create
     end
-    on EditAssessment do |assessment|
-      assessment.settings
-    end
+    on(EditAssessment).settings
     on AssessmentSettings do |settings|
       settings.open
       # Introduction
@@ -136,12 +134,8 @@ class AssessmentObject
     open_my_site_by_name @site
     tests_and_quizzes
     reset
-    on AssessmentsList do |list|
-      list.publish @title
-    end
-    on PublishAssessment do |assessment|
-      assessment.publish
-    end
+    on(AssessmentsList).publish @title
+    on(PublishAssessment).publish
   end
 
   def add_part opts={}
@@ -176,9 +170,7 @@ class AssessmentObject
     tests_and_quizzes
     unless @browser.frame(:class=>'portletMainIframe').h3.text=="Questions: #{@title}"
       reset
-      on AssessmentsList do |list|
-        list.edit @title
-      end
+      on(AssessmentsList).edit @title
     end
   end
 
@@ -209,9 +201,8 @@ class PartObject
   end
     
   def create
-    on EditAssessment do |edit|
-      edit.add_part
-    end
+    # Assumes you're already on the right page.
+    on(EditAssessment).add_part
     on AddEditAssessmentPart do |part|
       fill_out part, :title, :information, :type, :question_ordering
       # TODO: more to add here

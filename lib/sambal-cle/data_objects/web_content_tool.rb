@@ -21,12 +21,8 @@ class WebContentObject
   def create
     my_workspace
     site_setup
-    on_page SiteSetupList do |page|
-      page.edit @site
-    end
-    on_page SiteEditor do |page|
-      page.edit_tools
-    end
+    on(SiteSetupList).edit @site
+    on(SiteEditor).edit_tools
     on_page EditSiteTools do |page|
       page.web_content.set
       page.continue
@@ -36,9 +32,7 @@ class WebContentObject
       page.web_content_source.set @source
       page.continue
     end
-    on_page ConfirmSiteToolsEdits do |page|
-      page.finish
-    end
+    on(ConfirmSiteToolsEdits).finish
     on_page SiteEditor do |page|
       page.return_button.wait_until_present
       page.return_to_sites_list

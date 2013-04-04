@@ -25,12 +25,8 @@ class ChatRoomObject
   def create
     open_my_site_by_name @site
     chat_room
-    on ChatRoom do |chat|
-      chat.options
-    end
-    on ManageRooms do |manage|
-      manage.add_room
-    end
+    on(ChatRoom).options
+    on(ManageRooms).add_room
     #TODO: finish this method
   end
     

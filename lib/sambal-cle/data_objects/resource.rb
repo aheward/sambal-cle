@@ -20,9 +20,7 @@ class FileObject
   def create
     open_my_site_by_name @site
     resources
-    on Resources do |file|
-      file.upload_files_to_folder @target_folder
-    end
+    on(Resources).upload_files_to_folder @target_folder
     on ResourcesUploadFiles do |upload|
       upload.file_to_upload @name, @source_path
       upload.upload_files_now
@@ -56,9 +54,7 @@ class FolderObject
   def create
     open_my_site_by_name @site
     resources
-    on_page Resources do |page|
-      page.create_subfolders_in @parent_folder
-    end
+    on(Resources).create_subfolders_in @parent_folder
     on_page CreateFolders do |page|
       page.folder_name.set @name
       page.create_folders_now
@@ -119,9 +115,7 @@ class HTMLPageObject
   def create
     open_my_site_by_name @site
     resources
-    on_page Resources do |page|
-      page.create_html_page_in @folder
-    end
+    on(Resources).create_html_page_in @folder
     on_page EditHTMLPageContent do |page|
       page.source
       page.source_field.set @html

@@ -62,12 +62,8 @@ class AssignmentSubmissionObject
     open_my_site_by_name @site
     assignments
     reset
-    on AssignmentsList do |list|
-      list.grade @title
-    end
-    on AssignmentSubmissionList do |submissions|
-      submissions.grade @student.ln_fn_id
-    end
+    on(AssignmentsList).grade @title
+    on(AssignmentSubmissionList).grade @student.ln_fn_id
     on AssignmentSubmission do |submission|
       submission.prepend(submission.assignment_submission, "{{#{opts[@inline_comment]}}}") unless opts[:inline_comment]==nil
       submission.instructor_comments=opts[:summary_comment] unless opts[:summary_comment]==nil
@@ -116,9 +112,7 @@ class AssignmentSubmissionObject
     open_my_site_by_name @site
     assignments
     reset
-    on AssignmentsList do |list|
-      list.open_assignment @title
-    end
+    on(AssignmentsList).open_assignment @title
   end
   alias view open
 

@@ -33,9 +33,7 @@ class CourseSiteObject
   def create
     my_workspace
     site_setup
-    on_page SiteSetupList do |page|
-      page.new
-    end
+    on(SiteSetupList).new
     on SiteType do |page|
       # Select the Course Site radio button
       page.course_site.set
@@ -104,9 +102,7 @@ class CourseSiteObject
   def create_and_reuse_site(site_name)
     my_workspace
     site_setup
-    on_page SiteSetupList do |page|
-      page.new
-    end
+    on(SiteSetupList).new
     on SiteType do |site_type|
 
       # Select the Course Site radio button
@@ -175,14 +171,10 @@ class CourseSiteObject
       page.joiner_role.select @joiner_role
       page.continue
     end
-    on_page ConfirmSiteSetup do |page|
-      page.request_site
-    end
+    on(ConfirmSiteSetup).request_site
     # Create a string that will match the new Site's "creation date" string
     @creation_date = make_date(Time.now)
-    on_page SiteSetupList do |page|
-      page.search(Regexp.escape(@subject))
-    end
+    on(SiteSetupList).search(Regexp.escape(@subject))
     # Get the site id for storage
     @browser.frame(:class=>'portletMainIframe').link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
     @id = $~.to_s
@@ -213,9 +205,7 @@ class CourseSiteObject
 
     open_my_site_by_name @name
     site_editor
-    on SiteEditor do |edit|
-      edit.duplicate_site
-    end
+    on(SiteEditor).duplicate_site
     on DuplicateSite do |dupe|
       dupe.site_title.set new_site.name
       dupe.academic_term.select new_site.term
@@ -223,9 +213,8 @@ class CourseSiteObject
     end
     my_workspace
     site_setup
-    on SiteSetupList do |sites|
-      sites.search(Regexp.escape(new_site.name))
-    end
+    on(SiteSetupList).search(Regexp.escape(new_site.name))
+
     # Get the site id for storage
     @browser.frame(:class=>'portletMainIframe').link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
     new_site.id = $~.to_s
@@ -238,9 +227,7 @@ class CourseSiteObject
     list_of_ids=participants.join("\n")
     open_my_site_by_name @name
     site_editor
-    on SiteEditor do |site|
-      site.add_participants
-    end
+    on(SiteEditor).add_participants
     on SiteSetupAddParticipants do |add|
       add.official_participants.set list_of_ids
       add.continue
@@ -249,12 +236,8 @@ class CourseSiteObject
       choose.radio_button(role).set
       choose.continue
     end
-    on SiteSetupParticipantEmail do |send|
-      send.continue
-    end
-    on SiteSetupParticipantConfirm do |confirm|
-      confirm.finish
-    end
+    on(SiteSetupParticipantEmail).continue
+    on(SiteSetupParticipantConfirm).finish
     if @participants.has_key?(role)
       @participants[role].insert(-1, participants).flatten!
     else

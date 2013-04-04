@@ -37,13 +37,9 @@ class SyllabusObject
   def edit opts={}
     open_my_site_by_name @site
     syllabus
-    on Syllabus do |syllabus|
-      reset
-      syllabus.create_edit
-    end
-    on SyllabusEdit do |edit|
-      edit.open_item @title
-    end
+    reset
+    on(Syllabus).create_edit
+    on(SyllabusEdit).open_item @title
     on AddEditSyllabusItem do |item|
       item.title.fit opts[:title]
       item.enter_source_text(item.editor, opts[:content]) unless opts[:content]==nil
@@ -55,13 +51,9 @@ class SyllabusObject
     open_my_site_by_name @site
     syllabus
     sleep 2 #FIXME
-    on Syllabus do |syllabus|
-      reset
-      syllabus.create_edit
-    end
-    on SyllabusEdit do |edit|
-      edit.open_item @title
-    end
+    reset
+    on(Syllabus).create_edit
+    on(SyllabusEdit).open_item @title
     on AddEditSyllabusItem do |item|
       @content = item.get_source_text(item.editor)
       # Add more here as necessary...

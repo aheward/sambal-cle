@@ -19,12 +19,7 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
   end
     
   def set opts={}
-    open_my_site_by_name @site
-    assignments
-    reset
-    on AssignmentsList do |list|
-      list.permissions
-    end
+    navigate
     on AssignmentsPermissions do |perm|
       roles={:guest=>'Guest', :instructor=>'Instructor', :student=>'Student', :teaching_assistant=>'Teaching Assistant'}
       roles.each_pair do |role, title|
@@ -43,12 +38,7 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
   end
 
   def get
-    open_my_site_by_name @site
-    assignments
-    reset
-    on AssignmentsList do |list|
-      list.permissions
-    end
+    navigate
     on AssignmentsPermissions do |perm|
       roles={@guest=>'Guest', @instructor=>'Instructor', @student=>'Student', @teaching_assistant=>'Teaching Assistant'}
       roles.each_pair do |role, name|
@@ -57,5 +47,15 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
       perm.cancel
     end
   end
-  
+
+  private
+
+  def navigate
+    open_my_site_by_name @site
+    assignments
+    reset
+    on(AssignmentsList).permissions
+  end
+
+
 end

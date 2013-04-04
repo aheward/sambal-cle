@@ -23,9 +23,7 @@ class PollObject
   def create
     open_my_site_by_name @site
     polls
-    on Polls do |polls|
-      polls.add
-    end
+    on(Polls).add
     on AddEditPoll do |add|
       add.question.set @question
       add.enter_source_text add.editor, @instructions
@@ -45,9 +43,7 @@ class PollObject
         page.save
       end
     end
-    on AddEditPoll do |poll|
-      poll.save
-    end
+    on(AddEditPoll).save
   end
     
   def edit opts={}

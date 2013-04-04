@@ -26,9 +26,7 @@ class AnnouncementObject
   def create
     open_my_site_by_name @site
     announcements
-    on_page Announcements do |page|
-      page.add
-    end
+    on(Announcements).add
     on_page AddEditAnnouncements do |page|
       page.title.set @title
       page.source
@@ -36,7 +34,7 @@ class AnnouncementObject
       page.post_announcement
       @creation_date=make_date Time.now
     end
-    on_page Announcements do |page|
+    on Announcements do |page|
       @link = page.href(@title)
       @id = @link[/(?<=msg\/).+(?=\/main\/)/]
     end
@@ -45,9 +43,7 @@ class AnnouncementObject
   def edit opts={}
     open_my_site_by_name @site
     announcements
-    on_page Announcements do |list|
-      list.edit @title
-    end
+    on(Announcements).edit @title
     on AddEditAnnouncements do |edit|
       edit.title.fit opts[:title]
       edit.send(opts[:access]) unless opts[:access]==nil
@@ -63,9 +59,7 @@ class AnnouncementObject
   def view
     open_my_site_by_name @site
     announcements
-    on Announcements do |list|
-      list.view @title
-    end
+    on(Announcements).view @title
     on ViewAnnouncement do |view|
       @subject=view.subject
       @saved_by=view.saved_by

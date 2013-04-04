@@ -23,16 +23,12 @@ class ModuleObject
     open_my_site_by_name @site
     lessons
     reset
-    on_page Lessons do |page|
-      page.add_module
-    end
+    on(Lessons).add_module
     on_page AddEditModule do |page|
       fill_out page, :title, :description, :keywords, :start_date, :end_date
       page.add
     end
-    on_page ConfirmModule do |page|
-      page.return_to_modules
-    end
+    on(ConfirmModule).return_to_modules
     on_page Lessons do |list|
       @href = list.href @title
     end
@@ -72,13 +68,9 @@ class ContentSectionObject
     open_my_site_by_name @site
     lessons
     reset
-    on_page Lessons do |page|
-      page.open_lesson @module
-    end
-    on_page AddEditModule do |page|
-      page.add_content_sections
-    end
-    on_page AddEditContentSection do |page|
+    on(Lessons).open_lesson @module
+    on(AddEditModule).add_content_sections
+    on AddEditContentSection do |page|
       fill_out page, :title, :instructions
       @modality.each do |content|
         page.send(content)
@@ -122,9 +114,7 @@ class ContentSectionObject
       page.copyright_status.select @copyright_status
       page.add
     end
-    on ConfirmSectionAdd do |confirm|
-      confirm.finish
-    end
+    on(ConfirmSectionAdd).finish
     on Lessons do |list|
       @href = list.href @title
     end

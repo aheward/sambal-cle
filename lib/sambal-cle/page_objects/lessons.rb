@@ -90,7 +90,7 @@ class ViewModule < LessonsBase
   def sections_list
     list = []
     frm.table(:id=>'viewmoduleStudentform:tablesec').links.each { |link| list << link.text }
-    return list
+    list
   end
 
   link 'Next'
