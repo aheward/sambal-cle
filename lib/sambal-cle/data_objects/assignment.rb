@@ -57,7 +57,8 @@ class AssignmentObject
         @resubmission[:minute_rounded]=get_or_select(@resubmission[:minute_rounded], add.resub_until_minute)
         @resubmission[:MERIDIAN]=get_or_select(@resubmission[:MERIDIAN], add.resub_until_meridian)
       end
-      fill_out_form add, :title, :instructions
+      add.title.set @title
+      add.instructions=@instructions
       get_or_select! :@student_submissions, add.student_submissions
       get_or_select! :@grade_scale, add.grade_scale
       @open[:MON]=get_or_select @open[:MON], add.open_month

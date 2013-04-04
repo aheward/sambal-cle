@@ -36,8 +36,8 @@ class AssessmentObject
         :title=>random_alphanums,
         :authors=>random_alphanums,
         :description=>random_alphanums,
-        :parts=>[],
-        :questions=>[],
+        :parts=>PartsCollection.new,
+        :questions=>QuestionsCollection.new,
         :available_date=>right_now,
         :due_date=>tomorrow,
         :retract_date=>next_week,
@@ -121,7 +121,7 @@ class AssessmentObject
 
       # Metadata
 
-      fill_out_form settings, :authors, :description, :submission_message, :final_page_url
+      fill_out settings, :authors, :description, :submission_message, :final_page_url
 
       settings.save_settings
     end
@@ -213,10 +213,7 @@ class PartObject
       edit.add_part
     end
     on AddEditAssessmentPart do |part|
-      part.title.set @title
-      part.information.set @information
-      part.send(@type).set
-      part.send(@question_ordering).set
+      fill_out part, :title, :information, :type, :question_ordering
       # TODO: more to add here
       part.save
     end
@@ -234,5 +231,20 @@ class PartObject
   def delete
     
   end
-  
+
+end
+
+class PartsCollection < Array
+
+  # TODO: Is this method actually needed?
+  def get(title)
+    self.find { |item| item.title==title }
+  end
+
+end
+
+class QuestionsCollection < Array
+
+
+
 end

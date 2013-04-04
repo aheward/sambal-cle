@@ -128,9 +128,7 @@ class HTMLPageObject
       page.continue
     end
     on_page EditHTMLPageProperties do |page|
-      page.name.set @name
-      page.description.set @description
-      # Put more here as needed later
+      fill_out page, :name, :description # Put more here as needed later
       page.finish
     end
     on_page Resources do |page|

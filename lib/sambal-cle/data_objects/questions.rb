@@ -490,11 +490,9 @@ class AudioRecordingQuestion
     on AudioRecording do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
-      add.time_allowed.set @time_allowed
-      add.number_of_attempts.select @number_of_attempts
       add.assign_to_part.select /#{@part}/
       add.assign_to_pool.fit @pool
-      add.feedback.fit @feedback
+      fill_out add, :time_allowed, :number_of_attempts, :feedback
       add.save
     end
   end

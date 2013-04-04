@@ -27,7 +27,7 @@ class ModuleObject
       page.add_module
     end
     on_page AddEditModule do |page|
-      fill_out_form page, :title, :description, :keywords, :start_date, :end_date
+      fill_out page, :title, :description, :keywords, :start_date, :end_date
       page.add
     end
     on_page ConfirmModule do |page|
@@ -79,7 +79,7 @@ class ContentSectionObject
       page.add_content_sections
     end
     on_page AddEditContentSection do |page|
-      fill_out_form page, :title, :instructions
+      fill_out page, :title, :instructions
       @modality.each do |content|
         page.send(content)
       end
@@ -92,7 +92,8 @@ class ContentSectionObject
                                        # TODO: Figure out if there's a better solution for this
       case @content_type
         when 'Compose content with editor'
-          page.enter_source_text page.content_editor, @editor_content
+          page.source
+          page.source_field.set @editor_content
         when 'Upload or link to a file'
           page.select_a_file
           on_page LessonAddAttachment do |add|

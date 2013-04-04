@@ -61,7 +61,7 @@ class CourseSiteObject
       page.continue
     end
     on CourseSiteInfo do |page|
-      fill_out_form page, :short_description, :site_contact_name, :site_contact_email
+      fill_out page, :short_description, :site_contact_name, :site_contact_email
       page.source
       page.source_field.set @description
 
@@ -75,7 +75,7 @@ class CourseSiteObject
     end
     on AddMultipleTools do |add_tools|
       add_tools.site_email_address.set @email
-      fill_out_form add_tools, :web_content_title, :web_content_source
+      fill_out add_tools, :web_content_title, :web_content_source
 
       add_tools.continue
     end
@@ -121,7 +121,7 @@ class CourseSiteObject
     end
     on CourseSectionInfo do |course_section|
       # Fill in those fields, storing the entered values for later verification steps
-      fill_out_form course_section, :subject, :course, :section
+      fill_out course_section, :subject, :course, :section
 
       # Store site name for ease of coding and readability later
       @name = "#{@subject} #{@course} #{@section} #{@term_value}"
@@ -167,7 +167,7 @@ class CourseSiteObject
     end
     on_page AddMultipleTools do |page|
       page.site_email_address.set @email
-      fill_out_form page, :web_content_title, :web_content_source
+      fill_out page, :web_content_title, :web_content_source
       page.continue
     end
     on_page SiteAccess do |page|

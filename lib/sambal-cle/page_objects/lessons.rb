@@ -243,7 +243,7 @@ class AddEditContentSection < LessonsBase
   menu_elements
   cke_elements
 
-  #expected_element :instructions
+  expected_element :instructions
 
   # Clicks the Add button on the page
   # next is the ConfirmSectionAdd class.
