@@ -25,16 +25,14 @@ class PortfolioSiteObject
   def create
     my_workspace
     site_setup
-    on_page SiteSetup do |page|
-      page.new
-    end
+    on(SiteSetup).new
     on SiteType do |page|
       # Select the Portfolio Site radio button
       page.portfolio_site.set
       page.continue
     end
     on PortfolioSiteInfo do |info|
-      fill_out_form info, :title, :description, :short_description
+      fill_out info, :title, :description, :short_description
       info.continue
     end
     on PortfolioSiteTools do |tools|
@@ -43,7 +41,7 @@ class PortfolioSiteObject
       tools.continue
     end
     on PortfolioConfigureToolOptions do |options|
-      fill_out_form options, :site_email
+      fill_out options, :site_email
       # TODO Add support for other fields here
       options.continue
     end
@@ -88,9 +86,7 @@ class PortfolioSiteObject
     list_of_ids=participants.join("\n")
     open_my_site_by_name @title
     site_editor
-    on SiteEditor do |site|
-      site.add_participants
-    end
+    on(SiteEditor).add_participants
     on SiteSetupAddParticipants do |add|
       add.official_participants.set list_of_ids
       add.continue
@@ -99,12 +95,8 @@ class PortfolioSiteObject
       choose.radio_button(role).set
       choose.continue
     end
-    on SiteSetupParticipantEmail do |send|
-      send.continue
-    end
-    on SiteSetupParticipantConfirm do |confirm|
-      confirm.finish
-    end
+    on(SiteSetupParticipantEmail).continue
+    on(SiteSetupParticipantConfirm).finish
     if @participants.has_key?(role)
       @participants[role].insert(-1, participants).flatten!
     else

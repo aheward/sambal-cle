@@ -50,7 +50,7 @@ class Announcements < BasePage
   end
 
   # Clicks the Merge link and goes to the AnnouncementsMerge class.
-  link('Merge')
+  link 'Merge'
 
   # =========
   private
@@ -80,13 +80,13 @@ class ViewAnnouncement < BasePage
   frame_element
 
   # Clicks the Return to list button and goes to the Announcements class.
-  button('Return to List')
+  button 'Return to List'
 
   # Clicks the Save changes button and goes to the Announcements class.
-  button('Save Changes')
+  button 'Save Changes'
 
   # Clicks the Edit button and goes to the AddEditAnnouncements class.
-  button('Edit')
+  button 'Edit'
 
   value(:subject) { |b| b.frm.table(class: 'itemSummary')[0][1].text }
   value(:saved_by) { |b| b.frm.table(class: 'itemSummary')[1][1].text }

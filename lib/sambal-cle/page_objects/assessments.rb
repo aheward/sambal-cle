@@ -79,6 +79,12 @@ class AssessmentsList < AssessmentsBase
     titles
   end
 
+  action(:working_copies) { |b| b.frm.link(text: /Working Copies:/).click }
+  action(:published_copies) { |b| b.frm.link(text: /Published Copies:/).click }
+  action(:view_all) { |b| b.frm.link(text: 'All').click }
+  action(:view_active) { |b| b.frm.link(text: 'Active').click }
+  action(:view_inactive) { |b| b.frm.link(text: 'Inactive').click }
+
   # Opens the selected test for scoring
   # then instantiates the AssessmentTotalScores class.
   # @param test_title [String] the title of the test to be clicked.
