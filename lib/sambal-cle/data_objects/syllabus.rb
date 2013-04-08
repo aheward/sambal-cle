@@ -29,7 +29,8 @@ class SyllabusObject
     end
     on AddEditSyllabusItem do |create|
       create.title.set @title
-      create.enter_source_text create.editor, @content
+      create.source
+      create.source_field.set @content
       create.post
     end
   end

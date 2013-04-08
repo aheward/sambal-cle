@@ -69,16 +69,6 @@ class AssessmentsList < AssessmentsBase
     titles
   end
 
-  # Returns an Array of the inactive Assessment titles displayed
-  # in the list.
-  def inactive_assessment_titles
-    titles =[]
-    1.upto(inactive_table.rows.size-1) do |x|
-      titles << inactive_table[x][1].span(:id=>/inactivePublishedAssessmentTitle/).text
-    end
-    titles
-  end
-
   action(:working_copies) { |b| b.frm.link(text: /Working Copies:/).click }
   action(:published_copies) { |b| b.frm.link(text: /Published Copies:/).click }
   action(:view_all) { |b| b.frm.link(text: 'All').click }
@@ -95,9 +85,8 @@ class AssessmentsList < AssessmentsBase
   action(:edit) { |test_title, b| b.frm.form(:id=>'authorIndexForm').tr(:text=>/#{Regexp.escape(test_title)}/).select(:name=>/Select/).select 'Edit' }
 
   element(:title) { |b| b.frm.text_field(:id=>'authorIndexForm:title') }
-  element(:pending_table) { |b| b.frm.table(:id=>'authorIndexForm:coreAssessments') }
-  element(:published_table) { |b| b.frm.div(:class=>'tier2', :index=>2).table(:class=>'listHier', :index=>0) }
-  element(:inactive_table) { |b| b.frm.div(:class=>'tier2', :index=>2).table(:id=>'authorIndexForm:inactivePublishedAssessments') }
+  element(:pending_table) { |b| b.frm.table(id: 'authorIndexForm:coreAssessments') }
+  element(:published_table) { |b| b.frm.table(id: 'authorIndexForm:published-assessments') }
   element(:create_using_builder) { |b| b.frm.radio(:name=>'authorIndexForm:_id29', :index=>0) }
   element(:create_using_text) { |b| b.frm.radio(:name=>'authorIndexForm:_id29') }
   element(:select_assessment_type) { |b| b.frm.select(:id=>'authorIndexForm:assessmentTemplate') }
@@ -168,22 +157,24 @@ class PreviewOverview < BasePage
   frame_element
 
   # Scrapes the value of the due date from the page. Returns it as a string.
-  value(:due_date) { |b| b.frm.frm.div(:class=>'tier2').table(:index=>0)[0][0].text }
+  value(:due_date) { |b| b.info_table[0][0].text }
 
   # Scrapes the value of the time limit from the page. Returns it as a string.
-  value(:time_limit) { |b| b.frm.frm.div(:class=>'tier2').table(:index=>0)[3][0].text }
+  value(:time_limit) { |b| b.info_table[3][0].text }
 
   # Scrapes the submission limit from the page. Returns it as a string.
-  value(:submission_limit) { |b| b.frm.frm.div(:class=>'tier2').table(:index=>0)[6][0].text }
+  value(:submission_limit) { |b| b.info_table[6][0].text }
 
   # Scrapes the Feedback policy from the page. Returns it as a string.
-  value(:feedback) { |b| b.frm.div(:class=>'tier2').table(:index=>0)[9][0].text }
+  value(:feedback) { |b| b.info_table[9][0].text }
 
   # Clicks the Done button, then instantiates
   # the EditAssessment class.
   action(:done) { |b| b.frm.button(:name=>'takeAssessmentForm:_id5').click }
 
   action(:begin_assessment) { |b| b.frm.button(:id=>'takeAssessmentForm:beginAssessment3').click }
+
+  element(:info_table) { |b| b.frm.div(:class=>'tier2').table(:index=>0) }
 
 end
 
@@ -195,13 +186,13 @@ class AssessmentSettings < AssessmentsBase
   expected_element :cancel_button
 
   # Scrapes the Assessment Type from the page and returns it as a string.
-  value(:assessment_type_title) { |b| b.frm.div(:class=>'tier2').table(:index=>0)[0][1].text }
+  value(:assessment_type_title) { |b| b.info_table[0][1].text }
 
   # Scrapes the Assessment Author information from the page and returns it as a string.
-  value(:assessment_type_author) { |b| b.frm.div(:class=>'tier2').table(:index=>0)[1][1].text }
+  value(:assessment_type_author) { |b| b.info_table[1][1].text }
 
   # Scrapes the Assessment Type Description from the page and returns it as a string.
-  value(:assessment_type_description) { |b| b.frm.div(:class=>'tier2').table(:index=>0)[2][1].text }
+  value(:assessment_type_description) { |b| b.info_table[2][1].text }
 
   # Clicks the Save Settings and Publish button
   # then instantiates the PublishAssessment class.
@@ -284,7 +275,9 @@ class AssessmentSettings < AssessmentsBase
     #text_field(:rubrics, :=>"") }
     #checkbox(:record_metadata_for_questions, :=>"") }
   button 'Save Settings' 
-  button 'Cancel' 
+  button 'Cancel'
+
+  element(:info_table) { |b| b.frm.div(:class=>'tier2').table(:index=>0) }
 
 end
 
@@ -710,7 +703,7 @@ class SelectQuestionType < AssessmentsBase
     frm.button(:value=>'Save').click
   end
 
-  action(:cancel) { |b| b.frm.button(:value=>'Cancel').click }
+  button 'Cancel'
 
 end
 
@@ -762,9 +755,7 @@ class TakeAssessment < AssessmentsBase
     frm.button(:value=>'Upload').click
   end
 
-  # Clicks the Next button and instantiates the BeginAssessment Class.
-  action(:next) { |b| b.frm.button(:value=>'Next').click }
-
+  button 'Next'
   button 'Submit for Grading'
 
 end

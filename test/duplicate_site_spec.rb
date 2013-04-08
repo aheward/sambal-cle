@@ -25,97 +25,78 @@ describe 'Duplicate Site' do
     # Log in to Sakai
     @instructor.login
 
-    @site1 = make CourseSiteObject
-    @site1.create
+    @site1 = create CourseSiteObject
 
     @source_site_string << "<br />\n<br />\nSite ID: #{@site1.id}<br />\n<br />\n"
 
-    @assignment = make AssignmentObject, :site=>@site1.name, :instructions=>@source_site_string
-    @assignment.create
+    @assignment = create AssignmentObject, :site=>@site1.name, :instructions=>@source_site_string
     @assignment.get_info
+    @assignment.get_direct_url
 
     @source_site_string << "Assignment...<br />\nID:(n) #{@assignment.id}<br />\n"
     @source_site_string << "Link (made 'by hand'): <a href=\"#{@assignment.link}\">#{@assignment.title}</a><br />\n"
-    @source_site_string << "URL from Entity picker:(x) <a href=\"#{@assignment.url}\">#{@assignment.title}</a><br />\n"
-    @source_site_string << "<em>Direct</em> URL from Entity picker:(y) <a href=\"#{@assignment.direct_url}\">#{@assignment.title}</a><br />\n<br />\n#{@assignment.direct_url}<br />\n<br />\n"
-    @source_site_string << "<em>Portal</em> URL from Entity picker:(z) <a href=\"#{@assignment.portal_url}\">#{@assignment.title}</a><br />\n<br />\n#{@assignment.portal_url}<br />\n<br />\n"
+    @source_site_string << "<em>Direct</em> URL from Link Tool:(y) <a href=\"#{@assignment.direct_url}\">#{@assignment.title}</a><br />\n<br />\n#{@assignment.direct_url}<br />\n<br />\n"
 
-    @announcement = make AnnouncementObject, :site=>@site1.name, :body=>@assignment.link
-    @announcement.create
+    @announcement = create AnnouncementObject, :site=>@site1.name, :body=>@assignment.link
 
     @source_site_string << "<br />\nAnnouncement link: <a href=\"#{@announcement.link}\">#{@announcement.title}</a><br />\n"
 
-    @file = make FileObject, :site=>@site1.name, :name=>"flower02.jpg", :source_path=>@file_path+"images/"
-    @file.create
+    @file = create FileObject, :site=>@site1.name, :name=>"flower02.jpg", :source_path=>@file_path+"images/"
 
     @source_site_string << %|<br />\nUploaded file: <a href="#{@file.href}">#{@file.name}</a><br />\n<img width="203" height="196" src="#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" /><br /><br />|
 
-    @htmlpage = make HTMLPageObject, :site=>@site1.name, :folder=>"#{@site1.name} Resources", :html=>@source_site_string
-    @htmlpage.create
+    @htmlpage = create HTMLPageObject, :site=>@site1.name, :folder=>"#{@site1.name} Resources", :html=>@source_site_string
 
     @source_site_string << "<br />\nHTML Page: <a href=\"#{@htmlpage.url}\">#{@htmlpage.name}</a><br />\n"
 
-    @folder = make FolderObject, :site=>@site1.name, :parent_folder=>"#{@site1.name} Resources"
-    @folder.create
+    @folder = create FolderObject, :site=>@site1.name, :parent_folder=>"#{@site1.name} Resources"
 
-    @nestedhtmlpage = make HTMLPageObject, :site=>@site1.name, :folder=>@folder.name, :html=>@source_site_string
-    @nestedhtmlpage.create
+    @nestedhtmlpage = create HTMLPageObject, :site=>@site1.name, :folder=>@folder.name, :html=>@source_site_string
 
     @source_site_string << "<br />\nNested HTML Page: <a href=\"#{@nestedhtmlpage.url}\">#{@nestedhtmlpage.name}</a><br />\n"
 
-    @web_content1 = make WebContentObject, :title=>@htmlpage.name, :source=>@htmlpage.url, :site=>@htmlpage.site
-    @web_content1.create
+    @web_content1 = create WebContentObject, :title=>@htmlpage.name, :source=>@htmlpage.url, :site=>@htmlpage.site
 
-    @web_content2 = make WebContentObject, :title=>@nestedhtmlpage.name, :source=>@nestedhtmlpage.url, :site=>@nestedhtmlpage.site
-    @web_content2.create
+    @web_content2 = create WebContentObject, :title=>@nestedhtmlpage.name, :source=>@nestedhtmlpage.url, :site=>@nestedhtmlpage.site
 
     @module = make ModuleObject, :site=>@site1.name
     @module.create
 
     @source_site_string << "<br />\nModule: <a href=\"#{@module.href}\">#{@module.name}</a><br />\n"
 
-    @section1 = make ContentSectionObject, :site=>@site1.name, :module=>@module.title, :content_type=>"Compose content with editor",
+    @section1 = create ContentSectionObject, :site=>@site1.name, :module=>@module.title, :content_type=>"Compose content with editor",
                      :editor_content=>@source_site_string
-    @section1.create
 
     @source_site_string << "<br />\nSection 1: <a href=\"#{@section1.href}\">#{@section1.name}</a><br />\n"
 
-    @section2 = make ContentSectionObject, :site=>@site1.name, :module=>@module.title, :content_type=>"Upload or link to a file",
+    @section2 = create ContentSectionObject, :site=>@site1.name, :module=>@module.title, :content_type=>"Upload or link to a file",
                      :file_name=>"flower01.jpg", :file_path=>@file_path+"images/"
-    @section2.create
 
     @source_site_string << "<br />Section 2: <a href=\"#{@section2.href}\">#{@section2.name}</a><br />"
 
-    @section3 = make ContentSectionObject, :site=>@site1.name, :module=>@module.title, :content_type=>"Link to new or existing URL resource on server",
+    @section3 = create ContentSectionObject, :site=>@site1.name, :module=>@module.title, :content_type=>"Link to new or existing URL resource on server",
                      :url=>@htmlpage.url, :url_title=>@htmlpage.name
-    @section3.create
 
-    @section4 = make ContentSectionObject, :site=>@site1.name, :module=>@module.title, :content_type=>"Upload or link to a file in Resources",
+    @section4 = create ContentSectionObject, :site=>@site1.name, :module=>@module.title, :content_type=>"Upload or link to a file in Resources",
                      :file_name=>@nestedhtmlpage.name, :file_folder=>@nestedhtmlpage.folder
-    @section4.create
 
-    @wiki = make WikiObject, :site=>@site1.name, :content=>"{image:worksite:/#{@file.name}}\n\n{worksiteinfo}\n\n{sakai-sections}"
-    @wiki.create
+    @wiki = create WikiObject, :site=>@site1.name, :content=>"{image:worksite:/#{@file.name}}\n\n{worksiteinfo}\n\n{sakai-sections}"
 
     @source_site_string << "<br />Wiki: <a href=\"#{@wiki.href}\">#{@wiki.title}</a><br />"
 
-    @syllabus = make SyllabusObject, :content=>@source_site_string, :site=>@site1.name
-    @syllabus.create
+    @syllabus = create SyllabusObject, :content=>@source_site_string, :site=>@site1.name
 
-    @forum = make ForumObject, :site=>@site1.name, :short_description=>random_alphanums, :description=>@source_site_string
-    @forum.create
-    @forum.get_entity_info
+    @forum = create ForumObject, :site=>@site1.name, :short_description=>random_alphanums, :description=>@source_site_string
+    @forum.get_direct_link
 
     @source_site_string << "<br />\nForum link: <a href=\"#{@forum.direct_link}\">#{@forum.title}</a><br />\n"
 
-    @topic = make TopicObject, :site=>@site1.name, :forum=>@forum.title, :description=>@source_site_string
-    @topic.create
-    @topic.get_entity_info
+    @topic = create TopicObject, :site=>@site1.name, :forum=>@forum.title, :description=>@source_site_string
+    @topic.get_direct_link
 
     @source_site_string << "<br />\nTopic link: <a href=\"#{@topic.direct_link}\">#{@topic.title}</a><br />\n"
 
-    @event = make EventObject, :site=>@site1.name, :message=>@source_site_string
-    @event.create
+    @event = create EventObject, :site=>@site1.name, :message=>@source_site_string
 
     @forum.edit :description=>@source_site_string
 
@@ -131,8 +112,7 @@ describe 'Duplicate Site' do
 
     @section1.edit :editor_content=>@source_site_string
 
-    @assessment = make AssessmentObject, :site=>@site1.name
-    @assessment.create
+    @assessment = create AssessmentObject, :site=>@site1.name
     @assessment.add_question :type=>"Short Answer/Essay", :rich_text=>true, :text=>%|<img width="203" height="196" src="#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" />|
     @assessment.publish
 

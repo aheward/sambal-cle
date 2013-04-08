@@ -12,10 +12,7 @@ class AssignmentObject
                 :max_points, :allow_resubmission, :num_resubmissions, :open,
                 :due, :accept_until, :student_submissions, :resubmission,
                 :add_due_date, :add_open_announcement, :add_to_gradebook,
-                # Note the following variables are taken from the Entity picker's
-                # Item Info list
-                :retract_time, :time_due, :time_modified, :url, :portal_url,
-                :description, :time_created, :direct_url
+                :direct_url
 
 
 
@@ -156,6 +153,15 @@ class AssignmentObject
     on AssignmentAdd do |edit|
       edit.cancel
     end
+  end
+
+  def get_direct_url
+    open_my_site_by_name @site
+    assignments
+    reset
+    on(AssignmentsList).edit_assignment @title
+    on(AssignmentAdd).open_link_tool
+    @direct_url = on(LinkTool).get_assignment_link @title
   end
 
   def duplicate
