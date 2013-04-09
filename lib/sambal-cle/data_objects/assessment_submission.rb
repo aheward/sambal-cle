@@ -4,7 +4,7 @@ class AssessmentSubmissionObject
   include DataFactory
   include StringFactory
   include DateFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :assessment
 
@@ -18,7 +18,7 @@ class AssessmentSubmissionObject
 
     set_options(options)
     # Note that the assessment requirement is for the Assessment Object itself.
-    requires @assessment
+    requires :assessment
   end
 
 

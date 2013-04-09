@@ -3,7 +3,7 @@ class GlossaryTermObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :term, :short_description, :long_description, :portfolio
   
@@ -15,18 +15,14 @@ class GlossaryTermObject
       :short_description=>random_alphanums,
       :long_description=>random_alphanums
     }
-    options = defaults.merge(opts)
-    
-    set_options(options)
-    requires @portfolio
+    set_options(defaults.merge(opts))
+    requires :portfolio
   end
     
   def create
     open_my_site_by_name @portfolio
     glossary
-    on Glossary do |list|
-      list.add
-    end
+    on(Glossary).add
     on AddEditTerm do |term|
       term.term.set @term
       term.short_description.set @short_description
@@ -38,9 +34,7 @@ class GlossaryTermObject
   def edit opts={}
     open_my_site_by_name @portfolio
     glossary
-    on Glossary do |list|
-      list.edit @term
-    end
+    on(Glossary).edit @term
     on AddEditTerm do |term|
       term.term.fit opts[:term]
       term.short_description.fit opts[:short_description]
@@ -53,17 +47,13 @@ class GlossaryTermObject
   def open
     open_my_site_by_name @portfolio
     glossary
-    on Glossary do |list|
-      list.open @term
-    end
+    on(Glossary).open @term
   end
     
   def delete
     open_my_site_by_name @portfolio
     glossary
-    on Glossary do |list|
-      list.delete @term
-    end
+    on(Glossary).delete @term
   end
   
 end

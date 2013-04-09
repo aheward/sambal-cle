@@ -4,7 +4,7 @@ class AssignmentSubmissionObject
   include DataFactory
   include StringFactory
   include DateFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :site, :title, :text, :status, :submission_date,
       :student, :allow_resubmission, :resubmission, :num_resubmissions,
@@ -16,12 +16,12 @@ class AssignmentSubmissionObject
 
     defaults = {
       :text=>random_alphanums,
-      :status=>"Not Started"
+      :status=>'Not Started'
     }
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @site, @title, @student
+    requires :site, :title, :student
   end
 
   def submit
@@ -31,7 +31,7 @@ class AssignmentSubmissionObject
       # TODO: Add stuff for adding file(s) to the assignment
       assignment.submit
       @submission_date=right_now[:sakai]
-      @status="Submitted"
+      @status='Submitted'
     end
   end
 
@@ -42,7 +42,7 @@ class AssignmentSubmissionObject
       # TODO: Add stuff for adding file(s) to the assignment
       assignment.save_draft
       @submission_date=right_now[:sakai]
-      @status="Draft - In progress"
+      @status='Draft - In progress'
     end
   end
 
@@ -53,7 +53,7 @@ class AssignmentSubmissionObject
       # TODO: Add stuff for adding/updating/removing file(s) for the assignment
       assignment.resubmit
       @submission_date=right_now[:sakai] # Is this right?
-      @status="Submitted"
+      @status='Submitted'
     end
     @text=opts[:text]
   end
@@ -62,12 +62,8 @@ class AssignmentSubmissionObject
     open_my_site_by_name @site
     assignments
     reset
-    on AssignmentsList do |list|
-      list.grade @title
-    end
-    on AssignmentSubmissionList do |submissions|
-      submissions.grade @student.ln_fn_id
-    end
+    on(AssignmentsList).grade @title
+    on(AssignmentSubmissionList).grade @student.ln_fn_id
     on AssignmentSubmission do |submission|
       submission.prepend(submission.assignment_submission, "{{#{opts[@inline_comment]}}}") unless opts[:inline_comment]==nil
       submission.instructor_comments=opts[:summary_comment] unless opts[:summary_comment]==nil
@@ -116,9 +112,7 @@ class AssignmentSubmissionObject
     open_my_site_by_name @site
     assignments
     reset
-    on AssignmentsList do |list|
-      list.open_assignment @title
-    end
+    on(AssignmentsList).open_assignment @title
   end
   alias view open
 

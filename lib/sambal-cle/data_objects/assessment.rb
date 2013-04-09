@@ -4,20 +4,20 @@ class AssessmentObject
   include DataFactory
   include StringFactory
   include DateFactory
-  include Workflows
+  include Navigation
 
   def question_types
     {
-      :"Multiple Choice"=>MultipleChoiceQuestion,
+      :'Multiple Choice'=>MultipleChoiceQuestion,
       :Survey=>SurveyQuestion,
-      :"Short Answer/Essay"=>ShortAnswerQuestion,
-      :"Fill in the Blank"=>FillInBlankQuestion,
-      :"Numeric Response"=>NumericResponseQuestion,
+      :'Short Answer/Essay'=>ShortAnswerQuestion,
+      :'Fill in the Blank'=>FillInBlankQuestion,
+      :'Numeric Response'=>NumericResponseQuestion,
       :Matching=>MatchingQuestion,
-      :"True False"=>TrueFalseQuestion,
-      :"Audio Recording"=>AudioRecordingQuestion,
-      :"File Upload"=>FileUploadQuestion,
-      :"Calculated Question"=>CalculatedQuestion
+      :'True False'=>TrueFalseQuestion,
+      :'Audio Recording'=>AudioRecordingQuestion,
+      :'File Upload'=>FileUploadQuestion,
+      :'Calculated Question'=>CalculatedQuestion
     }
   end
 
@@ -28,36 +28,35 @@ class AssessmentObject
                 :late_handling, :submission_message, :final_page_url, :student_ids,
                 :gradebook_options, :recorded_score, :allowed_ips
 
+
+
   def initialize(browser, opts={})
     @browser = browser
-
     defaults = {
-      :title=>random_alphanums,
-      :authors=>random_alphanums,
-      :description=>random_alphanums,
-      :parts=>[],
-      :questions=>[],
-      :available_date=>right_now,
-      :due_date=>tomorrow,
-      :retract_date=>next_week,
-      :feedback_authoring=>:question_level_feedback,
-      :feedback_delivery=>:no_feedback,
-      :release=>:release_questions_and,
-      :release_options=>[],
-      :released_to=>:released_to_site,
-      :navigation=>:linear_access,
-      :submissions=>:unlimited_submissions,
-      :late_handling=>:late_submissions_not_accepted,
-      :submission_message=>random_alphanums,
-      :final_page_url=>"http://www.rsmart.com",
-      :student_ids=>:student_ids_seen
-      # TODO: More to add
+        :title=>random_alphanums,
+        :authors=>random_alphanums,
+        :description=>random_alphanums,
+        :parts=>PartsCollection.new,
+        :questions=>QuestionsCollection.new,
+        :available_date=>right_now,
+        :due_date=>tomorrow,
+        :retract_date=>next_week,
+        :feedback_authoring=>:question_level_feedback,
+        :feedback_delivery=>:no_feedback,
+        :release=>:release_questions_and,
+        :release_options=>[],
+        :released_to=>:released_to_site,
+        :navigation=>:linear_access,
+        :submissions=>:unlimited_submissions,
+        :late_handling=>:late_submissions_not_accepted,
+        :submission_message=>random_alphanums,
+        :final_page_url=>'http://www.rsmart.com',
+        :student_ids=>:student_ids_seen
+        # TODO: More to add
     }
-    options = defaults.merge(opts)
-    set_options(options)
-    requires @site
-
-    default_part = make PartObject, :title=>"Default", :assessment=>@title, :part_number=>1, :information=>""
+    set_options(defaults.merge(opts))
+    requires :site
+    default_part = make PartObject, :title=>'Default', :assessment=>@title, :part_number=>1, :information=>''
     @parts << default_part
   end
 
@@ -70,14 +69,13 @@ class AssessmentObject
       page.type.select @type unless @type==nil
       page.create
     end
-    on EditAssessment do |assessment|
-      assessment.settings
-    end
+    on(EditAssessment).settings
     on AssessmentSettings do |settings|
       settings.open
       # Introduction
-      settings.authors.set @authors
-      settings.description.set @description
+
+      #settings.authors.set @authors
+      #settings.description.set @description
       # Delivery Dates
       settings.available_date.set @available_date[:samigo]
       settings.due_date.set @due_date[:samigo]
@@ -103,8 +101,8 @@ class AssessmentObject
       end
       settings.send(@late_handling).set
       # Submission Message
-      settings.submission_message.set @submission_message
-      settings.final_page_url.set @final_page_url
+      #settings.submission_message.set @submission_message
+      #settings.final_page_url.set @final_page_url
       # Feedback
       settings.send(@feedback_authoring).set
       settings.send(@feedback_delivery).set
@@ -121,6 +119,7 @@ class AssessmentObject
 
       # Metadata
 
+      fill_out settings, :authors, :description, :submission_message, :final_page_url
 
       settings.save_settings
     end
@@ -135,12 +134,8 @@ class AssessmentObject
     open_my_site_by_name @site
     tests_and_quizzes
     reset
-    on AssessmentsList do |list|
-      list.publish @title
-    end
-    on PublishAssessment do |assessment|
-      assessment.publish
-    end
+    on(AssessmentsList).publish @title
+    on(PublishAssessment).publish
   end
 
   def add_part opts={}
@@ -173,11 +168,9 @@ class AssessmentObject
   def position
     open_my_site_by_name @site
     tests_and_quizzes
-    unless @browser.frame(:class=>"portletMainIframe").h3.text=="Questions: #{@title}"
+    unless @browser.frame(:class=>'portletMainIframe').h3.text=="Questions: #{@title}"
       reset
-      on AssessmentsList do |list|
-        list.edit @title
-      end
+      on(AssessmentsList).edit @title
     end
   end
 
@@ -187,7 +180,7 @@ class PartObject
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
   include StringFactory
 
   attr_accessor :assessment, :title, :information, :type, :number_of_questions, :pool_name, :part_number, :question_ordering
@@ -204,18 +197,16 @@ class PartObject
     options = defaults.merge(opts)
     
     set_options(options)
-    requires @assessment
+    requires :assessment
   end
     
   def create
-    on EditAssessment do |edit|
-      edit.add_part
-    end
+    # Assumes you're already on the right page.
+    on(EditAssessment).add_part
     on AddEditAssessmentPart do |part|
-      part.title.set @title
-      part.information.set @information
-      part.send(@type).set
-      part.send(@question_ordering).set
+      fill_out part, :title, :information, :type, :question_ordering
+      #part.send(@type).set
+      #part.send(@question_ordering).set
       # TODO: more to add here
       part.save
     end
@@ -233,5 +224,20 @@ class PartObject
   def delete
     
   end
-  
+
+end
+
+class PartsCollection < Array
+
+  # TODO: Is this method actually needed?
+  def get(title)
+    self.find { |item| item.title==title }
+  end
+
+end
+
+class QuestionsCollection < Array
+
+
+
 end

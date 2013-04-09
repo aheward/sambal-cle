@@ -2,7 +2,7 @@ class BlogEntryObject
 
   include Foundry
   include StringFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :title, :content, :site, :permissions
   
@@ -14,10 +14,8 @@ class BlogEntryObject
       :content=>random_alphanums,
       :permissions=>:publicly_viewable
     }
-    options = defaults.merge(opts)
-    
-    set_options(options)
-    requirements @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
     
   def create

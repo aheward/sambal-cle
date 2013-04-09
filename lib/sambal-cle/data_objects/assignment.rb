@@ -6,20 +6,18 @@ class AssignmentObject
   include DataFactory
   include StringFactory
   include DateFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :title, :site, :instructions, :id, :link, :status, :grade_scale,
                 :max_points, :allow_resubmission, :num_resubmissions, :open,
                 :due, :accept_until, :student_submissions, :resubmission,
                 :add_due_date, :add_open_announcement, :add_to_gradebook,
-                # Note the following variables are taken from the Entity picker's
-                # Item Info list
-                :retract_time, :time_due, :time_modified, :url, :portal_url,
-                :description, :time_created, :direct_url
+                :direct_url
+
+
 
   def initialize(browser, opts={})
     @browser = browser
-
     defaults = {
         :title=>random_alphanums,
         :instructions=>random_multiline(250, 10, :string),
@@ -28,10 +26,8 @@ class AssignmentObject
         :due=>{},
         :accept_until=>{}
     }
-    options = defaults.merge(opts)
-
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
     raise "You must specify max points if your grade scale is 'points'" if @max_points==nil && @grade_scale=="Points"
   end
 
@@ -60,10 +56,10 @@ class AssignmentObject
       end
       add.title.set @title
       add.instructions=@instructions
-      @student_submissions=get_or_select(@student_submissions, add.student_submissions)
-      @grade_scale=get_or_select(@grade_scale, add.grade_scale)
-      @open[:MON]=get_or_select(@open[:MON], add.open_month)
-      add.max_points.set(@max_points) unless @max_points==nil
+      get_or_select! :@student_submissions, add.student_submissions
+      get_or_select! :@grade_scale, add.grade_scale
+      @open[:MON]=get_or_select @open[:MON], add.open_month
+      add.max_points.fit @max_points
       @open[:year]=get_or_select(@open[:year], add.open_year)
       @open[:day_of_month]=get_or_select(@open[:day_of_month], add.open_day)
       @open[:hour]=get_or_select(@open[:hour], add.open_hour)
@@ -101,18 +97,14 @@ class AssignmentObject
   def edit opts={}
     open_my_site_by_name @site
     assignments
-    on AssignmentsList do |list|
-      if @status=="Draft"
-        list.edit_assignment "Draft - #{@title}"
-      else
-        list.edit_assignment @title
-      end
-    end
+    reset
+    on(AssignmentsList).edit_assignment @title
 
     on AssignmentAdd do |edit|
       edit.title.fit opts[:title]
       unless opts[:instructions]==nil
-        edit.enter_source_text edit.editor, opts[:instructions]
+        edit.source
+        edit.source_field.set opts[:instructions]
       end
       edit.grade_scale.fit opts[:grade_scale]
       #if edit.max_points.enabled?
@@ -123,17 +115,17 @@ class AssignmentObject
       # This should be one of the last items edited...
       edit.add_to_gradebook.send(opts[:add_to_gradebook]) unless opts[:add_to_gradebook]==nil
 
-      if (@status=="Draft" && opts[:status]==nil) || opts[:status]=="Draft"
+      if (@status=='Draft' && opts[:status]==nil) || opts[:status]=='Draft'
         edit.save_draft
-      elsif opts[:status]=="Editing"
+      elsif opts[:status]=='Editing'
         # Stay on the page
       else
         edit.post
       end
     end
-    set_options(opts)
+    update_options(opts)
 
-    unless opts[:status]=="Editing"
+    unless opts[:status]=='Editing'
       on AssignmentsList do |list|
         @status=list.status_of @title
       end
@@ -143,11 +135,12 @@ class AssignmentObject
   def get_info
     open_my_site_by_name @site
     assignments
+    reset
     on AssignmentsList do |list|
       @id = list.get_assignment_id @title
       @status=list.status_of @title
       @link=list.assignment_href @title
-      if @status=="Draft"
+      if @status=='Draft'
         list.open_assignment "Draft - #{@title}"
       else
         list.edit_assignment @title
@@ -157,26 +150,21 @@ class AssignmentObject
     # TODO: Add more stuff here as needed...
 
     on AssignmentAdd do |edit|
-
-      @instructions=edit.get_source_text edit.editor
-      edit.source edit.editor
-      edit.entity_picker(edit.editor)
-    end
-    on EntityPicker do |info|
-      info.view_assignment_details @title
-      @retract_time=info.retract_time
-      @time_due=info.time_due
-      @time_modified=info.time_modified
-      @url=info.url
-      @portal_url=info.portal_url
-      @description=info.description
-      @time_created=info.time_created
-      @direct_url=info.direct_link
-      info.close_picker
+      edit.source
+      @instructions=edit.source_field.value
     end
     on AssignmentAdd do |edit|
       edit.cancel
     end
+  end
+
+  def get_direct_url
+    open_my_site_by_name @site
+    assignments
+    reset
+    on(AssignmentsList).edit_assignment @title
+    on(AssignmentAdd).open_link_tool
+    @direct_url = on(LinkTool).get_assignment_link @title
   end
 
   def duplicate
@@ -189,7 +177,7 @@ class AssignmentObject
 
     duplicate_assignment = self
     duplicate_assignment.title="Draft - #{self.title} - Copy"
-    duplicate_assignment.status="Draft"
+    duplicate_assignment.status='Draft'
     duplicate_assignment
   end
 

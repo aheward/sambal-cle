@@ -10,10 +10,10 @@ class SyllabusBase < BasePage
   class << self
 
     def menu_elements
-      link("Create/Edit")
-      link("Add")
-      link("Redirect")
-      link("Preview")
+      link 'Create/Edit'
+      link 'Add'
+      link 'Redirect'
+      link 'Preview'
     end
 
   end
@@ -29,8 +29,8 @@ class Syllabus < SyllabusBase
 
   def attachments_list
     list = []
-    frm.div(:class=>"portletBody").links.each { |link| list << link.text }
-    return list
+    frm.div(:class=>'portletBody').links.each { |link| list << link.text }
+    list
   end
 
 end
@@ -59,21 +59,27 @@ class SyllabusEdit < SyllabusBase
     #FIXME
   end
 
-  button("Update")
+  button 'Update'
 
   # Opens the specified item
-  action(:open_item) { | title, b| b.frm.link(:text=>title).click }
+  action(:open_item) { |title, b| b.frm.link(:text=>title).click }
 
   # Returns an array containing the titles of the syllabus items
   # displayed on the page.
   def syllabus_titles
     titles = []
-    s_table = frm.table(:class=>"listHier lines nolines")
+    s_table = frm.table(:class=>'listHier lines nolines')
     1.upto(s_table.rows.size-1) do |x|
       titles << s_table[x][0].text
     end
-    return titles
+    titles
   end
+
+  # ==========
+  private
+  # ==========
+
+
 
 end
 
@@ -81,40 +87,34 @@ end
 class AddEditSyllabusItem < SyllabusBase
 
   menu_elements
-  include FCKEditor
+  cke_elements
 
   expected_element :editor
 
-  button("Post")
-
-  # Defines the text area of the FCKEditor that appears on the page for
-  # the Syllabus content.
-  element(:editor) { |b| b.frm.frame(:id=>/_textarea___Frame/) }
+  button 'Post'
 
   # Sends the specified string to the FCKEditor text area on the page.
-  def content=(text)
-    editor.send_keys(text)
-  end
+  action(:content=) { |text, b| b.rich_text_field('_id4:syllabus_compose_edit_inputRichText').send_keys text }
 
-  button("Add attachments")
+  button 'Add attachments'
 
   # Returns an array of the filenames in the attachments
   # table
   def files_list
     names = []
-    frm.table(:class=>"listHier lines nolines").rows.each do |row|
-      if row.td(:class=>"item").exist?
-        names << row.td(:class=>"item").h4.text
+    frm.table(:class=>'listHier lines nolines').rows.each do |row|
+      if row.td(:class=>'item').exist?
+        names << row.td(:class=>'item').h4.text
       end
     end
     return names
   end
 
-  button("Preview")
+  button'Preview'
 
-  element(:title) { |b| b.frm.text_field(:id=>"_id4:title") }
-  element(:only_members_of_this_site) { |b| b.frm.radio_button(:name=>/_id\d+:_id\d+/, :value=>"no") }
-  element(:publicly_viewable) { |b| b.frm.radio_button(:name=>/_id\d+:_id\d+/, :value=>"yes") }
+  element(:title) { |b| b.frm.text_field(:id=>'_id4:title') }
+  element(:only_members_of_this_site) { |b| b.frm.radio_button(:name=>/_id\d+:_id\d+/, :value=>'no') }
+  element(:publicly_viewable) { |b| b.frm.radio_button(:name=>/_id\d+:_id\d+/, :value=>'yes') }
 
 end
 
@@ -123,7 +123,7 @@ class SyllabusPreview < SyllabusBase
 
   menu_elements
 
-  button("Edit")
+  button 'Edit'
 
 end
 
@@ -132,7 +132,7 @@ class SyllabusRedirect < SyllabusBase
 
   menu_elements
 
-  element(:url) { |b| b.frm.text_field(:id=>"redirectForm:urlValue") }
+  element(:url) { |b| b.frm.text_field(:id=>'redirectForm:urlValue') }
 
 end
 
@@ -141,7 +141,7 @@ class DeleteSyllabusItems < SyllabusBase
 
   menu_elements
 
-  button("Delete")
+  button 'Delete'
 
 end
 

@@ -3,7 +3,7 @@ class WebContentObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :title, :source, :site
 
@@ -12,23 +12,17 @@ class WebContentObject
 
     defaults = {
       :title=>random_alphanums,
-      :source=>"www.rsmart.com"
+      :source=>'www.rsmart.com'
     }
-    options = defaults.merge(opts)
-
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
 
   def create
     my_workspace
     site_setup
-    on_page SiteSetup do |page|
-      page.edit @site
-    end
-    on_page SiteEditor do |page|
-      page.edit_tools
-    end
+    on(SiteSetupList).edit @site
+    on(SiteEditor).edit_tools
     on_page EditSiteTools do |page|
       page.web_content.set
       page.continue
@@ -38,9 +32,7 @@ class WebContentObject
       page.web_content_source.set @source
       page.continue
     end
-    on_page ConfirmSiteToolsEdits do |page|
-      page.finish
-    end
+    on(ConfirmSiteToolsEdits).finish
     on_page SiteEditor do |page|
       page.return_button.wait_until_present
       page.return_to_sites_list

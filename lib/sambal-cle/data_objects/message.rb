@@ -3,7 +3,7 @@ class MessageObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :site, :subject, :send_cc, :recipients, :message, :label
 
@@ -12,12 +12,11 @@ class MessageObject
 
     defaults = {
       :subject=>random_alphanums,
-      :recipients=>["All Participants"]
+      :recipients=>['All Participants']
     }
-    options = defaults.merge(opts)
 
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
 
   def create
@@ -35,7 +34,7 @@ class MessageFolderObject
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :site
 

@@ -1,5 +1,5 @@
 require 'rspec'
-require 'sambal-cle'
+require "#{File.dirname(__FILE__)}/../lib/sambal-cle"
 require 'yaml'
 
 # TODO: Add more tests of various permissions settings.
@@ -7,7 +7,7 @@ require 'yaml'
 describe "Assignment Permissions" do
 
   include Utilities
-  include Workflows
+  include Navigation
   include Foundry
   include StringFactory
   include DateFactory

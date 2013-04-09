@@ -4,7 +4,7 @@ class UserObject
   include DataFactory
   include StringFactory
   include DateFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :id, :first_name, :last_name, :password, :email, :type,
                 :created_by, :creation_date, :modified_by, :modified_date, :internal_id,
@@ -17,12 +17,10 @@ class UserObject
         :first_name=>random_alphanums,
         :last_name=>random_alphanums,
         :email=>random_email,
-        :type=>"Student",
+        :type=>'Student',
         :password=>random_alphanums,
     }
-    options = defaults.merge(opts)
-
-    set_options(options)
+    set_options(defaults.merge(opts))
     @full_name="#{@first_name} #{last_name}"
     @long_name="#{@first_name} #{last_name} (#{@id})"
     @ln_fn_id="#{@last_name}, #{@first_name} (#{@id})"
@@ -52,7 +50,7 @@ class UserObject
     if logged_in?
       # do nothing
     else # see if we're on the login screen
-      if @browser.frame(:id, "ifrm").text_field(:id, "eid").present?
+      if @browser.text_field(:id, 'eid').present?
         userlogin
       else # Log the current user out, then log in
         log_out
@@ -60,26 +58,29 @@ class UserObject
       end
     end
   end
-  alias login log_in
+  alias_method :login, :log_in
+  alias_method :sign_in, :log_in
 
   def logged_in?
-    welcome=@browser.span(:class=>"welcome")
-    if welcome.present?
-      welcome.text=~/#{@first_name}/ ? true : false
+    submenu=@browser.div(id: 'LoginLinks')
+    if submenu.present?
+      submenu.span(class: 'nav-menu').html=~/#{@first_name}/ ? true : false
     else
       return false
     end
   end
 
   def log_out
-    @browser.link(:text=>"Logout").click
+    @browser.link(:text=>'Logout').click
   end
 
   private
 
   def userlogin
     on Login do |page|
-      page.login_with @id, @password
+      page.user_id.set @id
+      page.password.set @password
+      page.login
     end
   end
 

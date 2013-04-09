@@ -2,7 +2,7 @@ class MultipleChoiceQuestion
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
   include StringFactory
 
   attr_accessor :assessment, :text, :point_value, :part, :correct_type, :answer_credit,
@@ -23,20 +23,18 @@ class MultipleChoiceQuestion
         :point_value=>(rand(100)+1).to_s,
         :correct_type=>:single_correct,
         :answers=>[random_alphanums, random_alphanums, random_alphanums, random_alphanums],
+        :answers_feedback=>[]
     }
     defaults[:correct_answer]=(rand(defaults[:answers].length)+65).chr.to_s
-    options = defaults.merge(opts)
-    set_options(options)
-    requires @assessment, @part
+    set_options(defaults.merge(opts))
+    requires :assessment, :part
   end
 
   def create
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type "Multiple Choice"
-    end
+    on(EditAssessment).question_type 'Multiple Choice'
     on MultipleChoice do |add|
       add.answer_point_value.set @point_value
       add.question_text.set @text
@@ -60,13 +58,13 @@ class MultipleChoiceQuestion
           3.times {add.insert_additional_answers.select "6"}
           add.insert_additional_answers.select((@answers.length-22).to_s)
         else
-          raise "There is no support for more than 26 choices right now"
+          raise 'There is no support for more than 26 choices right now'
       end
       @answers.each_with_index do |answer, x|
         add.answer_text((x+65).chr).set answer
       end
       @answers_feedback.each_with_index do |feedback, x|
-        add.answer_feedback_text((x+65).chr).set feedback
+        add.answer_feedback_text((x+65).chr).fit feedback
       end
       add.correct_answer(@correct_answer).set
       add.randomize_answers_yes.set if @randomize_answers=="yes"
@@ -90,7 +88,7 @@ class SurveyQuestion
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
   include StringFactory
 
   attr_accessor :assessment, :text, :part, :answer, :feedback, :pool
@@ -116,16 +114,14 @@ class SurveyQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @assessment
+    requires :assessment
   end
 
   def create
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type "Survey"
-    end
+    on(EditAssessment).question_type 'Survey'
     on Survey do |add|
       add.question_text.set @text
       add.send(@answer).set
@@ -148,7 +144,7 @@ class ShortAnswerQuestion
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
   include StringFactory
 
   attr_accessor :assessment, :part, :text, :point_value, :model_answer, :feedback,
@@ -166,20 +162,19 @@ class ShortAnswerQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @assessment, @part
+    requires :assessment, :part
   end
 
   def create
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type "Short Answer/Essay"
-    end
+    on(EditAssessment).question_type 'Short Answer/Essay'
     on ShortAnswer do |add|
       if @rich_text
         add.toggle_question_editor
-        add.enter_source_text(add.question_editor, @text)
+        add.source
+        add.source_field.set @text
       else
         add.question_text.set @text
       end
@@ -203,7 +198,7 @@ class FillInBlankQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :assessment, :part, :text, :point_value, :case_sensitive, :mutually_exclusive, :pool,
                 :correct_answer_feedback, :incorrect_answer_feedback,
@@ -225,22 +220,21 @@ class FillInBlankQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @assessment
+    requires :assessment
   end
 
   def create
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type "Fill in the Blank"
-    end
+    on(EditAssessment).question_type 'Fill in the Blank'
     on FillInBlank do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
       add.case_sensitive.send(@case_sensitive) unless @case_sensitive==nil
       add.mutually_exclusive.send(@mutually_exclusive) unless @mutually_exclusive==nil
-      add.feedback.fit @feedback
+      add.correct_answer_feedback.fit @correct_answer_feedback
+      add.incorrect_answer_feedback.fit @incorrect_answer_feedback
       add.assign_to_part.select /#{@part}/
       add.assign_to_pool.fit @pool
       add.save
@@ -259,7 +253,7 @@ class NumericResponseQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :text, :point_value, :answers, :correct_answer_feedback, :part, :pool, :incorrect_answer_feedback
 
@@ -279,16 +273,14 @@ class NumericResponseQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @text
+    requires :text
   end
 
   def create
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type "Numeric Response"
-    end
+    on(EditAssessment).question_type 'Numeric Response'
     on NumericResponse do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
@@ -320,7 +312,7 @@ class MatchingQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :text, :point_value, :pairs, :correct_answer_feedback, :incorrect_answer_feedback
 
@@ -330,6 +322,7 @@ class MatchingQuestion
     defaults = {
         :text=>random_alphanums,
         :point_value=>(rand(100)+1).to_s,
+        #TODO: Turn this into a collection object...
         :pairs=>[
             {:choice=>random_alphanums, :match=>random_alphanums, :correct_match_feedback=>random_alphanums, :incorrect_match_feedback=>random_alphanums},
             {:choice=>random_alphanums, :match=>random_alphanums, :correct_match_feedback=>random_alphanums, :incorrect_match_feedback=>random_alphanums},
@@ -342,16 +335,14 @@ class MatchingQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @assessment
+    requires :assessment
   end
 
   def create
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type "Matching"
-    end
+    on(EditAssessment).question_type 'Matching'
     on Matching do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
@@ -399,7 +390,7 @@ class TrueFalseQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :point_value, :text, :negative_point_value, :answer, :assessment, :part, :pool,
                 :correct_answer_feedback, :incorrect_answer_feedback, :required_rationale
@@ -412,22 +403,20 @@ class TrueFalseQuestion
     defaults = {
         :point_value=>(rand(100)+1).to_s,
         :text=>random_alphanums,
-        :negative_point_value=>"0",
+        :negative_point_value=>'0',
         :answer=>ANSWERS[rand(2)]
     }
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @point_value
+    requires :point_value
   end
 
   def create
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type "True False"
-    end
+    on(EditAssessment).question_type 'True False'
     on TrueFalse do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
@@ -436,7 +425,7 @@ class TrueFalseQuestion
       add.assign_to_pool.fit @pool
       add.correct_answer_feedback.fit @correct_answer_feedback
       add.incorrect_answer_feedback.fit @incorrect_answer_feedback
-      add.require_rationale_yes.set if @require_rationale=="yes"
+      add.require_rationale_yes.set if @require_rationale=='yes'
       add.save
     end
   end
@@ -461,7 +450,7 @@ class AudioRecordingQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :text, :point_value, :time_allowed, :number_of_attempts, :part, :pool, :feedback
 
@@ -477,24 +466,20 @@ class AudioRecordingQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @text
+    requires :text
   end
 
   def create
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type "Audio Recording"
-    end
+    on(EditAssessment).question_type 'Audio Recording'
     on AudioRecording do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
-      add.time_allowed.set @time_allowed
-      add.number_of_attempts.select @number_of_attempts
       add.assign_to_part.select /#{@part}/
       add.assign_to_pool.fit @pool
-      add.feedback.fit @feedback
+      fill_out add, :time_allowed, :number_of_attempts, :feedback
       add.save
     end
   end
@@ -519,7 +504,7 @@ class FileUploadQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :text, :point_value, :part, :pool, :feedback
 
@@ -533,16 +518,14 @@ class FileUploadQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @text
+    requires :text
   end
 
   def create
     # Note that this method presumes that it's being called from
     # within methods in the AssessmentObject class, not directly
     # in a test script, so no positioning navigation is set up.
-    on EditAssessment do |edit|
-      edit.question_type "File Upload"
-    end
+    on(EditAssessment).question_type 'File Upload'
     on FileUpload do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
@@ -573,7 +556,7 @@ class CalculatedQuestion
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :text, :point_value, :variables, :formulas, :part, :pool
 
@@ -590,10 +573,10 @@ class CalculatedQuestion
             :z=>{:min=>rand(50)+1,:max=>rand(50)+51, :decimals=>rand(11)}
         },
         :formulas=>[{
-                        :name=>"abc",
-                        :text=>"SQRT({z}^2/({x}^2+{y}^2))*60",
-                        :tolerance=>"0.01",
-                        :decimals=>"0"
+                        :name=>'abc',
+                        :text=>'SQRT({z}^2/({x}^2+{y}^2))*60',
+                        :tolerance=>'0.01',
+                        :decimals=>'0'
                     }],
         :point_value=>(rand(100)+1).to_s
     }
@@ -601,7 +584,7 @@ class CalculatedQuestion
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @text
+    requires :text
   end
 
   def calculation(x, y, z)
@@ -609,9 +592,7 @@ class CalculatedQuestion
   end
 
   def create
-    on EditAssessment do |edit|
-      edit.question_type "Calculated Question"
-    end
+    on(EditAssessment).question_type 'Calculated Question'
     on CalculatedQuestions do |add|
       add.question_text.set @text
       add.answer_point_value.set @point_value
@@ -658,7 +639,7 @@ class PoolObject #TODO: Someday add support for sub pools
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :site, :name, :questions, :creator, :department, :description,
                 :objectives, :keywords
@@ -672,7 +653,7 @@ class PoolObject #TODO: Someday add support for sub pools
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @site
+    requires :site
   end
 
   alias :group :department

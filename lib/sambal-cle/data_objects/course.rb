@@ -4,7 +4,7 @@ class CourseSiteObject
   include DataFactory
   include StringFactory
   include DateFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :name, :id, :subject, :course, :section, :term, :term_value, :authorizer,
     :web_content_source, :email, :joiner_role, :creation_date, :web_content_title,
@@ -27,24 +27,20 @@ class CourseSiteObject
       :site_contact_name => random_alphanums(5)+" "+random_alphanums(8),
       :participants=>{}
     }
-    options = defaults.merge(opts)
-    set_options(options)
+    set_options(defaults.merge(opts))
   end
 
   def create
     my_workspace
     site_setup
-    on_page SiteSetup do |page|
-      page.new
-    end
+    on(SiteSetupList).new
     on SiteType do |page|
       # Select the Course Site radio button
       page.course_site.set
       # Store the selected term value for use later
       # TODO: Add logic here in case we want to actually SET the term value instead.
       @term_value = page.academic_term.value
-      @term = page.academic_term.selected_options[0].text
-
+      @term = page.academic_term.selected_options[0].text[/\w+.\w+/]
       page.continue
     end
     on CourseSectionInfo do |page|
@@ -57,17 +53,14 @@ class CourseSiteObject
 
       # Store site name for ease of coding and readability later
       @name = "#{@subject} #{@course} #{@section} #{@term_value}"
-      # Add a valid instructor id
-      page.authorizers_username.set @authorizer
 
       # Click continue button
       page.continue
     end
     on CourseSiteInfo do |page|
-      page.short_description.set @short_description
-      page.site_contact_name.set @site_contact_name
-      page.site_contact_email.set @site_contact_email
-      page.enter_source_text page.editor, @description
+      fill_out page, :short_description, :site_contact_name, :site_contact_email
+      page.source
+      page.source_field.set @description
 
       # Click Continue
       page.continue
@@ -79,8 +72,7 @@ class CourseSiteObject
     end
     on AddMultipleTools do |add_tools|
       add_tools.site_email_address.set @email
-      add_tools.web_content_title.set @web_content_title
-      add_tools.web_content_source.set @web_content_source
+      fill_out add_tools, :web_content_title, :web_content_source
 
       add_tools.continue
     end
@@ -89,18 +81,17 @@ class CourseSiteObject
       access.joiner_role.select @joiner_role
       access.continue
     end
-    on ConfirmSiteSetup do |review|
-      review.request_site
-    end
+    on(ConfirmSiteSetup).request_site
 
     # Create a string that will match the new Site's "creation date" string
     @creation_date = right_now[:sakai]
 
-    on SiteSetup do |site_setup|
-      site_setup.search(Regexp.escape(@subject))
+    on SiteSetupList do |site_setup|
+      site_setup.search_field.set(Regexp.escape(@subject))
+      site_setup.search
 
       # Get the site id for storage
-      @browser.frame(:class=>"portletMainIframe").link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
+      site_setup.frm.link(:href=>/portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
       @id = $~.to_s
     end
   end
@@ -108,9 +99,7 @@ class CourseSiteObject
   def create_and_reuse_site(site_name)
     my_workspace
     site_setup
-    on_page SiteSetup do |page|
-      page.new
-    end
+    on(SiteSetupList).new
     on SiteType do |site_type|
 
       # Select the Course Site radio button
@@ -125,23 +114,17 @@ class CourseSiteObject
     end
     on CourseSectionInfo do |course_section|
       # Fill in those fields, storing the entered values for later verification steps
-      course_section.subject.set @subject
-
-      course_section.course.set @course
-
-      course_section.section.set @section
+      fill_out course_section, :subject, :course, :section
 
       # Store site name for ease of coding and readability later
       @name = "#{@subject} #{@course} #{@section} #{@term_value}"
-
-      # Add a valid instructor id
-      course_section.authorizers_username.set @authorizer
 
       # Click continue button
       course_section.continue
     end
     on CourseSiteInfo do |course_site|
-      course_site.enter_source_text course_site.editor, @description
+      course_site.source
+      course_site.source_field.set @description
       course_site.short_description.set @short_description
       # Click Continue
       course_site.continue
@@ -175,8 +158,7 @@ class CourseSiteObject
     end
     on_page AddMultipleTools do |page|
       page.site_email_address.set @email
-      page.web_content_title.set @web_content_title
-      page.web_content_source.set @web_content_source
+      fill_out page, :web_content_title, :web_content_source
       page.continue
     end
     on_page SiteAccess do |page|
@@ -184,17 +166,18 @@ class CourseSiteObject
       page.joiner_role.select @joiner_role
       page.continue
     end
-    on_page ConfirmSiteSetup do |page|
-      page.request_site
-    end
+    on(ConfirmSiteSetup).request_site
     # Create a string that will match the new Site's "creation date" string
-    @creation_date = make_date(Time.now)
-    on_page SiteSetup do |page|
-      page.search(Regexp.escape(@subject))
+    @creation_date = right_now[:sakai]
+
+    on SiteSetupList do |site_setup|
+      site_setup.search_field.set(Regexp.escape(@subject))
+      site_setup.search
+
+      # Get the site id for storage
+      site_setup.frm.link(:href=>/portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
+      @id = $~.to_s
     end
-    # Get the site id for storage
-    @browser.frame(:class=>"portletMainIframe").link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
-    @id = $~.to_s
 
   end
 
@@ -220,26 +203,9 @@ class CourseSiteObject
 
     new_site = make CourseSiteObject, options
 
-    new_site.name=options[:name]
-    new_site.subject=options[:subject]
-    new_site.course=options[:course]
-    new_site.section=options[:section]
-    new_site.authorizer=options[:authorizer]
-    new_site.web_content_source=options[:web_content_source]
-    new_site.email=options[:email]
-    new_site.joiner_role=options[:joiner_role]
-    new_site.web_content_title=options[:web_content_title]
-    new_site.description=options[:description]
-    new_site.short_description=options[:short_description]
-    new_site.site_contact_name=options[:site_contact_name]
-    new_site.site_contact_email=options[:site_contact_email]
-    new_site.term=options[:term]
-
-    open_my_site_by_name @site
+    open_my_site_by_name @name
     site_editor
-    on SiteEditor do |edit|
-      edit.duplicate_site
-    end
+    on(SiteEditor).duplicate_site
     on DuplicateSite do |dupe|
       dupe.site_title.set new_site.name
       dupe.academic_term.select new_site.term
@@ -247,11 +213,14 @@ class CourseSiteObject
     end
     my_workspace
     site_setup
-    on SiteSetup do |sites|
-      sites.search(Regexp.escape(new_site.name))
+    on SiteSetupList do |list|
+      list.clear_search
+      list.search_field.set(Regexp.escape(new_site.name))
+      list.search
     end
+
     # Get the site id for storage
-    @browser.frame(:class=>"portletMainIframe").link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
+    @browser.frame(:class=>'portletMainIframe').link(:href=>/portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
     new_site.id = $~.to_s
 
     new_site
@@ -260,11 +229,9 @@ class CourseSiteObject
 
   def add_official_participants(role, *participants)
     list_of_ids=participants.join("\n")
-    open_my_site_by_name @title
+    open_my_site_by_name @name
     site_editor
-    on SiteEditor do |site|
-      site.add_participants
-    end
+    on(SiteEditor).add_participants
     on SiteSetupAddParticipants do |add|
       add.official_participants.set list_of_ids
       add.continue
@@ -273,12 +240,8 @@ class CourseSiteObject
       choose.radio_button(role).set
       choose.continue
     end
-    on SiteSetupParticipantEmail do |send|
-      send.continue
-    end
-    on SiteSetupParticipantConfirm do |confirm|
-      confirm.finish
-    end
+    on(SiteSetupParticipantEmail).continue
+    on(SiteSetupParticipantConfirm).finish
     if @participants.has_key?(role)
       @participants[role].insert(-1, participants).flatten!
     else

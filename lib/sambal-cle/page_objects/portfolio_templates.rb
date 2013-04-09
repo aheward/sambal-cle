@@ -12,20 +12,26 @@ class PortfolioTemplates < BasePage
   link "Add"
 
   # Clicks the "Publish" link for the specified Template.
-  action(:publish) { |templatename, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(templatename)}/).link(:text=>"Publish").click }
+  action(:publish) { |templatename, b| b.template_table.row(:text=>/#{Regexp.escape(templatename)}/).link(:text=>'Publish').click }
 
-  # Clicks the "Edit" link for the specified Template.
-  action(:edit) { |templatename, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(templatename)}/).link(:text=>"Edit").click }
+  # Clicks the 'Edit' link for the specified Template.
+  action(:edit) { |templatename, b| b.template_table.row(:text=>/#{Regexp.escape(templatename)}/).link(:text=>'Edit').click }
 
-  # Clicks the "Delete" link for the specified Template.
-  action(:delete) { |templatename, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(templatename)}/).link(:text=>"Delete").click }
+  # Clicks the 'Delete' link for the specified Template.
+  action(:delete) { |templatename, b| b.template_table.row(:text=>/#{Regexp.escape(templatename)}/).link(:text=>'Delete').click }
 
-  # Clicks the "Copy" link for the specified Template.
-  action(:copy) { |templatename, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(templatename)}/).link(:text=>"Copy").click }
+  # Clicks the 'Copy' link for the specified Template.
+  action(:copy) { |templatename, b| b.template_table.row(:text=>/#{Regexp.escape(templatename)}/).link(:text=>'Copy').click }
 
-  # Clicks the "Export" link for the specified Template.
-  action(:export) { |templatename, b| b.frm.table(:class=>"listHier lines nolines").row(:text=>/#{Regexp.escape(templatename)}/).link(:text=>"Export").click }
+  # Clicks the 'Export' link for the specified Template.
+  action(:export) { |templatename, b| b.template_table.row(:text=>/#{Regexp.escape(templatename)}/).link(:text=>'Export').click }
 
+  # ========
+  private
+  # ========
+  
+  element(:template_table) { |b| b.frm.table(:class=>'listHier lines nolines') }
+  
 end
 
 #
@@ -34,10 +40,10 @@ class AddPortfolioTemplate < BasePage
   frame_element
 
   # Clicks the Continue button and instantiates the BuildTemplate Class.
-  button "Continue"
+  button 'Continue'
 
-  element(:name) { |b| b.frm.text_field(:id=>"name-id") }
-  element(:description) { |b| b.frm.text_field(:id=>"description") }
+  element(:name) { |b| b.frm.text_field(:id=>'name-id') }
+  element(:description) { |b| b.frm.text_field(:id=>'description') }
 
 end
 
@@ -46,10 +52,10 @@ class BuildTemplate < BasePage
 
   frame_element
 
-  link "Select File"
-  button "Continue"
+  link 'Select File'
+  button 'Continue'
 
-  element(:outline_options_form_type) { |b| b.frm.select(:id=>"propertyFormType-id") }
+  element(:outline_options_form_type) { |b| b.frm.select(:id=>'propertyFormType-id') }
 
 end
 
@@ -72,14 +78,14 @@ class PortfoliosUploadFiles < BasePage # TODO - This class can probably be remov
   # Clicks the Upload Files Now button and instantiates the
   # PortfolioAttachFiles Class.
   def upload_files_now
-    frm.button(:value=>"Upload Files Now").click
+    frm.button(:value=>'Upload Files Now').click
     sleep 1 # TODO - use a wait clause here
     @@filex=0
     PortfolioAttachFiles.new(@browser)
   end
 
   # Clicks the Add Another File link.
-  link "Add Another File"
+  link 'Add Another File'
 
 end
 
@@ -88,13 +94,13 @@ class PortfolioContent < BasePage
 
   frame_element
 
-  button "Continue"
-  element(:type) { |b| b.frm.select(:id=>"item.type") }
-  element(:name) { |b| b.frm.text_field(:id=>"item.name-id") }
-  element(:title) { |b| b.frm.text_field(:id=>"item.title-id") }
-  element(:description) { |b| b.frm.text_field(:id=>"item.description-id") }
-  button "Add To List"
-  element(:image) { |b| b.frm.checkbox(:id=>"image-id") }
+  button 'Continue'
+  element(:type) { |b| b.frm.select(:id=>'item.type') }
+  element(:name) { |b| b.frm.text_field(:id=>'item.name-id') }
+  element(:title) { |b| b.frm.text_field(:id=>'item.title-id') }
+  element(:description) { |b| b.frm.text_field(:id=>'item.description-id') }
+  button 'Add To List'
+  element(:image) { |b| b.frm.checkbox(:id=>'image-id') }
 
 end
 
@@ -103,9 +109,9 @@ class SupportingFilesPortfolio < BasePage
 
   frame_element
 
-  button "Finish"
-  link "Select File"
-  button "Add To List"
-  element(:name) { |b| b.frm.text_field(:id=>"fileRef.usage-id") }
+  button 'Finish'
+  link 'Select File'
+  button 'Add To List'
+  element(:name) { |b| b.frm.text_field(:id=>'fileRef.usage-id') }
 
 end

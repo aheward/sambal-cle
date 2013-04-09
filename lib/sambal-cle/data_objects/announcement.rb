@@ -4,7 +4,7 @@ class AnnouncementObject
   include DataFactory
   include StringFactory
   include DateFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :title, :body, :site, :link, :access, :availability,
                 :subject, :saved_by, :date, :creation_date, :groups,
@@ -17,26 +17,24 @@ class AnnouncementObject
         :title=>random_alphanums,
         :body=>random_multiline(500, 10, :alpha)
     }
-    options = defaults.merge(opts)
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
 
-  alias :name :title
+  alias_method :name, :title
 
   def create
     open_my_site_by_name @site
     announcements
-    on_page Announcements do |page|
-      page.add
-    end
+    on(Announcements).add
     on_page AddEditAnnouncements do |page|
       page.title.set @title
-      page.enter_source_text page.editor, @body
-      page.add_announcement
+      page.source
+      page.source_field.set @body
+      page.post_announcement
       @creation_date=make_date Time.now
     end
-    on_page Announcements do |page|
+    on Announcements do |page|
       @link = page.href(@title)
       @id = @link[/(?<=msg\/).+(?=\/main\/)/]
     end
@@ -45,27 +43,25 @@ class AnnouncementObject
   def edit opts={}
     open_my_site_by_name @site
     announcements
-    on_page Announcements do |list|
-      list.edit @title
-    end
+    on(Announcements).edit @title
     on AddEditAnnouncements do |edit|
       edit.title.fit opts[:title]
       edit.send(opts[:access]) unless opts[:access]==nil
       edit.send(opts[:availability]) unless opts[:availability]==nil
       unless opts[:body]==nil
-        edit.enter_source_text edit.editor, opts[:body]
+        edit.source
+        edit.source_field.set opts[:body]
       end
       edit.save_changes
     end
     update_options(opts)
   end
 
+  # Unsure if this method is still relevant to 2.9
   def view
     open_my_site_by_name @site
     announcements
-    on Announcements do |list|
-      list.view @title
-    end
+    on(Announcements).view @title
     on ViewAnnouncement do |view|
       @subject=view.subject
       @saved_by=view.saved_by

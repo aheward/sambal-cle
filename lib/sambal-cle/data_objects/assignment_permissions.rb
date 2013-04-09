@@ -2,7 +2,7 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :site, :group, :guest, :instructor, :student, :teaching_assistant
   
@@ -14,19 +14,14 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
     @student=checkboxes
     @teaching_assistant=checkboxes
     set_options(opts)
-    requires @site
+    requires :site
     get
   end
     
   def set opts={}
-    open_my_site_by_name @site
-    assignments
-    reset
-    on AssignmentsList do |list|
-      list.permissions
-    end
+    navigate
     on AssignmentsPermissions do |perm|
-      roles={:guest=>"Guest", :instructor=>"Instructor", :student=>"Student", :teaching_assistant=>"Teaching Assistant"}
+      roles={:guest=>'Guest', :instructor=>'Instructor', :student=>'Student', :teaching_assistant=>'Teaching Assistant'}
       roles.each_pair do |role, title|
         if opts[role]!=nil
           opts[role].each_pair do |checkbox, setting|
@@ -43,19 +38,24 @@ class AssignmentPermissionsObject # TODO: Need to add support for Group-specific
   end
 
   def get
-    open_my_site_by_name @site
-    assignments
-    reset
-    on AssignmentsList do |list|
-      list.permissions
-    end
+    navigate
     on AssignmentsPermissions do |perm|
-      roles={@guest=>"Guest", @instructor=>"Instructor", @student=>"Student", @teaching_assistant=>"Teaching Assistant"}
+      roles={@guest=>'Guest', @instructor=>'Instructor', @student=>'Student', @teaching_assistant=>'Teaching Assistant'}
       roles.each_pair do |role, name|
         role.each_key { |key| role.store(key, checkbox_setting(perm.send(key, name))) }
       end
       perm.cancel
     end
   end
-  
+
+  private
+
+  def navigate
+    open_my_site_by_name @site
+    assignments
+    reset
+    on(AssignmentsList).permissions
+  end
+
+
 end

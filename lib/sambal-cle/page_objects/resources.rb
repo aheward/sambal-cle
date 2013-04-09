@@ -146,7 +146,7 @@ class Resources < ResourcesBase
   #
   # Finally, it re-instantiates the appropriate page class.
   # Note that it expects all files to be located in the same folder (can be in subfolders of that folder).
-  def upload_multiple_files_to_folder(folder, file_array, file_path="")
+  def upload_multiple_files_to_folder(folder, file_array, file_path='')
 
     upload = upload_files_to_folder folder
 
@@ -196,9 +196,7 @@ class Resources < ResourcesBase
     frm.button(:value=>"Continue").click
   end
 
-  def open_add_menu(folder_name)
-    files_table.row(:text=>/#{Regexp.escape(folder_name)}/).link(:text=>"Start Add Menu").fire_event("onfocus")
-  end
+  action(:open_add_menu) { |folder_name, b| b.files_table.row(text: /#{Regexp.escape(folder_name)}/).li(class: 'menuOpen').click }
 
   def open_actions_menu(name)
     files_table.row(:text=>/#{Regexp.escape(name)}/).li(:text=>/Action/, :class=>"menuOpen").fire_event("onclick")
@@ -281,9 +279,8 @@ end
 class EditHTMLPageContent < BasePage
 
   frame_element
-  include FCKEditor
+  cke_elements
 
-  element(:editor) { |b| b.frm.frame(:id=>"content___Frame") }
   action(:continue) { |b| b.frm.button(id: "saveChanges").click }
   element(:email_notification) { |b| b.frm.select(:id=>"notify") }
 
@@ -293,6 +290,8 @@ class EditHTMLPageProperties < ResourcesBase
 
   element(:name) { |b| b.frm.text_field(id: "displayName_0") }
   element(:description) { |b| b.frm.text_field(id: "description_0") }
+
+  action(:html_content=) { |text, b| b.rich_text_field('content').send_keys text }
 
   action(:finish) { |b| b.frm.button(id: "finish_button").click }
 

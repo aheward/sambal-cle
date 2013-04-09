@@ -2,7 +2,7 @@ class FileObject
 
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :name, :site, :source_path, :target_folder, :href
 
@@ -11,19 +11,16 @@ class FileObject
 
     defaults = {
     }
-    options = defaults.merge(opts)
 
-    set_options(options)
-    @target_folder=@site if options[:target_folder]==nil
-    requires @site
+    set_options(defaults.merge!(opts))
+    @target_folder=@site if defaults[:target_folder]==nil
+    requires :site
   end
 
   def create
     open_my_site_by_name @site
     resources
-    on Resources do |file|
-      file.upload_files_to_folder @target_folder
-    end
+    on(Resources).upload_files_to_folder @target_folder
     on ResourcesUploadFiles do |upload|
       upload.file_to_upload @name, @source_path
       upload.upload_files_now
@@ -38,7 +35,7 @@ end
 class FolderObject
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
   include StringFactory
 
   attr_accessor :name, :parent_folder, :site
@@ -49,18 +46,15 @@ class FolderObject
     defaults = {
         :name=>random_alphanums
     }
-    options = defaults.merge(opts)
 
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
 
   def create
     open_my_site_by_name @site
     resources
-    on_page Resources do |page|
-      page.create_subfolders_in @parent_folder
-    end
+    on(Resources).create_subfolders_in @parent_folder
     on_page CreateFolders do |page|
       page.folder_name.set @name
       page.create_folders_now
@@ -72,7 +66,7 @@ end
 class WebLinkObject
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :site
 
@@ -82,7 +76,7 @@ class WebLinkObject
     defaults = {}
     options = defaults.merge(opts)
     set_options(options)
-    requires @site
+    requires :site
   end
 
   def create
@@ -96,7 +90,7 @@ class HTMLPageObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :name, :description, :site, :folder, :html, :url
 
@@ -106,12 +100,12 @@ class HTMLPageObject
     defaults = {
         :name=>random_alphanums,
         :description=>random_multiline(100, 15, :alpha),
-        :html=>"<body>Body</body>"
+        :html=>'<body>Body</body>'
     }
     options = defaults.merge(opts)
 
     set_options(options)
-    requires @site
+    requires :site
   end
 
   alias :title :name
@@ -121,17 +115,14 @@ class HTMLPageObject
   def create
     open_my_site_by_name @site
     resources
-    on_page Resources do |page|
-      page.create_html_page_in @folder
-    end
+    on(Resources).create_html_page_in @folder
     on_page EditHTMLPageContent do |page|
-      page.enter_source_text page.editor, @html
+      page.source
+      page.source_field.set @html
       page.continue
     end
     on_page EditHTMLPageProperties do |page|
-      page.name.set @name
-      page.description.set @description
-      # Put more here as needed later
+      fill_out page, :name, :description # Put more here as needed later
       page.finish
     end
     on_page Resources do |page|
@@ -147,7 +138,8 @@ class HTMLPageObject
       fileslist.edit_content @name
     end
     on EditHTMLPageContent do |edit|
-      edit.enter_source_text edit.editor, html_source
+      edit.source
+      edit.source_field.set html_source
       edit.continue
     end
     @html=html_source
@@ -158,7 +150,7 @@ end
 class TextDocumentObject
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :site
 
@@ -168,7 +160,7 @@ class TextDocumentObject
     defaults = {}
     options = defaults.merge(opts)
     set_options(options)
-    requires @site
+    requires :site
   end
 
   def create
@@ -181,7 +173,7 @@ end
 class CitationListObject
   include Foundry
   include DataFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :site
 
@@ -191,7 +183,7 @@ class CitationListObject
     defaults = {}
     options = defaults.merge(opts)
     set_options(options)
-    requires @site
+    requires :site
   end
 
   def create

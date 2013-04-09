@@ -3,7 +3,7 @@ class PollObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :question, :instructions, :options, :opening_date, :closing_date,
                 :access, :visibility, :site
@@ -15,18 +15,15 @@ class PollObject
       :question=>random_alphanums,
       :options=>[random_alphanums, random_alphanums]
     }
-    options = defaults.merge(opts)
     
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
     
   def create
     open_my_site_by_name @site
     polls
-    on Polls do |polls|
-      polls.add
-    end
+    on(Polls).add
     on AddEditPoll do |add|
       add.question.set @question
       add.enter_source_text add.editor, @instructions
@@ -46,9 +43,7 @@ class PollObject
         page.save
       end
     end
-    on AddEditPoll do |poll|
-      poll.save
-    end
+    on(AddEditPoll).save
   end
     
   def edit opts={}

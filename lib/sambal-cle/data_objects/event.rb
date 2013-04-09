@@ -4,7 +4,7 @@ class EventObject
   include DataFactory
   include DateFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :title, :month, :day, :year, :start_hour, :start_minute,
                 :start_meridian, :duration_hours, :duration_minutes, :end_hour,
@@ -23,27 +23,21 @@ class EventObject
         :start_meridian=>minutes_from_now(15)[:meridian],
         :message=>random_multiline(400, 20, :lorem)
     }
-    options = defaults.merge(opts)
 
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
 
   def create
     open_my_site_by_name @site
     calendar
-    on Calendar do |cal|
-      cal.add_event
-    end
+    on( Calendar).add_event
     on AddEditEvent do |add_event|
-      add_event.enter_source_text add_event.editor, @message
-      add_event.title.set @title
-      add_event.month.select @month
-      add_event.day.select @day
-      add_event.year.select @year
-      add_event.start_hour.select @start_hour
-      add_event.start_minute.select @start_minute
-      add_event.start_meridian.select @start_meridian
+      add_event.source
+      add_event.source_field.set @message
+      fill_out add_event, :title, :month, :day,
+                    :year, :start_hour, :start_minute,
+                    :start_meridian
       if @end_hour == nil && @duration_hours == nil
         @duration_hours = add_event.hours.value
         @duration_minutes = add_event.minutes.value
@@ -65,9 +59,7 @@ class EventObject
   def view
     open_my_site_by_name @site
     calendar
-    on Calendar do |cal|
-      cal.open_event @title
-    end
+    on(Calendar).open_event @title
     on EventDetail do |event|
       @message_html = event.message_html
       # TODO: Lots of stuff to add here...

@@ -3,7 +3,7 @@ class ChatRoomObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
   
   attr_accessor :title, :description, :chat_display, :allow_change, :site
   
@@ -19,18 +19,14 @@ class ChatRoomObject
     options = defaults.merge(opts)
     
     set_options(options)
-    requires @site
+    requires :site
   end
     
   def create
-    open_my_site_by_name
+    open_my_site_by_name @site
     chat_room
-    on ChatRoom do |chat|
-      chat.options
-    end
-    on ManageRooms do |manage|
-      manage.add_room
-    end
+    on(ChatRoom).options
+    on(ManageRooms).add_room
     #TODO: finish this method
   end
     

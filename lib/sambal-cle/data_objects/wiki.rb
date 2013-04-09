@@ -3,7 +3,7 @@ class WikiObject
   include Foundry
   include DataFactory
   include StringFactory
-  include Workflows
+  include Navigation
 
   attr_accessor :title, :content, :site, :href
 
@@ -14,10 +14,8 @@ class WikiObject
       :title=>random_alphanums,
       :content=>"{worksiteinfo}\n{sakai-sections}"
     }
-    options = defaults.merge(opts)
-
-    set_options(options)
-    requires @site
+    set_options(defaults.merge(opts))
+    requires :site
   end
 
   alias :name :title
