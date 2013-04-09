@@ -124,7 +124,11 @@ module Navigation
         'Watir::Radio'     => lambda{|p, f| p.send(ivg f).set}
     }
     fields.each do |field|
-      methods[page.send(field).class.to_s].call(page, field)
+      begin
+        methods[page.send(field).class.to_s].call(page, field)
+      rescue NoMethodError
+        methods[page.send(ivg field).class.to_s].call(page, field)
+      end
     end
   end
   alias_method :fill_in, :fill_out
