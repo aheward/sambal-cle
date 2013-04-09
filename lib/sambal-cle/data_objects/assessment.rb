@@ -205,6 +205,8 @@ class PartObject
     on(EditAssessment).add_part
     on AddEditAssessmentPart do |part|
       fill_out part, :title, :information, :type, :question_ordering
+      #part.send(@type).set
+      #part.send(@question_ordering).set
       # TODO: more to add here
       part.save
     end

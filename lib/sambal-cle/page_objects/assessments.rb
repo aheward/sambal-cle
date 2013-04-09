@@ -550,15 +550,15 @@ class Matching < AssessmentsBase
   menu_bar_elements
   question_page_elements
 
-  element(:choice) { |b| b.frm.text_field(:id=>'itemForm:_id147_textinput') }
-  element(:match) { |b| b.frm.text_field(:id=>'itemForm:_id151_textinput') }
-  element(:correct_match_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id155_textinput') }
-  element(:incorrect_match_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id160_textinput') }
-  element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id184_textinput') }
-  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id189_textinput') }
+  element(:choice) { |b| b.frm.text_field(:id=>'itemForm:_id151_textinput') }
+  element(:match) { |b| b.frm.text_field(:id=>'itemForm:_id155_textinput') }
+  element(:correct_match_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id159_textinput') }
+  element(:incorrect_match_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id164_textinput') }
+  element(:correct_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id188_textinput') }
+  element(:incorrect_answer_feedback) { |b| b.frm.text_field(:id=>'itemForm:_id193_textinput') }
 
   action(:distractor) { |b| b.frm.select(:id=>'itemForm:controllingSequence').select '*distractor*' }
-  action(:save_pairing) { |b| b.frm.button(:name=>'itemForm:_id164').click }
+  action(:save_pairing) { |b| b.frm.button(:name=>'itemForm:_id168').click }
 
 end
 

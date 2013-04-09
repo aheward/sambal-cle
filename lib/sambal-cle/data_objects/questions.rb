@@ -23,6 +23,7 @@ class MultipleChoiceQuestion
         :point_value=>(rand(100)+1).to_s,
         :correct_type=>:single_correct,
         :answers=>[random_alphanums, random_alphanums, random_alphanums, random_alphanums],
+        :answers_feedback=>[]
     }
     defaults[:correct_answer]=(rand(defaults[:answers].length)+65).chr.to_s
     set_options(defaults.merge(opts))
@@ -63,7 +64,7 @@ class MultipleChoiceQuestion
         add.answer_text((x+65).chr).set answer
       end
       @answers_feedback.each_with_index do |feedback, x|
-        add.answer_feedback_text((x+65).chr).set feedback
+        add.answer_feedback_text((x+65).chr).fit feedback
       end
       add.correct_answer(@correct_answer).set
       add.randomize_answers_yes.set if @randomize_answers=="yes"
@@ -321,6 +322,7 @@ class MatchingQuestion
     defaults = {
         :text=>random_alphanums,
         :point_value=>(rand(100)+1).to_s,
+        #TODO: Turn this into a collection object...
         :pairs=>[
             {:choice=>random_alphanums, :match=>random_alphanums, :correct_match_feedback=>random_alphanums, :incorrect_match_feedback=>random_alphanums},
             {:choice=>random_alphanums, :match=>random_alphanums, :correct_match_feedback=>random_alphanums, :incorrect_match_feedback=>random_alphanums},
