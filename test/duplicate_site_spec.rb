@@ -59,8 +59,7 @@ describe 'Duplicate Site' do
 
     @web_content2 = create WebContentObject, :title=>@nestedhtmlpage.name, :source=>@nestedhtmlpage.url, :site=>@nestedhtmlpage.site
 
-    @module = make ModuleObject, :site=>@site1.name
-    @module.create
+    @module = create ModuleObject, :site=>@site1.name
 
     @source_site_string << "<br />\nModule: <a href=\"#{@module.href}\">#{@module.name}</a><br />\n"
 
@@ -113,12 +112,12 @@ describe 'Duplicate Site' do
     @section1.edit :editor_content=>@source_site_string
 
     @assessment = create AssessmentObject, :site=>@site1.name
-    @assessment.add_question :type=>"Short Answer/Essay", :rich_text=>true, :text=>%|<img width="203" height="196" src="#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" />|
+    @assessment.add_question :type=>'Short Answer/Essay', :rich_text=>true, :text=>%|<img width="203" height="196" src="#{$base_url}/access/content/group/#{@site1.id}/#{@file.name}" alt="" />|
     @assessment.publish
 
     @site2 = @site1.duplicate
 
-    @new_assignment = make AssignmentObject, :site=>@site2.name, :status=>"Draft", :title=>@assignment.title
+    @new_assignment = make AssignmentObject, :site=>@site2.name, :status=>'Draft', :title=>@assignment.title
     @new_assignment.get_info
     @new_assignment.get_direct_url
 

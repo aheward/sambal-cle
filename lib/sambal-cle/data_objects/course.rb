@@ -81,9 +81,7 @@ class CourseSiteObject
       access.joiner_role.select @joiner_role
       access.continue
     end
-    on ConfirmSiteSetup do |review|
-      review.request_site
-    end
+    on(ConfirmSiteSetup).request_site
 
     # Create a string that will match the new Site's "creation date" string
     @creation_date = right_now[:sakai]
@@ -121,14 +119,12 @@ class CourseSiteObject
       # Store site name for ease of coding and readability later
       @name = "#{@subject} #{@course} #{@section} #{@term_value}"
 
-      # Add a valid instructor id
-      course_section.authorizers_username.set @authorizer
-
       # Click continue button
       course_section.continue
     end
     on CourseSiteInfo do |course_site|
-      course_site.enter_source_text course_site.editor, @description
+      course_site.source
+      course_site.source_field.set @description
       course_site.short_description.set @short_description
       # Click Continue
       course_site.continue
@@ -172,11 +168,16 @@ class CourseSiteObject
     end
     on(ConfirmSiteSetup).request_site
     # Create a string that will match the new Site's "creation date" string
-    @creation_date = make_date(Time.now)
-    on(SiteSetupList).search(Regexp.escape(@subject))
-    # Get the site id for storage
-    @browser.frame(:class=>'portletMainIframe').link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
-    @id = $~.to_s
+    @creation_date = right_now[:sakai]
+
+    on SiteSetupList do |site_setup|
+      site_setup.search_field.set(Regexp.escape(@subject))
+      site_setup.search
+
+      # Get the site id for storage
+      site_setup.frm.link(:href=>/portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
+      @id = $~.to_s
+    end
 
   end
 
