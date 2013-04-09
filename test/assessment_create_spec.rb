@@ -2,6 +2,7 @@ require 'rspec'
 require "#{File.dirname(__FILE__)}/../lib/sambal-cle"
 require 'yaml'
 
+# TODO: This entire script needs to be rethought and rewritten.
 describe 'Assessments' do
 
   include Utilities
@@ -27,13 +28,11 @@ describe 'Assessments' do
                         :type=>'Instructor'
     @instructor1.log_in
 
-    @site = make CourseSiteObject
-    @site.create
+    @site = create CourseSiteObject
     @site.add_official_participants @student.type, @student.id
     @site.add_official_participants @instructor2.type, @instructor2.id
 
-    @assessment = make AssessmentObject, :site=>@site.name
-    @assessment.create
+    @assessment = create AssessmentObject, :site=>@site.name
 
     2.times{@assessment.add_part}
 
@@ -71,12 +70,9 @@ describe 'Assessments' do
     @pool_file = 'documents/Exam1.xml'
     @imported_pool_name = 'Exam 1'
 
-    # Store the quiz titles in the directory.yml for later use
-    @directory['site1']['quiz1'] = @assessments[0][:title]
-    @directory['site1']['quiz2'] = @assessments[1][:title]
-
     # Validation text -- These contain page content that will be used for
     # test asserts.
+    # TODO: These all really need to be stored in the Assessment Data Object itself.
     @due_date = 'There is no due date for this assessment.'
     @time_limit = 'There is no time limit.'
     @submission_limit = 'You can submit this assessment an unlimited number of times. Your highest score will be recorded.'

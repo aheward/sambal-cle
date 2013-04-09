@@ -52,6 +52,7 @@ class AssessmentsList < AssessmentsBase
   # Collects the titles of the Assessments listed as "Pending"
   # then returns them as an Array.
   def pending_assessment_titles
+    working_copies
     titles =[]
     1.upto(pending_table.rows.size-1) do |x|
       titles << pending_table[x][1].span(:id=>/assessmentTitle/).text
@@ -62,6 +63,17 @@ class AssessmentsList < AssessmentsBase
   # Collects the titles of the Assessments listed as "Published"
   # then returns them as an Array.
   def published_assessment_titles
+    published_copies
+    titles =[]
+    1.upto(published_table.rows.size-1) do |x|
+      titles << published_table[x][1].span(:id=>/publishedAssessmentTitle/).text
+    end
+    titles
+  end
+
+  def inactive_assessment_titles
+    published_copies
+    view_inactive
     titles =[]
     1.upto(published_table.rows.size-1) do |x|
       titles << published_table[x][1].span(:id=>/publishedAssessmentTitle/).text

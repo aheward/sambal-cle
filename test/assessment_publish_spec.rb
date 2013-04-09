@@ -25,27 +25,23 @@ describe "Publishing Assessments" do
                         :type=>"Instructor"
     @instructor1.log_in
 
-    @site = make CourseSiteObject
-    @site.create
+    @site = create CourseSiteObject
     @site.add_official_participants @student.type, @student.id
     @site.add_official_participants @instructor2.type, @instructor2.id
 
-    @assessment1 = make AssessmentObject, :site=>@site.name
-    @assessment1.create
+    @assessment1 = create AssessmentObject, :site=>@site.name
 
     1.times{ @assessment1.add_part }
     3.times{ @assessment1.add_question }
 
-    @assessment2 = make AssessmentObject, :site=>@site.name
-    @assessment2.create
+    @assessment2 = create AssessmentObject, :site=>@site.name
 
     1.times{ @assessment2.add_part }
     3.times{ @assessment2.add_question }
 
     @assessment2.publish
 
-    @assessment3 = make AssessmentObject, :site=>@site.name, :available_date=>in_an_hour
-    @assessment3.create
+    @assessment3 = create AssessmentObject, :site=>@site.name, :available_date=>in_an_hour
 
     1.times{ @assessment3.add_part }
     3.times{ @assessment3.add_question }
