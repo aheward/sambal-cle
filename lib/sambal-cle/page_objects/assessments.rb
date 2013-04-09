@@ -514,9 +514,9 @@ class ShortAnswer < AssessmentsBase
   element(:model_short_answer) { |b| b.frm.text_field(:id=>'itemForm:_id133_textinput') }
   element(:feedback) { |b| b.frm.text_field(:id=>'itemForm:_id133_textinput') }
 
-  action(:toggle_question_editor) { |b| b.frm.link(:id=>'itemForm:_id69_toggle').click; b.editor.wait_until_present }
+  action(:toggle_question_editor) { |b| b.frm.link(:id=>'itemForm:_id73_toggle').click; b.editor.wait_until_present }
 
-  action(:information=) { |text, b| b.rich_text_field('modifyPartForm:_id10_textinput').send_keys text }
+  action(:question_text) { |b| b.frm.text_field(id: 'itemForm:_id73_textinput') }
 
 end
 

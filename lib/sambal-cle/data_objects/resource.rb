@@ -138,7 +138,8 @@ class HTMLPageObject
       fileslist.edit_content @name
     end
     on EditHTMLPageContent do |edit|
-      edit.enter_source_text edit.editor, html_source
+      edit.source
+      edit.source_field.set html_source
       edit.continue
     end
     @html=html_source

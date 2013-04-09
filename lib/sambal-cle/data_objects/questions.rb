@@ -172,7 +172,8 @@ class ShortAnswerQuestion
     on ShortAnswer do |add|
       if @rich_text
         add.toggle_question_editor
-        add.enter_source_text(add.question_editor, @text)
+        add.source
+        add.source_field.set @text
       else
         add.question_text.set @text
       end

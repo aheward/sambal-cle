@@ -49,13 +49,15 @@ class AnnouncementObject
       edit.send(opts[:access]) unless opts[:access]==nil
       edit.send(opts[:availability]) unless opts[:availability]==nil
       unless opts[:body]==nil
-        edit.enter_source_text edit.editor, opts[:body]
+        edit.source
+        edit.source_field.set opts[:body]
       end
       edit.save_changes
     end
     update_options(opts)
   end
 
+  # Unsure if this method is still relevant to 2.9
   def view
     open_my_site_by_name @site
     announcements

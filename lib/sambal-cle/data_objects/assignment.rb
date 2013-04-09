@@ -97,12 +97,14 @@ class AssignmentObject
   def edit opts={}
     open_my_site_by_name @site
     assignments
+    reset
     on(AssignmentsList).edit_assignment @title
 
     on AssignmentAdd do |edit|
       edit.title.fit opts[:title]
       unless opts[:instructions]==nil
-        edit.enter_source_text edit.editor, opts[:instructions]
+        edit.source
+        edit.source_field.set opts[:instructions]
       end
       edit.grade_scale.fit opts[:grade_scale]
       #if edit.max_points.enabled?
@@ -133,6 +135,7 @@ class AssignmentObject
   def get_info
     open_my_site_by_name @site
     assignments
+    reset
     on AssignmentsList do |list|
       @id = list.get_assignment_id @title
       @status=list.status_of @title

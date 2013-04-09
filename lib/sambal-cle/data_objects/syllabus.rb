@@ -56,7 +56,8 @@ class SyllabusObject
     on(Syllabus).create_edit
     on(SyllabusEdit).open_item @title
     on AddEditSyllabusItem do |item|
-      @content = item.get_source_text(item.editor)
+      item.source
+      @content = item.source_field.value
       # Add more here as necessary...
     end
   end

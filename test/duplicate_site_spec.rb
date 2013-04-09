@@ -37,7 +37,7 @@ describe 'Duplicate Site' do
     @source_site_string << "Link (made 'by hand'): <a href=\"#{@assignment.link}\">#{@assignment.title}</a><br />\n"
     @source_site_string << "<em>Direct</em> URL from Link Tool:(y) <a href=\"#{@assignment.direct_url}\">#{@assignment.title}</a><br />\n<br />\n#{@assignment.direct_url}<br />\n<br />\n"
 
-    @announcement = create AnnouncementObject, :site=>@site1.name, :body=>@assignment.link
+    @announcement = create AnnouncementObject, :site=>@site1.name, :body=>@source_site_string
 
     @source_site_string << "<br />\nAnnouncement link: <a href=\"#{@announcement.link}\">#{@announcement.title}</a><br />\n"
 
@@ -120,6 +120,7 @@ describe 'Duplicate Site' do
 
     @new_assignment = make AssignmentObject, :site=>@site2.name, :status=>"Draft", :title=>@assignment.title
     @new_assignment.get_info
+    @new_assignment.get_direct_url
 
   end
 
@@ -130,7 +131,7 @@ describe 'Duplicate Site' do
 
   def check_this_stuff(thing)
     thing.should match /Site ID: #{@site2.id}/
-    thing.should match /\(y\) <a href..#{@new_assignment.direct_url}/
+    thing.should match /\(y\)\s+\[?<a href..#{@new_assignment.direct_url}/
     thing.should match /<img.+#{@site2.id}\/#{@file.name}/
     thing.should_not match /Announcement link:.+#{@announcement.id}.+#{@announcement.title}/
     thing.should match /Uploaded file:.+#{@site2.id}.+#{@file.name}/
@@ -152,25 +153,29 @@ describe 'Duplicate Site' do
     #puts "Syllabus Link updated? " + (thing[/Syllabus: #{@site2.id}/]==nil ? "no" : "yes")
   end
 
-  it "duplicates Assignments correctly" do
+  it 'duplicates Assignments correctly' do
     check_this_stuff(@new_assignment.instructions)
   end
 
-  it "duplicates Web Content pages correctly" do
+  it 'duplicates Web Content pages correctly' do
     open_my_site_by_name @site2.name unless @browser.title=~/#{@site2.name}/
     @browser.link(:text=>@web_content1.title, :href=>/#{@site2.id}/).should be_present
     @browser.link(:text=>@web_content2.title, :href=>/#{@site2.id}/).should be_present
 
   end
 
-  it "duplicates Announcements correctly" do
-    @new_announcement = make AnnouncementObject, :site=>@site2.name, :title=>@announcement.title
-    @new_announcement.view
-
-    check_this_stuff(@new_announcement.message_html)
+  it 'duplicates Announcements correctly' do
+    @new_announcement = make AnnouncementObject, :site=>@site2.name, :title=>"Draft - #{@announcement.title}"
+    open_my_site_by_name @new_announcement.site
+    announcements
+    on(Announcements).edit @new_announcement.title
+    on AddEditAnnouncements do |edit|
+      edit.source
+      check_this_stuff edit.source_field.value
+    end
   end
 
-  it "duplicates Forums correctly" do
+  it 'duplicates Forums correctly' do
     @new_forum = make ForumObject, :site=>@site2.name, :title=>@forum.title
     @new_forum.view
 
@@ -183,7 +188,7 @@ describe 'Duplicate Site' do
     check_this_stuff(@new_topic.description_html)
   end
 
-  it "duplicates Lessons correctly" do
+  it 'duplicates Lessons correctly' do
     lessons
     on Lessons do |lessons|
       lessons.lessons_list.should include @module.title
@@ -194,27 +199,28 @@ describe 'Duplicate Site' do
       lessons.open_section @section1.title
     end
     on AddEditContentSection do |section|
-      @text = section.get_source_text section.content_editor
+      section.source
+      @text = section.source_field.value
     end
 
     check_this_stuff @text
   end
 
-  it "duplicates Syllabi correctly" do
+  it 'duplicates Syllabi correctly' do
     @new_syllabus = make SyllabusObject, :site=>@site2.name, :title=>@syllabus.title
     @new_syllabus.get_properties
 
     check_this_stuff @new_syllabus.content
   end
 
-  it "duplicates Wikis correctly" do
+  it 'duplicates Wikis correctly' do
     @new_wiki = make WikiObject, :site=>@site2.name, :title=>@wiki.title
     @new_wiki.get_content
 
     @new_wiki.content.should == @wiki.content
   end
 
-  it "duplicates Resources correctly" do
+  it 'duplicates Resources correctly' do
     resources
     on Resources do |resources|
       resources.folder_names.should include @folder.name
@@ -222,14 +228,14 @@ describe 'Duplicate Site' do
     end
   end
 
-  it "duplicates Events correctly" do
+  it 'duplicates Events correctly' do
     @new_event = make EventObject, :title=>@event.title, :site=>@site2.name
     @new_event.view
 
     check_this_stuff @new_event.message_html
   end
 
-  it "duplicates Assessments correctly" do
+  it 'duplicates Assessments correctly' do
     @new_assessment = make AssessmentObject, :title=>@assessment.title, :site=>@site2.name
     @new_assessment.questions=@assessment.questions
     assessments
@@ -241,7 +247,8 @@ describe 'Duplicate Site' do
       edit.edit_question(1,1)
     end
     on ShortAnswer do |q|
-      q.get_source_text(q.question_editor).should==%|<img width="203" height="196" alt="" src="#{$base_url}/access/content/group/#{@site2.id}/#{@file.name}" />|
+      q.source
+      q.source_field.value.should==%|<img width="203" height="196" alt="" src="#{$base_url}/access/content/group/#{@site2.id}/#{@file.name}" />|
     end
   end
 

@@ -1,5 +1,7 @@
 class LinkTool < BasePage
 
+  frame_element
+
   action(:open_site) { |name, b| b.use_linktool; b.sites_frame.link(text: name).click }
 
   # Note that this method assumes the child window is already active and the folder link is
@@ -9,6 +11,7 @@ class LinkTool < BasePage
   def self.link_getter(name)
     define_method "get_#{name}_link" do |item|
       use_linktool
+      sleep 2 #FIXME
       send("toggle_#{name}s")
       direct_link = link_html(item)
       close_linktool
@@ -27,7 +30,11 @@ class LinkTool < BasePage
   # ========
 
   action(:use_linktool) { |b| b.window(title: 'Server Browser').use; b.links_frame.wait_until_present }
-  action(:close_linktool) { |b| b.windows.last.close; b.windows.first.use }
+  action(:close_linktool) { |b|
+    b.windows.first.use
+    b.window(title: 'Server Browser').close
+    b.frm.table(class: 'cke_dialog_contents').link(title: 'Cancel').click
+  }
   action(:toggle_assignments) { |b| b.links_frame.image(id: 'imgAssignments').click }
   action(:toggle_forums) { |b| b.links_frame.image(id: 'imgForums').click }
   alias_method :toggle_topics, :toggle_forums

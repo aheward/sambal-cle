@@ -138,8 +138,8 @@ class ContentSectionObject
       end
 
       # TODO: Add code here for updating attached resources
-
-      edit.enter_source_text(edit.content_editor, opts[:editor_content]) unless opts[:editor_content]==nil
+      edit.source
+      edit.source_field.fit opts[:editor_content]
 
       # TODO: Add code here for updating remaining variables
 

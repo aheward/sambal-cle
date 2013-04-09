@@ -40,8 +40,7 @@ class CourseSiteObject
       # Store the selected term value for use later
       # TODO: Add logic here in case we want to actually SET the term value instead.
       @term_value = page.academic_term.value
-      @term = page.academic_term.selected_options[0].text
-
+      @term = page.academic_term.selected_options[0].text[/\w+.\w+/]
       page.continue
     end
     on CourseSectionInfo do |page|
@@ -213,10 +212,14 @@ class CourseSiteObject
     end
     my_workspace
     site_setup
-    on(SiteSetupList).search(Regexp.escape(new_site.name))
+    on SiteSetupList do |list|
+      list.clear_search
+      list.search_field.set(Regexp.escape(new_site.name))
+      list.search
+    end
 
     # Get the site id for storage
-    @browser.frame(:class=>'portletMainIframe').link(:href=>/xsl-portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
+    @browser.frame(:class=>'portletMainIframe').link(:href=>/portal.site/, :index=>0).href =~ /(?<=\/site\/).+/
     new_site.id = $~.to_s
 
     new_site

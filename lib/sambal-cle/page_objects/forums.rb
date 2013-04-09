@@ -29,14 +29,14 @@ class Forums < BasePage
     titles = []
     title_links = frm.div(:class=>'portletBody').links.find_all { |link| link.class_name=='title' && link.id=='' }
     title_links.each { |link| titles << link.text }
-    return titles
+    titles
   end
 
   def topic_titles
     titles = []
     title_links = frm.div(:class=>'portletBody').links.find_all { |link| link.class_name == 'title' && link.id != '' }
     title_links.each { |link| titles << link.text }
-    return titles
+    titles
   end
 
   # EditForum

@@ -35,7 +35,8 @@ class ForumObject
     
   def edit opts={}
     open_my_site_by_name @site
-    forums unless @browser.title=~/Forums$/
+    forums
+    reset
     on(Forums).forum_settings @title
     on EditForum do |edit|
       edit.title.fit opts[:title]
@@ -67,12 +68,10 @@ class ForumObject
   def get_direct_link
     open_my_site_by_name @site
     forums
+    reset
     on(Forums).forum_settings @title
     on(EditForum).open_link_tool
-    on(LinkTool).get_forum_link @title
-    on EditForum do |edit|
-      @direct_link=edit.url_field.value
-    end
+    @direct_link = on(LinkTool).get_forum_link @title
   end
 
 end
@@ -98,7 +97,7 @@ class TopicObject
 
     }
     set_options(defaults.merge(opts))
-    requires @site, @forum
+    requires :site, :forum
   end
 
   alias :name :title
@@ -106,6 +105,7 @@ class TopicObject
   def create
     open_my_site_by_name @site
     forums
+    reset
     on(Forums).new_topic_for_forum @forum
     on AddEditTopic do |add|
       fill_out add, :title, :short_description
@@ -153,10 +153,7 @@ class TopicObject
     forums
     on(Forums).topic_settings @title
     on(AddEditTopic).open_link_tool
-    on(LinkTool).get_topic_link @title
-    on AddEditTopic do |edit|
-      @direct_link=edit.url_field.value
-    end
+    @direct_link = on(LinkTool).get_topic_link @title
   end
   
 end

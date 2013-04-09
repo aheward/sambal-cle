@@ -33,8 +33,9 @@ class EventObject
     calendar
     on( Calendar).add_event
     on AddEditEvent do |add_event|
-      add_event.enter_source_text add_event.editor, @message
-      fill_out_form add_event, :title, :month, :day,
+      add_event.source
+      add_event.source_field.set @message
+      fill_out add_event, :title, :month, :day,
                     :year, :start_hour, :start_minute,
                     :start_meridian
       if @end_hour == nil && @duration_hours == nil
