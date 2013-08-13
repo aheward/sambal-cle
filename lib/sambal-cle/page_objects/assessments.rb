@@ -528,8 +528,6 @@ class ShortAnswer < AssessmentsBase
 
   action(:toggle_question_editor) { |b| b.frm.link(:id=>'itemForm:_id73_toggle').click; b.editor.wait_until_present }
 
-  action(:question_text) { |b| b.frm.text_field(id: 'itemForm:_id73_textinput') }
-
 end
 
 #  The page for setting up a Fill-in-the-blank question

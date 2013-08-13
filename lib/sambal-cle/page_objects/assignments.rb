@@ -329,7 +329,6 @@ class AssignmentsReorder < AssignmentsBase
   menu_elements
   basic_page_elements
 
-  action(:save) { |b| b.frm.button(:value=>'Save').click }
   action(:sort_by_title) { |b| b.frm.link(:text=>'Sort by title').click }
   action(:sort_by_open_date) { |b| b.frm.link(:text=>'Sort by open date').click }
   action(:sort_by_due_date) { |b| b.frm.link(:text=>'Sort by due date').click }

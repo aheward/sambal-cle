@@ -31,8 +31,6 @@ class Matrices < BasePage
 
   action(:export) { |matrixname, b| b.matrix_table.tr(:text=>/#{Regexp.escape(matrixname)}/).link(:text=>'Export').click }
 
-  action(:permissions) { |matrixname, b| b.matrix_table.tr(:text=>/#{Regexp.escape(matrixname)}/).link(:text=>'Permissions').click }
-
   element(:matrix_table) { |b| b.frm.table(:class=>'listHier lines nolines') }
 
   def matrices_list

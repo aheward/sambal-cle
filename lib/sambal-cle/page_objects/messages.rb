@@ -116,8 +116,6 @@ class ComposeMessage < BasePage
   cke_elements
   expected_element :editor
 
-  action(:send) { |b| b.frm.button(:value=>'Send ').click }
-
   action(:message=) { |text, b| b.rich_text_field('compose:pvt_message_body_inputRichText').send_keys text }
 
   button 'Add attachments'
@@ -135,8 +133,6 @@ class ReplyToMessage < BasePage
   cke_elements
 
   expected_element :editor
-
-  action(:send) { |b| b.frm.button(:value=>'Send ').click }
 
   action(:reply=) { |text, b| b.rich_text_field('pvtMsgReply:df_compose_body_inputRichText').send_keys text }
 
@@ -156,8 +152,6 @@ class ForwardMessage < BasePage
   cke_elements
 
   expected_element :editor
-
-  action(:send) { |b| b.frm.button(:value=>'Send ').click }
 
   action(:forward_message=) { |text, b| b.rich_text_field('pvtMsgForward:df_compose_body_inputRichText').send_keys text }
 

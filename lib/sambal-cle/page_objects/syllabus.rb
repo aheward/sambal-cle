@@ -110,8 +110,6 @@ class AddEditSyllabusItem < SyllabusBase
     return names
   end
 
-  button'Preview'
-
   element(:title) { |b| b.frm.text_field(:id=>'_id4:title') }
   element(:only_members_of_this_site) { |b| b.frm.radio_button(:name=>/_id\d+:_id\d+/, :value=>'no') }
   element(:publicly_viewable) { |b| b.frm.radio_button(:name=>/_id\d+:_id\d+/, :value=>'yes') }

@@ -213,16 +213,16 @@ class PartObject
   end
     
   def edit opts={}
-
+    #pending
     set_options(opts)
   end
     
   def view
-    
+    #pending
   end
     
   def delete
-    
+    #pending
   end
 
 end

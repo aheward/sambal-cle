@@ -38,7 +38,6 @@ class AddForm < BasePage
 
   button 'Add Form'
 
-  action(:instruction=) { |text, b| b.rich_text_field('instruction').send_keys text }
   element(:name) { |b| b.frm.text_field(:id=>'description-id') }
 
 end

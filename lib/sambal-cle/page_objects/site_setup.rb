@@ -291,7 +291,6 @@ class EditSiteTools < SiteSetupBase
   element(:no_thanks) { |b| b.frm.radio(:id=>'import_no') }
   element(:yes) { |b| b.frm.radio(:id=>'import_yes') }
   element(:import_sites) { |b| b.frm.select(:id=>'importSites') }
-  action(:back) { |b| b.frm.button(:name=>'Back').click }
 
 end
 
@@ -441,7 +440,6 @@ class SiteAccess < SiteSetupBase
   element(:leave_as_draft) { |b| b.frm.radio(:id=>'unpublish') }
   element(:limited) { |b| b.frm.radio(:id=>'unjoinable') }
   element(:allow) { |b| b.frm.radio(:id=>'joinable') }
-  action(:back) { |b| b.frm.button(:name=>'eventSubmit_doBack').click }
   element(:joiner_role) { |b| b.frm.select(:id=>'joinerRole') }
 
 end
